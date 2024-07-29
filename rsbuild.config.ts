@@ -1,5 +1,6 @@
 import {defineConfig} from '@rsbuild/core';
 import {pluginReact} from '@rsbuild/plugin-react';
+import {pluginSvgr} from '@rsbuild/plugin-svgr';
 import {ModuleFederationPlugin} from "@module-federation/enhanced/rspack";
 // @ts-ignore
 import {TanStackRouterRspack} from '@tanstack/router-plugin/rspack'
@@ -33,23 +34,23 @@ export default defineConfig({
 		port: 7777,
 	},
 	dev: {
-		assetPrefix: 'http://localhost:7777',
+		// assetPrefix: 'http://localhost:7777',
 	},
 	html: {
-		title: 'BetFin Template',
+		title: 'BetFin Games',
 		favicon: './src/assets/favicon.svg',
 	},
 	output: {
-		assetPrefix: process.env.PUBLIC_ENVIRONMENT === 'production' ? 'https://betfin-template.web.app' : 'https://betfin-template-dev.web.app'
+		assetPrefix: process.env.PUBLIC_ENVIRONMENT === 'production' ? 'https://betfin-games.web.app' : 'https://betfin-games-dev.web.app',
 	},
-	plugins: [pluginReact()],
+	plugins: [pluginReact(), pluginSvgr()],
 	tools: {
 		rspack: (config, {appendPlugins}) => {
-			config.output!.uniqueName = 'betfinio_template';
+			config.output!.uniqueName = 'betfinio_games';
 			appendPlugins([
 				TanStackRouterRspack(),
 				new ModuleFederationPlugin({
-					name: 'betfinio_template',
+					name: 'betfinio_games',
 					remotes: {
 						betfinio_app: getApp(),
 						betfinio_staking: getStaking()
@@ -71,17 +72,9 @@ export default defineConfig({
 							singleton: true,
 							requiredVersion: dependencies['@tanstack/react-query']
 						},
-						"@tanstack/react-table": {
-							singleton: true,
-							requiredVersion: dependencies['@tanstack/react-table']
-						},
 						"lucide-react": {
 							singleton: true,
 							requiredVersion: dependencies['lucide-react']
-						},
-						"@supabase/supabase-js": {
-							singleton: true,
-							requiredVersion: dependencies['@supabase/supabase-js']
 						},
 						"i18next": {
 							singleton: true,
@@ -103,10 +96,6 @@ export default defineConfig({
 							singleton: true,
 							requiredVersion: dependencies['wagmi']
 						},
-						"@web3modal/wagmi": {
-							singleton: true,
-							requiredVersion: dependencies['@web3modal/wagmi']
-						}
 					},
 				}),
 			]);
