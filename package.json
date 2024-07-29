@@ -1,0 +1,40 @@
+{
+  "name": "@betfinio/template",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "build": "rsbuild build",
+    "check": "biome check --write",
+    "dev": "rsbuild dev --open",
+    "prod": "rsbuild dev --env-mode production --open",
+    "local": "rsbuild dev --env-mode localhost --open",
+    "format": "biome format --write",
+    "preview": "rsbuild preview"
+  },
+  "dependencies": {
+    "@module-federation/enhanced": "^0.2.6",
+    "@supabase/supabase-js": "^2.44.3",
+    "@tanstack/react-query": "^5.51.1",
+    "@tanstack/react-router": "^1.44.2",
+    "class-variance-authority": "^0.7.0",
+    "framer-motion": "^11.3.2",
+    "i18next": "^23.11.5",
+    "i18next-icu": "^2.3.0",
+    "lucide-react": "^0.417.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-i18next": "^14.1.2",
+    "tailwind-merge": "^2.4.0",
+    "tailwindcss": "^3.4.4",
+    "tailwindcss-animate": "^1.0.7"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.8.3",
+    "@rsbuild/core": "^1.0.1-beta.3",
+    "@rsbuild/plugin-react": "^1.0.1-beta.3",
+    "@tanstack/router-plugin": "^1.44.2",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "typescript": "^5.5.2"
+  }
+}
