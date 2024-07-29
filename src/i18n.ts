@@ -13,13 +13,13 @@ import ruShared from 'betfinio_app/locales/ru';
 const resources = {
 	en: {
 		translation: {
-			template: enJSON,
+			games: enJSON,
 			shared: enShared
 		}
 	},
 	ru: {
 		translation: {
-			template: ruJSON,
+			games: ruJSON,
 			shared: ruShared
 		}
 	},
