@@ -5,7 +5,7 @@ import {useTranslation} from "react-i18next";
 import RoundConditions from "@/src/components/predict/RoundConditions.tsx";
 import PlaceBet from "@/src/components/predict/PlaceBet.tsx";
 import LastBets from "@/src/components/predict/LastBets.tsx";
-
+import BonusAndChart from "@/src/components/predict/BonusAndChart.tsx";
 
 
 export const Route = createFileRoute('/predict/$pair')({
@@ -27,5 +27,6 @@ function PredictPage() {
 			<PlaceBet game={game}/>
 			<LastBets game={game}/>
 		</div>
+		<BonusAndChart game={game}/>
 	</div>
 }
