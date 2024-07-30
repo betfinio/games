@@ -158,8 +158,7 @@ export async function fetchPlayerRounds(options: Options, params: { game: Addres
 		const time = await getBlock(config, {blockNumber: block})
 		return Math.floor(Number(time.timestamp) / g.interval)
 	}))
-	console.error(rounds)
-	return rounds.reverse().slice(0, 10)
+	return [...new Set(rounds)].reverse().slice(0, 10)
 }
 
 export async function fetchLastBets(options: Options, params: { count: number }): Promise<PredictBet[]> {

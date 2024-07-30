@@ -1,11 +1,14 @@
-import {createFileRoute} from '@tanstack/react-router'
+import {createFileRoute, Link} from '@tanstack/react-router'
 import PairInfo from "@/src/components/predict/PairInfo.tsx";
 import {games} from "@/src/lib/predict";
-import {useTranslation} from "react-i18next";
+import {Trans, useTranslation} from "react-i18next";
 import RoundConditions from "@/src/components/predict/RoundConditions.tsx";
 import PlaceBet from "@/src/components/predict/PlaceBet.tsx";
 import LastBets from "@/src/components/predict/LastBets.tsx";
 import BonusAndChart from "@/src/components/predict/BonusAndChart.tsx";
+import {getStakingUrl} from "betfinio_app/lib";
+import i18n from "@/src/i18n.ts";
+import RoundsTable from "@/src/components/predict/RoundsTable.tsx";
 
 
 export const Route = createFileRoute('/predict/$pair')({
@@ -28,5 +31,9 @@ function PredictPage() {
 			<LastBets game={game}/>
 		</div>
 		<BonusAndChart game={game}/>
+		<a href={getStakingUrl()} className={'text-center text-gray-400 text-sm md:text-base cursor-pointer'}>
+			<Trans i18nKey={'games.predict.feeStaking'} i18n={i18n} components={{b: <b className={'text-yellow-400 font-medium'}/>}}/>
+		</a>
+		<RoundsTable game={game}/>
 	</div>
 }
