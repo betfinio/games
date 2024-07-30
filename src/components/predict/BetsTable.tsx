@@ -9,6 +9,8 @@ import {PredictBet} from "@/src/lib/predict/types.ts";
 import {useTranslation} from "react-i18next";
 import {BetValue} from "betfinio_app/BetValue";
 
+// todo rewrite tables
+
 const SCAN = import.meta.env.PUBLIC_ETHSCAN
 
 const columnHelper = createColumnHelper<PredictBet>()

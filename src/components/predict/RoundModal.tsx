@@ -175,9 +175,7 @@ const RoundModal: FC<{
 					<span className={'text-gray-500 hidden md:block'}>{t('staking')}</span>
 				</div>
 			</div>
-			
 			{/*<BonusChart bonuses={bonuses} />*/}
-			
 			<BetsTable isFetching={!isFetched} bets={bets} isFinished={isFinished}/>
 			<div className={cx('flex flex-row justify-end w-full p-2', (status !== 'ended') && "!hidden")}>
 				<button className={'rounded-md px-4 py-2 bg-yellow-400 text-black '} onClick={handleCalculate}>Calculate
