@@ -9,6 +9,9 @@ import BonusAndChart from "@/src/components/predict/BonusAndChart.tsx";
 import {getStakingUrl} from "betfinio_app/lib";
 import i18n from "@/src/i18n.ts";
 import RoundsTable from "@/src/components/predict/RoundsTable.tsx";
+import RoundModal from "@/src/components/predict/RoundModal.tsx";
+import * as sea from "node:sea";
+import {Dialog} from 'betfinio_app/dialog';
 
 
 export const Route = createFileRoute('/predict/$pair')({
@@ -35,5 +38,9 @@ function PredictPage() {
 			<Trans i18nKey={'games.predict.feeStaking'} i18n={i18n} components={{b: <b className={'text-yellow-400 font-medium'}/>}}/>
 		</a>
 		<RoundsTable game={game}/>
+		<Dialog open={!!search.round && search.round > 0}>
+			{search.round && <RoundModal round={search.round} game={game}/>}
+		
+		</Dialog>
 	</div>
 }

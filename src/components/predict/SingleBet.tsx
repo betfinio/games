@@ -13,7 +13,7 @@ import {ArrowDownIcon, ArrowUpIcon, SquareArrowOutUpRight, X} from "lucide-react
 import {useTranslation} from "react-i18next";
 import {games} from "@/src/lib/predict";
 import {useCurrentRound, useLatestPrice, usePrice} from "@/src/lib/predict/query";
-
+import btcSvg from "@/src/assets/predict/btc.svg";
 
 const ETHSCAN = import.meta.env.PUBLIC_ETHSCAN
 
@@ -36,7 +36,7 @@ const SingleBet: FC<PredictBet & { loading: boolean }> = (bet) => {
 				</div>
 			</motion.div>
 		</DialogTrigger>
-		<DialogContent>
+		<DialogContent className={'games w-fit'}>
 			<BetModal {...bet}/>
 		</DialogContent>
 	</Dialog>
@@ -63,7 +63,7 @@ const BetModal: FC<PredictBet> = (bet) => {
 	const getImage = () => {
 		switch (game.name) {
 			case "BTCUSDT":
-				return <img src={'/predict/btc.svg'} width={30} height={30} alt={'btc'}/>
+				return <img src={btcSvg} width={30} height={30} alt={'btc'}/>
 			case "ETHUSDT":
 				return <img src={'/predict/eth.svg'} width={30} height={30} alt={'eth'}/>
 			case "MATICUSDT":
@@ -114,7 +114,7 @@ const BetModal: FC<PredictBet> = (bet) => {
 	const endPrice = isCurrent ? valueToNumber(latest.answer, 8) : valueToNumber(end.answer, 8)
 	const endTime = DateTime.fromMillis(Number(end.timestamp) * 1000).toFormat("HH:mm:ss")
 	return <motion.div onClick={(e) => e.stopPropagation()}
-	                   className={'rounded-lg relative border border-gray-800  text-white w-full !max-w-[600px] mx-auto bg-primaryLighter py-6 px-8 BET_MODAL'}>
+	                   className={'rounded-lg relative border border-gray-800  text-white w-full aspect-video max-w-[98vw] md:max-w-[600px] mx-auto bg-primaryLighter py-6 px-8 BET_MODAL'}>
 		<div className={'flex items-center justify-between'}>
 			<div className={'flex flex-row items-center gap-2'}>
 				{getImage()}
