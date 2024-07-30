@@ -1,50 +1,87 @@
-import {BarTooltipProps, ResponsiveBar} from '@nivo/bar'
+import {BarElement, CategoryScale, Chart as ChartJS, type ChartOptions, Legend, LinearScale, Title, Tooltip,} from 'chart.js';
+import {Bar} from 'react-chartjs-2';
+import {FC, useMemo} from "react";
+import {useAccount} from "wagmi";
+import {ZeroAddress} from "@betfinio/hooks/dist";
 import {PredictBet} from "@/src/lib/predict/types.ts";
-import {FC} from "react";
-import millify from "millify";
-import {Bet} from "@betfinio/ui/dist/icons";
 
-interface Bonus {
-	bet: PredictBet,
-	bonus: number
-}
+ChartJS.register(
+	CategoryScale,
+	LinearScale,
+	BarElement,
+	Title,
+	Tooltip,
+	Legend
+);
 
-const BonusChart: FC<{ bonuses: Bonus[] }> = ({bonuses}) => {
-	const data = bonuses.map(({bet, bonus}) => ({
-		id: bet.address,
-		value: bet.side ? bonus : -bonus,
-		color: bet.side ? '#27AE60' : '#EB5757'
-	}))
+const BonusChart: FC<{ bonuses: { bet: PredictBet, bonus: number }[], oneWay?: boolean, minBars?: number, height?: number }> = ({
+	bonuses,
+	oneWay = false,
+	minBars = 20,
+	height = 50
+}) => {
+	const {address = ZeroAddress} = useAccount()
+	const colors: string[] = [];
+	const values: number[] = [];
+	bonuses.forEach(({bet, bonus}) => {
+		if (oneWay) {
+			values.push(bonus)
+		} else {
+			values.push(bet.side ? bonus : -bonus)
+		}
+		colors.push(bet.player === address ? '#FFC800' : (bet.side ? '#27AE60' : '#EB5757'))
+	})
 	
-	console.log(data)
-	return <ResponsiveBar
-		data={data}
-		padding={0.8}
-		renderWrapper={true}
-		margin={{left: 100, right: 100}}
-		enableLabel={false}
-		enableGridY={false}
-		enableGridX={false}
-		borderRadius={4}
-		groupMode="grouped"
-		tooltip={CustomTooltip}
-		axisBottom={{
-			ariaHidden: true,
-			format: (v) => '',
-		}}
-		axisLeft={{
-			ariaHidden: true,
-			format: (v) => '',
-		}}
-		colors={{datum: 'data.color'}}
-	/>
+	const options = useMemo<ChartOptions<"bar">>(() => ({
+		plugins: {
+			title: {
+				display: false,
+				text: 'Chart.js Bar Chart - Stacked',
+			},
+			legend: {
+				display: false
+			},
+			tooltip: {
+				displayColors: false,
+				callbacks: {
+					label: function (context) {
+						return `${Math.abs(context.parsed.y)} BET`;
+					},
+					title(): string | string[] | void {
+						return ''
+					}
+				},
+				
+			},
+		},
+		interaction: {
+			mode: 'nearest',
+		},
+		responsive: true,
+		scales: {
+			x: {
+				display: false,
+			},
+			y: {
+				display: false,
+				min: oneWay ? 0 : -Math.max(...values),
+				max: Math.max(...values)
+			},
+		},
+	}), [oneWay, values])
+	
+	const data = {
+		labels: Array.from(Array(Math.max(values.length, minBars)), (_, i) => i),
+		datasets: [
+			{
+				label: 'Dataset 1',
+				data: values,
+				backgroundColor: colors,
+				borderRadius: 2,
+			}
+		],
+	};
+	return <Bar height={height} options={options} data={data}/>;
 }
 
-export default BonusChart
-
-
-const CustomTooltip: FC<BarTooltipProps<{ id: string; value: number; color: string; }>> = ({value}) => {
-	return <div className={'bg-gray-800 text-white rounded-lg text-sm px-4 py-2 flex flex-row items-center gap-2'}>
-		{millify(Math.abs(value))} <Bet className={'w-4 h-4 '}/>
-	</div>
-}
+export default BonusChart;

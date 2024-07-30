@@ -69,3 +69,11 @@ html, body {
 		user-select: none;
 	}
 }
+
+
+.BET_MODAL {
+	background-image: url('./assets/predict/bet_modal_bg.svg');
+	background-repeat: no-repeat;
+	background-position-y: bottom;
+	background-size: contain;
+}
