@@ -20,6 +20,7 @@ const BonusChart: FC<{ bonuses: Bonus[] }> = ({bonuses}) => {
 	return <ResponsiveBar
 		data={data}
 		padding={0.8}
+		renderWrapper={true}
 		margin={{left: 100, right: 100}}
 		enableLabel={false}
 		enableGridY={false}

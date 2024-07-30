@@ -156,7 +156,7 @@ export const useRounds = (game: Address) => {
 		config: config,
 		eventName: 'RoundCreated',
 		onLogs: async () => {
-			await client.invalidateQueries({queryKey: ['predict', ['rounds', 'playerRounds'], game]})
+			await client.invalidateQueries({queryKey: ['predict', 'rounds', game]})
 		}
 	})
 	

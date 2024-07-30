@@ -92,7 +92,7 @@ const BonusInfo: FC<{ game: Game }> = ({game}) => {
 		</h1>
 		<div className={'bg-primaryLight rounded-[10px] px-2 md:px-[30px] py-5 flex flex-col  justify-between '}>
 			<div className={'relative'}>
-				<div className={'relative my-4 md:my-0 w-full py-4 h-[200px]'}>
+				<div className={'relative my-4 md:my-0 w-full py-4 h-[200px] lg:max-w-[1000px] mx-auto'}>
 					<BonusChart bonuses={bonuses}/>
 				</div>
 			</div>
