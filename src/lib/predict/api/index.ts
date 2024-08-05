@@ -126,7 +126,7 @@ export async function fetchRounds(options: Options, params: { game: Address }): 
 	const events = await getContractEvents(config.getClient(), {
 		abi: GameContract.abi,
 		address: game,
-		fromBlock: currentBlock.number - 5000n,
+		fromBlock: currentBlock.number - 100000n,
 		toBlock: 'latest',
 		eventName: 'RoundCreated'
 	})
