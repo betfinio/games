@@ -5,6 +5,7 @@ import {ZeroAddress} from "@betfinio/hooks";
 import {useAccount, useConfig, useWatchContractEvent} from "wagmi";
 import {BetsMemoryContract, GameContract} from "@betfinio/abi";
 import {useSupabase} from "betfinio_app/supabase";
+import {toast} from "betfinio_app/use-toast"
 import {
 	fetchBetsCount,
 	fetchBetsVolume, fetchLastBets,
@@ -19,6 +20,8 @@ import {
 	placeBet
 } from "@/src/lib/predict/api";
 import {writeContract, WriteContractReturnType} from "@wagmi/core";
+import {waitForTransactionReceipt} from "viem/actions";
+import {getTransactionLink} from "betfinio_app/helpers";
 
 export const useCurrentRound = (interval: number) => {
 	return useQuery<number>({
@@ -188,6 +191,14 @@ export const usePlaceBet = () => {
 		onMutate: () => console.log('placeBet'),
 		onSuccess: async (data) => {
 			console.log(data)
+			const {update} = toast({
+				title: "Placing a bet",
+				description: "Transaction is pending",
+				variant: "loading",
+				duration: 10000
+			})
+			await waitForTransactionReceipt(config.getClient(), {hash: data})
+			update({variant: "default", description: "Transaction is confirmed", title: "Bet placed", action: getTransactionLink(data), duration: 5000})
 			await client.invalidateQueries({queryKey: ['predict', 'bets']})
 		},
 		onSettled: () => console.log('placeBet settled')

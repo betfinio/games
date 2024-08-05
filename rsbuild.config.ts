@@ -31,10 +31,10 @@ const getApp = () => {
 
 export default defineConfig({
 	server: {
-		port: 7777,
+		port: 4000,
 	},
 	dev: {
-		// assetPrefix: 'http://localhost:7777',
+		assetPrefix: 'http://localhost:4000',
 	},
 	html: {
 		title: 'BetFin Games',
