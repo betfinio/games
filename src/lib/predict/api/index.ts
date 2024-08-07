@@ -11,8 +11,6 @@ import {getBlockByTimestamp} from "betfinio_app/lib/utils";
 const PREDICT_ADDRESS = import.meta.env.PUBLIC_PREDICT_ADDRESS as Address
 const BETS_MEMORY_ADDRESS = import.meta.env.PUBLIC_BETS_MEMORY_ADDRESS as Address
 const PARTNER_ADDRESS = import.meta.env.PUBLIC_PARTNER_ADDRESS as Address
-// const TOKEN_ADDRESS = import.meta.env.PUBLIC_TOKEN_ADDRESS as Address
-// const CORE_ADDRESS = import.meta.env.PUBLIC_CORE_ADDRESS as Address
 
 export async function fetchRound(options: Options, params: { game: Game, round: number, player: Address }): Promise<Round> {
 	if (!options.config) throw Error("Config is required!")
