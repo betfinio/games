@@ -15,6 +15,8 @@ module.exports = {
 		extend: {
 			backgroundImage: {
 				"roulette-wheel": "url('/src/assets/roulette/roulette.svg')",
+				"luro": "url('/src/assets/luro/luro.png')",
+				"luro-sm": "url('/src/assets/luro/luro-sm.png')",
 			},
 			colors: {
 				border: "hsl(var(--border))",

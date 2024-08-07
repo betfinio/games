@@ -14,7 +14,9 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
 import { Route as RouletteIndexImport } from './routes/roulette/index'
 import { Route as PredictIndexImport } from './routes/predict/index'
+import { Route as LuroIndexImport } from './routes/luro/index'
 import { Route as PredictPairImport } from './routes/predict/$pair'
+import { Route as LuroSoonImport } from './routes/luro/soon'
 
 // Create/Update Routes
 
@@ -33,8 +35,18 @@ const PredictIndexRoute = PredictIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const LuroIndexRoute = LuroIndexImport.update({
+  path: '/luro/',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const PredictPairRoute = PredictPairImport.update({
   path: '/predict/$pair',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const LuroSoonRoute = LuroSoonImport.update({
+  path: '/luro/soon',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -49,11 +61,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/luro/soon': {
+      id: '/luro/soon'
+      path: '/luro/soon'
+      fullPath: '/luro/soon'
+      preLoaderRoute: typeof LuroSoonImport
+      parentRoute: typeof rootRoute
+    }
     '/predict/$pair': {
       id: '/predict/$pair'
       path: '/predict/$pair'
       fullPath: '/predict/$pair'
       preLoaderRoute: typeof PredictPairImport
+      parentRoute: typeof rootRoute
+    }
+    '/luro/': {
+      id: '/luro/'
+      path: '/luro'
+      fullPath: '/luro'
+      preLoaderRoute: typeof LuroIndexImport
       parentRoute: typeof rootRoute
     }
     '/predict/': {
@@ -77,7 +103,9 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren({
   IndexRoute,
+  LuroSoonRoute,
   PredictPairRoute,
+  LuroIndexRoute,
   PredictIndexRoute,
   RouletteIndexRoute,
 })
@@ -91,7 +119,9 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/luro/soon",
         "/predict/$pair",
+        "/luro/",
         "/predict/",
         "/roulette/"
       ]
@@ -99,8 +129,14 @@ export const routeTree = rootRoute.addChildren({
     "/": {
       "filePath": "index.tsx"
     },
+    "/luro/soon": {
+      "filePath": "luro/soon.tsx"
+    },
     "/predict/$pair": {
       "filePath": "predict/$pair.tsx"
+    },
+    "/luro/": {
+      "filePath": "luro/index.tsx"
     },
     "/predict/": {
       "filePath": "predict/index.tsx"
