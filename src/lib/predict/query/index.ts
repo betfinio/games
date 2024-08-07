@@ -1,5 +1,5 @@
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
-import {defaultResult, Game, PlaceBetParams, PredictBet, Result} from "@/src/lib/predict/types.ts";
+import {CalculateRoundParams, defaultResult, Game, PlaceBetParams, PredictBet, Result} from "@/src/lib/predict/types.ts";
 import {Address} from "viem";
 import {ZeroAddress} from "@betfinio/hooks";
 import {useAccount, useConfig, useWatchContractEvent} from "wagmi";
@@ -7,6 +7,7 @@ import {BetsMemoryContract, GameContract} from "@betfinio/abi";
 import {useSupabase} from "betfinio_app/supabase";
 import {toast} from "betfinio_app/use-toast"
 import {
+	calculateRound,
 	fetchBetsCount,
 	fetchBetsVolume, fetchLastBets,
 	fetchLatestPrice,
@@ -124,11 +125,10 @@ export const useRoundInfo = (game: Game, round: number) => {
 
 export const useRoundBets = (game: Address, round: number) => {
 	const config = useConfig();
-	
 	return useQuery<PredictBet[]>({
 		initialData: [],
 		queryKey: ['predict', 'bets', 'round', game, round],
-		queryFn: () => fetchRoundBets({config}, {game, round})
+		queryFn: () => fetchRoundBets({config}, {game, round}),
 	})
 }
 
@@ -204,4 +204,28 @@ export const usePlaceBet = () => {
 		onSettled: () => console.log('placeBet settled')
 	})
 	
+}
+
+export const useCalculate = () => {
+	const client = useQueryClient();
+	const config = useConfig();
+	const {client: supabase} = useSupabase();
+	return useMutation<WriteContractReturnType, any, CalculateRoundParams>({
+		mutationKey: ['predict', 'bets', 'calculate'],
+		mutationFn: (params) => calculateRound(params, {config, supabase}),
+		onError: (e) => {
+			console.log(e)
+		},
+		onSuccess: async (data) => {
+			const {update} = toast({
+				title: "Calculating a round",
+				description: "Transaction is pending",
+				variant: "loading",
+				duration: 10000
+			})
+			await waitForTransactionReceipt(config.getClient(), {hash: data})
+			update({variant: "default", description: "Transaction is confirmed", title: "Bet placed", action: getTransactionLink(data), duration: 3000})
+			await client.invalidateQueries({queryKey: ['predict']})
+		},
+	})
 }

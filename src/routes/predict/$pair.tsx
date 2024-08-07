@@ -1,7 +1,7 @@
-import {createFileRoute, Link} from '@tanstack/react-router'
+import {createFileRoute} from '@tanstack/react-router'
 import PairInfo from "@/src/components/predict/PairInfo.tsx";
 import {games} from "@/src/lib/predict";
-import {Trans, useTranslation} from "react-i18next";
+import {Trans} from "react-i18next";
 import RoundConditions from "@/src/components/predict/RoundConditions.tsx";
 import PlaceBet from "@/src/components/predict/PlaceBet.tsx";
 import LastBets from "@/src/components/predict/LastBets.tsx";
@@ -10,7 +10,6 @@ import {getStakingUrl} from "betfinio_app/lib";
 import i18n from "@/src/i18n.ts";
 import RoundsTable from "@/src/components/predict/RoundsTable.tsx";
 import RoundModal from "@/src/components/predict/RoundModal.tsx";
-import * as sea from "node:sea";
 import {Dialog} from 'betfinio_app/dialog';
 
 

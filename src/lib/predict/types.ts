@@ -58,3 +58,8 @@ export interface PlaceBetParams {
 	side: boolean,
 	game: Address
 }
+
+export interface CalculateRoundParams {
+	round: number,
+	game: Game
+}

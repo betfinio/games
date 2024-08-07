@@ -2,7 +2,7 @@ import {getBlock, multicall, readContract, writeContract, WriteContractReturnTyp
 import {BetInterfaceContract, BetsMemoryContract, DataFeedContract, defaultMulticall, GameContract, PartnerContract, PredictBetContract, TokenContract} from "@betfinio/abi";
 import {getContractEvents} from "viem/actions";
 import {ZeroAddress} from "@betfinio/hooks/dist";
-import {defaultResult, Game, PlaceBetParams, PredictBet, Result, Round, RoundPool} from "../types";
+import {CalculateRoundParams, defaultResult, Game, PlaceBetParams, PredictBet, Result, Round, RoundPool} from "../types";
 import {Address, encodeAbiParameters, parseAbiParameters} from "viem";
 import {Options} from "betfinio_app/lib/types";
 import {games} from "@/src/lib/predict";
@@ -240,6 +240,8 @@ export const fetchYesterdayPrice = async (options: Options, params: { pair: stri
 
 
 export const fetchRoundBets = async (options: Options, params: { game: Address, round: number }) => {
+	console.log('fetching round bets')
+
 	if (!options.config) throw Error("Config is required!")
 	const {game, round} = params
 	const {config} = options
@@ -308,10 +310,19 @@ export async function fetchPredictBet(options: Options, params: { address: Addre
 	} as PredictBet
 }
 
-export async function calculateBets(options: Options, params: { game: Game, round: number }): Promise<`0x${string}`> {
-	if (!options.config) throw Error("Config is required!")
-	if (!options.supabase) throw Error("Supabase is required!")
-	const {game, round} = params
+export const placeBet = async ({amount, side, game}: PlaceBetParams, options: Options): Promise<WriteContractReturnType> => {
+	if (!options.config) throw new Error('Config are required!')
+	const data = encodeAbiParameters(parseAbiParameters('uint256 _amount, bool _side, address _game'), [amount, side, game])
+	return await writeContract(options.config, {
+		abi: PartnerContract.abi,
+		address: PARTNER_ADDRESS,
+		functionName: 'placeBet',
+		args: [PREDICT_ADDRESS, amount, data]
+	})
+}
+export const calculateRound = async ({round, game}: CalculateRoundParams, options: Options): Promise<WriteContractReturnType> => {
+	if (!options.config) throw new Error('Config are required!')
+	if (!options.supabase) throw new Error('Supabase is required!')
 	const {config} = options
 	const start = round * game.interval
 	const end = (round + game.duration) * game.interval
@@ -330,21 +341,9 @@ export async function calculateBets(options: Options, params: { game: Game, roun
 		blockNumber: endBlock
 	}) as bigint[]
 	return await writeContract(config, {
-		abi: GameContract.abi,
+		...GameContract,
 		address: game.address,
 		functionName: 'calculateBets',
 		args: [round, priceStart[0], priceEnd[0]]
-	})
-}
-
-
-export const placeBet = async ({amount, side, game}: PlaceBetParams, options: Options): Promise<WriteContractReturnType> => {
-	if (!options.config) throw new Error('Config are required!')
-	const data = encodeAbiParameters(parseAbiParameters('uint256 _amount, bool _side, address _game'), [amount, side, game])
-	return await writeContract(options.config, {
-		abi: PartnerContract.abi,
-		address: PARTNER_ADDRESS,
-		functionName: 'placeBet',
-		args: [PREDICT_ADDRESS, amount, data]
 	})
 }
