@@ -241,7 +241,7 @@ export const fetchYesterdayPrice = async (options: Options, params: { pair: stri
 
 export const fetchRoundBets = async (options: Options, params: { game: Address, round: number }) => {
 	console.log('fetching round bets')
-
+	
 	if (!options.config) throw Error("Config is required!")
 	const {game, round} = params
 	const {config} = options

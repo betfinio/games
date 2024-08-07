@@ -150,7 +150,7 @@ const PlaceBet: FC<{ game: Game }> = ({game}) => {
 			                      requiredAllowance={BigInt(amount) * 10n ** 18n}
 			                      allowance={allowance}
 			                      tx={data}
-			                      scan={import.meta.env.VITE_ETHSCAN}/>}
+			                      scan={ETHSCAN}/>}
 		
 		</div>
 	</div>

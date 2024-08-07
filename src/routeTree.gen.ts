@@ -12,6 +12,7 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
+import { Route as RouletteIndexImport } from './routes/roulette/index'
 import { Route as PredictIndexImport } from './routes/predict/index'
 import { Route as PredictPairImport } from './routes/predict/$pair'
 
@@ -19,6 +20,11 @@ import { Route as PredictPairImport } from './routes/predict/$pair'
 
 const IndexRoute = IndexImport.update({
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const RouletteIndexRoute = RouletteIndexImport.update({
+  path: '/roulette/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -57,6 +63,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PredictIndexImport
       parentRoute: typeof rootRoute
     }
+    '/roulette/': {
+      id: '/roulette/'
+      path: '/roulette'
+      fullPath: '/roulette'
+      preLoaderRoute: typeof RouletteIndexImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -66,6 +79,7 @@ export const routeTree = rootRoute.addChildren({
   IndexRoute,
   PredictPairRoute,
   PredictIndexRoute,
+  RouletteIndexRoute,
 })
 
 /* prettier-ignore-end */
@@ -78,7 +92,8 @@ export const routeTree = rootRoute.addChildren({
       "children": [
         "/",
         "/predict/$pair",
-        "/predict/"
+        "/predict/",
+        "/roulette/"
       ]
     },
     "/": {
@@ -89,6 +104,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/predict/": {
       "filePath": "predict/index.tsx"
+    },
+    "/roulette/": {
+      "filePath": "roulette/index.tsx"
     }
   }
 }

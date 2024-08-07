@@ -8,10 +8,10 @@ import {Predict} from "@betfinio/ui/dist/icons";
 import {PredictBet} from "@/src/lib/predict/types.ts";
 import {useTranslation} from "react-i18next";
 import {BetValue} from "betfinio_app/BetValue";
+import {ETHSCAN} from "@/src/global.ts";
 
 // todo rewrite tables
 
-const SCAN = import.meta.env.PUBLIC_ETHSCAN
 
 const columnHelper = createColumnHelper<PredictBet>()
 
@@ -22,12 +22,12 @@ const BetsTable: FC<{ isFetching: boolean, bets: PredictBet[], isFinished: boole
 	const columns = [
 		columnHelper.accessor("address", {
 			header: '',
-			cell: (props) => <a href={SCAN + `/address/${props.getValue()}#internaltx`}
+			cell: (props) => <a href={ETHSCAN + `/address/${props.getValue()}#internaltx`}
 			                    target={"_blank"} className={'text-blue-700'}>{<Predict className={'w-4 h-4 md:w-6 md:h-6'}/>}</a>
 		}),
 		columnHelper.accessor("player", {
 			header: t('table.player')!,
-			cell: (props) => <a href={SCAN + `/address/${props.getValue()}`} target={'_blank'}
+			cell: (props) => <a href={ETHSCAN + `/address/${props.getValue()}`} target={'_blank'}
 			                    className={'text-blue-600 flex text-xs md:text-sm flex-row items-start gap-1 cursor-pointer whitespace-nowrap'}>{truncateEthAddress(props.getValue())}<ArrowTopRightOnSquareIcon
 				className={'w-[14px] h-[16px]'}/></a>
 		}),
