@@ -2,9 +2,7 @@ import {defineConfig} from '@rsbuild/core';
 import {pluginReact} from '@rsbuild/plugin-react';
 import {pluginSvgr} from '@rsbuild/plugin-svgr';
 import {ModuleFederationPlugin} from "@module-federation/enhanced/rspack";
-// @ts-ignore
 import {TanStackRouterRspack} from '@tanstack/router-plugin/rspack'
-// @ts-ignore
 import {dependencies} from "./package.json";
 
 const getApp = () => {
