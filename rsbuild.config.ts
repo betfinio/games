@@ -21,13 +21,13 @@ const getApp = () => {
 function getOutput() {
 	switch (process.env.PUBLIC_ENVIRONMENT) {
 		case 'development':
-			return 'https://betfin-app-dev.web.app';
+			return 'https://betfin-games-dev.web.app';
 		case 'production':
-			return 'https://app.betfin.io';
+			return 'https://games.betfin.io';
 		case 'production-ua':
-			return 'https://app.betfin.gg';
+			return 'https://games.betfin.gg';
 		default:
-			return 'http://localhost:5555';
+			return 'http://localhost:4000';
 	}
 }
 
