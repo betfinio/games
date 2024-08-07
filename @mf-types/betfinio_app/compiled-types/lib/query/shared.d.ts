@@ -1,0 +1,76 @@
+import { BetInterface } from "@betfinio/hooks/dist/types/game";
+import { Stake } from "@/lib/types";
+import { Address } from "viem";
+declare const useBets: (count: number) => import("@tanstack/react-query").UseQueryResult<BetInterface[], Error>;
+declare const useAllStakes: (count: number) => import("@tanstack/react-query").UseQueryResult<Stake[], Error>;
+declare const usePlayerBets: (count: number) => import("@tanstack/react-query").UseQueryResult<BetInterface[], Error>;
+declare const useOpenProfile: () => {
+    open: (address: Address) => void;
+    close: () => void;
+    data: {
+        open: boolean;
+        address: `0x${string}` | undefined;
+    };
+    error: Error;
+    isError: true;
+    isPending: false;
+    isLoading: false;
+    isLoadingError: false;
+    isRefetchError: true;
+    isSuccess: false;
+    status: "error";
+    dataUpdatedAt: number;
+    errorUpdatedAt: number;
+    failureCount: number;
+    failureReason: Error | null;
+    errorUpdateCount: number;
+    isFetched: boolean;
+    isFetchedAfterMount: boolean;
+    isFetching: boolean;
+    isInitialLoading: boolean;
+    isPaused: boolean;
+    isPlaceholderData: boolean;
+    isRefetching: boolean;
+    isStale: boolean;
+    refetch: (options?: import("@tanstack/react-query").RefetchOptions) => Promise<import("@tanstack/react-query").QueryObserverResult<{
+        open: boolean;
+        address: `0x${string}` | undefined;
+    }, Error>>;
+    fetchStatus: import("@tanstack/react-query").FetchStatus;
+} | {
+    open: (address: Address) => void;
+    close: () => void;
+    data: {
+        open: boolean;
+        address: `0x${string}` | undefined;
+    };
+    error: null;
+    isError: false;
+    isPending: false;
+    isLoading: false;
+    isLoadingError: false;
+    isRefetchError: false;
+    isSuccess: true;
+    status: "success";
+    dataUpdatedAt: number;
+    errorUpdatedAt: number;
+    failureCount: number;
+    failureReason: Error | null;
+    errorUpdateCount: number;
+    isFetched: boolean;
+    isFetchedAfterMount: boolean;
+    isFetching: boolean;
+    isInitialLoading: boolean;
+    isPaused: boolean;
+    isPlaceholderData: boolean;
+    isRefetching: boolean;
+    isStale: boolean;
+    refetch: (options?: import("@tanstack/react-query").RefetchOptions) => Promise<import("@tanstack/react-query").QueryObserverResult<{
+        open: boolean;
+        address: `0x${string}` | undefined;
+    }, Error>>;
+    fetchStatus: import("@tanstack/react-query").FetchStatus;
+};
+declare const useSide: (parent: Address, member: Address) => import("@tanstack/react-query").UseQueryResult<"right" | "left" | null, Error>;
+export declare const useRegistrationDate: (address: Address) => import("@tanstack/react-query").UseQueryResult<number, Error>;
+export { useBets, usePlayerBets, useAllStakes, useOpenProfile, useSide };

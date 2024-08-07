@@ -12,11 +12,29 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
+import { Route as RouletteIndexImport } from './routes/roulette/index'
+import { Route as PredictIndexImport } from './routes/predict/index'
+import { Route as PredictPairImport } from './routes/predict/$pair'
 
 // Create/Update Routes
 
 const IndexRoute = IndexImport.update({
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const RouletteIndexRoute = RouletteIndexImport.update({
+  path: '/roulette/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const PredictIndexRoute = PredictIndexImport.update({
+  path: '/predict/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const PredictPairRoute = PredictPairImport.update({
+  path: '/predict/$pair',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -31,12 +49,38 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/predict/$pair': {
+      id: '/predict/$pair'
+      path: '/predict/$pair'
+      fullPath: '/predict/$pair'
+      preLoaderRoute: typeof PredictPairImport
+      parentRoute: typeof rootRoute
+    }
+    '/predict/': {
+      id: '/predict/'
+      path: '/predict'
+      fullPath: '/predict'
+      preLoaderRoute: typeof PredictIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/roulette/': {
+      id: '/roulette/'
+      path: '/roulette'
+      fullPath: '/roulette'
+      preLoaderRoute: typeof RouletteIndexImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
 // Create and export the route tree
 
-export const routeTree = rootRoute.addChildren({ IndexRoute })
+export const routeTree = rootRoute.addChildren({
+  IndexRoute,
+  PredictPairRoute,
+  PredictIndexRoute,
+  RouletteIndexRoute,
+})
 
 /* prettier-ignore-end */
 
@@ -46,11 +90,23 @@ export const routeTree = rootRoute.addChildren({ IndexRoute })
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/"
+        "/",
+        "/predict/$pair",
+        "/predict/",
+        "/roulette/"
       ]
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/predict/$pair": {
+      "filePath": "predict/$pair.tsx"
+    },
+    "/predict/": {
+      "filePath": "predict/index.tsx"
+    },
+    "/roulette/": {
+      "filePath": "roulette/index.tsx"
     }
   }
 }

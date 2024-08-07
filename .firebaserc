@@ -1,0 +1,20 @@
+{
+  "projects": {
+    "default": "betfin-dev"
+  },
+  "targets": {
+    "betfin-dev": {
+      "hosting": {
+        "games": [
+          "betfin-staking"
+        ],
+        "games-dev": [
+          "betfin-games-dev"
+        ],
+        "games-ua": [
+          "betfin-games-ua"
+        ]
+      }
+    }
+  }
+}
