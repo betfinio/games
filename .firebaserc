@@ -6,7 +6,7 @@
     "betfin-dev": {
       "hosting": {
         "games": [
-          "betfin-staking"
+          "betfin-games"
         ],
         "games-dev": [
           "betfin-games-dev"
