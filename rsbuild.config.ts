@@ -1,21 +1,11 @@
 import {defineConfig} from '@rsbuild/core';
 import {pluginReact} from '@rsbuild/plugin-react';
+import {pluginSvgr} from '@rsbuild/plugin-svgr';
 import {ModuleFederationPlugin} from "@module-federation/enhanced/rspack";
 // @ts-ignore
 import {TanStackRouterRspack} from '@tanstack/router-plugin/rspack'
 // @ts-ignore
 import {dependencies} from "./package.json";
-
-const getStaking = () => {
-	switch (process.env.PUBLIC_ENVIRONMENT) {
-		case 'development':
-			return 'betfinio_staking@https://betfin-staking-dev.web.app/mf-manifest.json'
-		case 'production':
-			return 'betfinio_staking@https://staking.betfin.io/mf-manifest.json'
-		default:
-			return 'betfinio_staking@http://localhost:3000/mf-manifest.json'
-	}
-}
 
 const getApp = () => {
 	switch (process.env.PUBLIC_ENVIRONMENT) {
@@ -28,31 +18,43 @@ const getApp = () => {
 	}
 }
 
+function getOutput() {
+	switch (process.env.PUBLIC_ENVIRONMENT) {
+		case 'development':
+			return 'https://betfin-app-dev.web.app';
+		case 'production':
+			return 'https://app.betfin.io';
+		case 'production-ua':
+			return 'https://app.betfin.gg';
+		default:
+			return 'http://localhost:5555';
+	}
+}
+
 export default defineConfig({
 	server: {
-		port: 7777,
+		port: 4000,
 	},
 	dev: {
-		assetPrefix: 'http://localhost:7777',
+		assetPrefix: 'http://localhost:4000',
 	},
 	html: {
-		title: 'BetFin Template',
+		title: 'BetFin Games',
 		favicon: './src/assets/favicon.svg',
 	},
 	output: {
-		assetPrefix: process.env.PUBLIC_ENVIRONMENT === 'production' ? 'https://betfin-template.web.app' : 'https://betfin-template-dev.web.app'
+		assetPrefix: getOutput(),
 	},
-	plugins: [pluginReact()],
+	plugins: [pluginReact(), pluginSvgr()],
 	tools: {
 		rspack: (config, {appendPlugins}) => {
-			config.output!.uniqueName = 'betfinio_template';
+			config.output!.uniqueName = 'betfinio_games';
 			appendPlugins([
 				TanStackRouterRspack(),
 				new ModuleFederationPlugin({
-					name: 'betfinio_template',
+					name: 'betfinio_games',
 					remotes: {
 						betfinio_app: getApp(),
-						betfinio_staking: getStaking()
 					},
 					shared: {
 						'react': {
@@ -71,17 +73,9 @@ export default defineConfig({
 							singleton: true,
 							requiredVersion: dependencies['@tanstack/react-query']
 						},
-						"@tanstack/react-table": {
-							singleton: true,
-							requiredVersion: dependencies['@tanstack/react-table']
-						},
 						"lucide-react": {
 							singleton: true,
 							requiredVersion: dependencies['lucide-react']
-						},
-						"@supabase/supabase-js": {
-							singleton: true,
-							requiredVersion: dependencies['@supabase/supabase-js']
 						},
 						"i18next": {
 							singleton: true,
@@ -103,10 +97,6 @@ export default defineConfig({
 							singleton: true,
 							requiredVersion: dependencies['wagmi']
 						},
-						"@web3modal/wagmi": {
-							singleton: true,
-							requiredVersion: dependencies['@web3modal/wagmi']
-						}
 					},
 				}),
 			]);

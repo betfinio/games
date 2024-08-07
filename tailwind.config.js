@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
 	darkMode: ["class"],
-	important: '.template',
+	important: '.games',
 	content: ['./pages/**/*.{ts,tsx}', './components/**/*.{ts,tsx}', './app/**/*.{ts,tsx}', './src/**/*.{ts,tsx}', './@mf-types/**/*.*',],
 	prefix: "",
 	theme: {
@@ -13,6 +13,9 @@ module.exports = {
 			},
 		},
 		extend: {
+			backgroundImage: {
+				"roulette-wheel": "url('/src/assets/roulette/roulette.svg')",
+			},
 			colors: {
 				border: "hsl(var(--border))",
 				input: "hsl(var(--input))",
@@ -25,6 +28,17 @@ module.exports = {
 				secondary: '#201C40',
 				secondaryLight: '#292546',
 				secondaryLighter: '#201C4080',
+				"purple": {
+					"box": '#6A6A9F',
+					"table": '#201C40'
+				},
+				"red": {
+					600: "#B80042",
+					"roulette": "#dd375f"
+				},
+				"gray": {
+					800: "#1E292E",
+				},
 				destructive: {
 					DEFAULT: "hsl(var(--destructive))",
 					foreground: "hsl(var(--destructive-foreground))",
@@ -68,6 +82,29 @@ module.exports = {
 				"accordion-down": "accordion-down 0.2s ease-out",
 				"accordion-up": "accordion-up 0.2s ease-out",
 			},
+			gridTemplateColumns: {
+				'14': 'repeat(14, minmax(0, 1fr))',
+				'29': 'repeat(29, minmax(0, 1fr))',
+			},
+			gridTemplateRows: {
+				'14': 'repeat(14, minmax(0, 1fr))',
+				'29': 'repeat(29, minmax(0, 1fr))',
+			},
+			gridRowStart: {
+				'8': '8',
+				'10': '10',
+				'12': '12',
+				'13': '13',
+				'14': '14'
+			},
+			gridColumnStart: {
+				'8': '8',
+				'10': '10',
+				'12': '12',
+			},
+			gridRow: {
+				'span-8': 'span 8 / span 8',
+			}
 		},
 	},
 	plugins: [require("tailwindcss-animate")],
