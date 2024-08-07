@@ -18,6 +18,19 @@ const getApp = () => {
 	}
 }
 
+function getOutput() {
+	switch (process.env.PUBLIC_ENVIRONMENT) {
+		case 'development':
+			return 'https://betfin-app-dev.web.app';
+		case 'production':
+			return 'https://app.betfin.io';
+		case 'production-ua':
+			return 'https://app.betfin.gg';
+		default:
+			return 'http://localhost:5555';
+	}
+}
+
 export default defineConfig({
 	server: {
 		port: 4000,
@@ -30,7 +43,7 @@ export default defineConfig({
 		favicon: './src/assets/favicon.svg',
 	},
 	output: {
-		assetPrefix: process.env.PUBLIC_ENVIRONMENT === 'production' ? 'https://betfin-games.web.app' : 'https://betfin-games-dev.web.app',
+		assetPrefix: getOutput(),
 	},
 	plugins: [pluginReact(), pluginSvgr()],
 	tools: {
