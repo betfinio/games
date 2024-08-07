@@ -25,8 +25,13 @@ function RoulettePage() {
 				<Controls/>
 			</div>
 			<div className={'hidden lg:block col-span-9'}>
-				<HistoryTable />
+				<HistoryTable/>
 			</div>
+		</div>
+		<div className={'lg:hidden flex flex-row items-center justify-center text-center mt-10'}>
+			Roulette is not available on mobile yet.
+			<br/>
+			Please use a desktop device.
 		</div>
 	</div>
 }
