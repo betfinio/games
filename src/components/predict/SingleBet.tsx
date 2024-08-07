@@ -14,8 +14,7 @@ import {useTranslation} from "react-i18next";
 import {games} from "@/src/lib/predict";
 import {useCurrentRound, useLatestPrice, usePrice} from "@/src/lib/predict/query";
 import btcSvg from "@/src/assets/predict/btc.svg";
-
-const ETHSCAN = import.meta.env.PUBLIC_ETHSCAN
+import {ETHSCAN} from "@/src/global.ts";
 
 const SingleBet: FC<PredictBet & { loading: boolean }> = (bet) => {
 	const amount = valueToNumber(bet.amount)
