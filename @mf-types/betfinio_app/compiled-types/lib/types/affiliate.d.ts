@@ -69,3 +69,4 @@ export interface Claim {
     amount: bigint;
     transaction: Address;
 }
+export declare const defaultTreeMember: TreeMember;

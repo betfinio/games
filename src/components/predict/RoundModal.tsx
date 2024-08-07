@@ -9,19 +9,20 @@ import {Bank, MoneyHand, People} from "@betfinio/ui/dist/icons";
 import millify from "millify";
 import {Game, PredictBet, RoundStatus} from "@/src/lib/predict/types";
 import {useTranslation} from "react-i18next";
-import {useRoundBets, useRoundInfo} from "@/src/lib/predict/query";
+import {useCalculate, useRoundBets, useRoundInfo} from "@/src/lib/predict/query";
 import {useRouter} from "@tanstack/react-router";
 import {X} from "lucide-react";
 import {BetValue} from "betfinio_app/BetValue";
 import BonusChart from "@/src/components/predict/BonusChart.tsx";
 import BetsTable from "@/src/components/predict/BetsTable.tsx";
-import {DialogContent} from "betfinio_app/dialog";
+import {DialogContent, DialogTitle} from "betfinio_app/dialog";
 
 const RoundModal: FC<{
 	round: number,
 	game: Game,
 }> = ({round, game}) => {
 	const {t} = useTranslation('', {keyPrefix: 'games.predict.roundModal'})
+	const {mutate: calculate}  = useCalculate()
 	const start = DateTime.fromMillis(round * (game.interval) * 1000);
 	const end = DateTime.fromMillis((round + game.duration) * (game.interval) * 1000);
 	const isFinished = DateTime.fromMillis(Date.now()).diff(end).milliseconds > 0;
@@ -54,7 +55,7 @@ const RoundModal: FC<{
 	)
 	
 	const handleCalculate = async () => {
-		alert('calculate')
+		calculate({game, round})
 	}
 	
 	const status: RoundStatus = useMemo(() => {
@@ -77,7 +78,8 @@ const RoundModal: FC<{
 	}, [isRoundFetched, roundData]);
 	
 	if (roundData === null || (roundData.pool.long + roundData.pool.short) === 0n) return null;
-	return <DialogContent className={'games text-white'}>
+	return <DialogContent className={'games text-white'} aria-describedby={undefined}>
+		<DialogTitle className={'hidden'}/>
 		<motion.div onClick={(e) => e.stopPropagation()}
 		            className={'border relative z-[10] mx-auto border-gray-800 bg-primary w-full max-w-[1000px]  max-h-[800px] min-h-[300px] rounded-lg flex flex-col p-2 md:p-8 pt-5'}>
 			<X
