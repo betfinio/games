@@ -6,10 +6,11 @@ import {useBalance} from "betfinio_app/lib/query/token";
 import {DYNAMIC_STAKING} from "@/src/global.ts";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "betfinio_app/tooltip";
 import {BetValue} from "betfinio_app/BetValue";
-import {AlertCircle, CircleHelp} from "lucide-react";
+import {AlertCircle, CircleAlert, CircleHelp} from "lucide-react";
 import {DialogContent, DialogTrigger, Dialog} from "betfinio_app/dialog";
 import {useLocalBets, usePotentialWin} from "@/src/lib/roulette/query";
 import Paytable from "@/src/components/roulette/Paytable.tsx";
+import {Button} from "betfinio_app/button";
 
 const ROULETTE_TUTORIAL = 'https://betfin.gitbook.io/betfin-public/v/games-manual/games-guide/roulette-single-player'
 
@@ -22,7 +23,9 @@ const Header: FC = () => {
 	const {data: bets = []} = useLocalBets()
 	const {data: potentialWin = 1928234n * 10n ** 18n, isLoading} = usePotentialWin()
 	const total = bets.reduce((acc, bet) => acc + bet.amount, 0);
-	
+	const handleReport = () => {
+		document.getElementById('live-chat-ai-button')?.click();
+	}
 	return <TooltipProvider>
 		<div className={cx('rounded-lg border border-gray-800 bg-primaryLight p-3 flex-row justify-between items-center h-full hidden lg:flex')}>
 			<div className={cx('flex flex-row grow items-center justify-start gap-4 w-1/2 h-full')}>
@@ -97,6 +100,18 @@ const Header: FC = () => {
 					<AlertCircle className={'w-6 h-6'}/>
 					<span className={'hidden sm:inline text-xs'}>How to Play</span>
 				</a>
+				<Button
+					onClick={handleReport}
+					variant={'link'}
+					className={
+						'text-white md:hover:text-yellow-400 md:text-yellow-400 flex flex-col items-center justify-center p-0'
+					}
+				>
+					<CircleAlert className={'w-6'}/>
+					<span className={'hidden lg:inline text-xs whitespace-nowrap'}>
+            Report
+          </span>
+				</Button>
 			</div>
 		</div>
 	</TooltipProvider>
