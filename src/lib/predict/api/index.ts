@@ -1,14 +1,5 @@
 import { games } from '@/src/lib/predict';
-import {
-	BetInterfaceContract,
-	BetsMemoryContract,
-	DataFeedContract,
-	GameContract,
-	PartnerContract,
-	PredictBetContract,
-	TokenContract,
-	defaultMulticall,
-} from '@betfinio/abi';
+import { BetInterfaceContract, BetsMemoryContract, DataFeedContract, GameContract, PartnerContract, PredictBetContract, defaultMulticall } from '@betfinio/abi';
 import { ZeroAddress } from '@betfinio/hooks/dist';
 import { type WriteContractReturnType, getBlock, multicall, readContract, writeContract } from '@wagmi/core';
 import type { Options } from 'betfinio_app/lib/types';
@@ -96,6 +87,8 @@ export async function fetchPool(options: Options, params: { game: Address; round
 	return {
 		long: betsData[0].result as bigint,
 		short: betsData[1].result as bigint,
+		longCount: 0,
+		shortCount: 0,
 	};
 }
 

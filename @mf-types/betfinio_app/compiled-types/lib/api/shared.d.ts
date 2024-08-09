@@ -1,0 +1,46 @@
+import { Address } from "viem";
+import { Options } from "@/lib/types";
+import { BetInterface } from "@betfinio/hooks/dist/types/game";
+import { SupabaseClient } from "@supabase/supabase-js";
+import { Config } from "wagmi";
+export declare const fetchLastBets: (count: number, address: Address, options: Options) => Promise<{
+    hash: `0x${string}`;
+    address: string;
+    player: string;
+    game: string;
+    amount: bigint;
+    result: bigint;
+    status: bigint;
+    created: bigint;
+    username?: string;
+    customUsername?: string;
+}[]>;
+export declare function fetchBetInterface(address: Address, member: Address, options: Options): Promise<BetInterface>;
+export declare const fetchPlayerBets: (count: number, player: Address, options: Options) => Promise<{
+    hash: `0x${string}`;
+    address: string;
+    player: string;
+    game: string;
+    amount: bigint;
+    result: bigint;
+    status: bigint;
+    created: bigint;
+    username?: string;
+    customUsername?: string;
+}[]>;
+export declare function fetchLastStakes(count: number, address: Address, options: Options): Promise<{
+    username: string;
+    customUsername: any;
+    start: number;
+    end: number;
+    staker: Address;
+    pool: Address;
+    amount: bigint;
+    ended: boolean;
+    hash?: string;
+    staking?: string;
+    reward?: bigint;
+    block?: number;
+}[]>;
+export declare const fetchMemberSide: (parent: Address, member: Address, supabase: SupabaseClient) => Promise<"left" | "right" | null>;
+export declare const fetchRegistrationDate: (address: Address, config: Config) => Promise<number>;

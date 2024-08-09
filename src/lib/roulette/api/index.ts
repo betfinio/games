@@ -91,42 +91,42 @@ export async function populateRouletteBet(bet: Address, config: Config): Promise
 		contracts: [
 			{
 				abi: RouletteBetContract.abi,
-				address: bet as `0x${string}`,
+				address: bet as Address,
 				functionName: 'getPlayer',
 			},
 			{
 				...RouletteBetContract,
-				address: bet as `0x${string}`,
+				address: bet as Address,
 				functionName: 'getResult',
 			},
 			{
 				...RouletteBetContract,
-				address: bet as `0x${string}`,
+				address: bet as Address,
 				functionName: 'getCreated',
 			},
 			{
 				...RouletteBetContract,
-				address: bet as `0x${string}`,
+				address: bet as Address,
 				functionName: 'getAmount',
 			},
 			{
 				...RouletteBetContract,
-				address: bet as `0x${string}`,
+				address: bet as Address,
 				functionName: 'getWinNumber',
 			},
 			{
 				...RouletteBetContract,
-				address: bet as `0x${string}`,
+				address: bet as Address,
 				functionName: 'getBetsCount',
 			},
 			{
 				...RouletteBetContract,
-				address: bet as `0x${string}`,
+				address: bet as Address,
 				functionName: 'getRequestId',
 			},
 			{
 				...RouletteBetContract,
-				address: bet as `0x${string}`,
+				address: bet as Address,
 				functionName: 'getStatus',
 			},
 		],
@@ -135,7 +135,7 @@ export async function populateRouletteBet(bet: Address, config: Config): Promise
 	const subBets = await multicall(config, {
 		contracts: arrayFrom(count).map((i) => ({
 			...RouletteBetContract,
-			address: bet as `0x${string}`,
+			address: bet as Address,
 			functionName: 'getBet',
 			args: [i],
 		})),
