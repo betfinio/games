@@ -18,7 +18,7 @@ import { type CalculateRoundParams, type Game, type PlaceBetParams, type Predict
 import { BetsMemoryContract, GameContract } from '@betfinio/abi';
 import { ZeroAddress } from '@betfinio/hooks';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { type WriteContractReturnType, writeContract } from '@wagmi/core';
+import type { WriteContractReturnType } from '@wagmi/core';
 import { getTransactionLink } from 'betfinio_app/helpers';
 import { useSupabase } from 'betfinio_app/supabase';
 import { toast } from 'betfinio_app/use-toast';

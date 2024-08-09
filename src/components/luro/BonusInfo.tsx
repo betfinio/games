@@ -11,7 +11,7 @@ import { useAccount } from 'wagmi';
 
 export const BonusInfo = () => {
 	const { data: round } = useVisibleRound();
-	const { data: bets } = useRoundBets(round);
+	const { data: bets = [] } = useRoundBets(round);
 	const { data: volume = 0n } = useRoundBank(round);
 	const { data: bonusShare = 0n } = useRoundBonusShare(round);
 	const { address = ZeroAddress } = useAccount();

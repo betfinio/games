@@ -10,7 +10,7 @@ import { useMemo } from 'react';
 
 export const RoundMyInfo = () => {
 	const { data: round } = useVisibleRound();
-	const { data: bets, isFetched } = useRoundBets(round);
+	const { data: bets = [], isFetched } = useRoundBets(round);
 	const { data: volume = 0n } = useRoundBank(round);
 
 	const roundInfo = useMemo(() => {
