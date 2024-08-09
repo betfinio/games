@@ -98,6 +98,7 @@ export const RoundCircle: FC<{ round: number }> = ({ round }) => {
 		const wheelMaxNumberOfSpins = 2;
 
 		const totalRotation = Math.floor(Math.random() * (wheelMaxNumberOfSpins - wheelMinNumberOfSpins + 1) + wheelMinNumberOfSpins) * 360 + result;
+
 		anime.remove('.LOTTERY');
 		anime({
 			targets: ['.LOTTERY'],
@@ -155,6 +156,8 @@ export const RoundCircle: FC<{ round: number }> = ({ round }) => {
 								enableArcLabels={false}
 								enableArcLinkLabels={false}
 								width={boxRef.current?.clientHeight || 300}
+								padAngle={0.1}
+								cornerRadius={2}
 								height={boxRef.current?.clientHeight || 300}
 								isInteractive={wheelState.state === 'standby' || wheelState.state === 'waiting'}
 								tooltip={CustomTooltip(roundData?.total.volume || 0n)}
@@ -405,7 +408,6 @@ const ProgressBar: FC<{ round: number; authors: CustomLuroBet[] }> = ({ round, a
 };
 
 const BetCircleWinner: FC<{ player: Address; amount: number; percent: number; coef: string }> = ({ player, amount, percent, coef }) => {
-	console.log(player);
 	return (
 		<motion.div
 			initial={{ opacity: 0 }}
