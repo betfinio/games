@@ -1,4 +1,4 @@
-import BonusChart from '@/src/components/predict/BonusChart.tsx';
+import { BonusChart } from '@/src/components/luro/BonusChart.tsx';
 import { useRoundBank, useRoundBets, useRoundBonusShare, useVisibleRound } from '@/src/lib/luro/query';
 import { ZeroAddress } from '@betfinio/abi';
 import { valueToNumber } from '@betfinio/hooks/dist/utils';
