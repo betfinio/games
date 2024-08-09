@@ -60,18 +60,12 @@ export const mapBetsToRoundTable = (bets: LuroBet[], winner: Address, volume: bi
 };
 
 export const animateNewBet = (address: Address, strength: number, queryClient: QueryClient) => {
-	queryClient.setQueryData(['lottery', 'bets', 'newBet'], { address, strength });
+	queryClient.setQueryData(['luro', 'bets', 'newBet'], { address, strength });
 };
 
 export const handleError = (e: Error, t: TFunction) => {
 	// @ts-ignore
 	toast({ variant: 'destructive', description: t(e.cause?.reason || 'unknown') });
-};
-
-export const getLotteryInterval = () => {
-	if (import.meta.env.PUBLIC_ENVIRONMENT.includes('prod')) {
-		return 60 * 60 * 24;
-	}
 };
 
 export const getCurrentRound = () => {
@@ -82,8 +76,8 @@ export const getCurrentRound = () => {
 };
 
 export const jumpToCurrentRound = (queryClient: QueryClient) => {
-	queryClient.invalidateQueries({ queryKey: ['lottery', 'visibleRound'] });
-	queryClient.setQueryData(['lottery', 'state'], { state: 'standby' });
+	queryClient.invalidateQueries({ queryKey: ['luro', 'visibleRound'] });
+	queryClient.setQueryData(['luro', 'state'], { state: 'standby' });
 };
 
 export function hexToRgbA(hex: string) {
