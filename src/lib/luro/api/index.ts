@@ -138,14 +138,15 @@ export const getCurrentRoundInfo = (iBets: LuroBet[]): ICurrentRoundInfo => {
 
 export const fetchRounds = async (player: Address, onlyPlayers: boolean, config: Config): Promise<Round[]> => {
 	console.log('fetching rounds', LURO);
-	const activeRounds = await getContractEvents(config.getClient(), {
-		abi: LuckyRoundContract.abi,
-		address: LURO,
-		fromBlock: 10220152n,
-		eventName: 'RoundStart',
-	});
-	console.log('rounds', activeRounds);
-	return (await Promise.all(activeRounds.reverse().map((e) => fetchRound(e.args.round, player, config)))).filter((e) => !onlyPlayers || e.player.bets > 0n);
+	return [];
+	// const activeRounds = await getContractEvents(config.getClient(), {
+	// 	abi: LuckyRoundContract.abi,
+	// 	address: LURO,
+	// 	// fromBlock: 0n,
+	// 	eventName: 'RoundStart',
+	// });
+	// console.log('rounds', activeRounds);
+	// return (await Promise.all(activeRounds.reverse().map((e) => fetchRound(e.args.round, player, config)))).filter((e) => !onlyPlayers || e.player.bets > 0n);
 };
 
 export const fetchRound = async (round: number, player: Address, config: Config): Promise<Round> => {

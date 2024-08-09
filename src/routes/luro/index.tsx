@@ -33,7 +33,7 @@ function Luro() {
 						<CurrentRound />
 						<div className={'text-center my-2 justify-self-end'}>
 							<Link to={getStakingUrl('conservative')} className={'text-sm text-[#6A6F84]'}>
-								<Trans i18nKey={'lottery.feeStaking'} components={{ b: <b className={'text-yellow-400 font-medium'} /> }} />
+								<Trans i18nKey={'games.luro.feeStaking'} components={{ b: <b className={'text-yellow-400 font-medium'} /> }} />
 							</Link>
 						</div>
 						<BonusClaimBlock />
