@@ -99,8 +99,6 @@ export const RoundCircle: FC<{ round: number }> = ({ round }) => {
 
 		const totalRotation = Math.floor(Math.random() * (wheelMaxNumberOfSpins - wheelMinNumberOfSpins + 1) + wheelMinNumberOfSpins) * 360 + result;
 
-		console.log('result!!!', result, totalRotation);
-
 		anime.remove('.LOTTERY');
 		anime({
 			targets: ['.LOTTERY'],
@@ -410,7 +408,6 @@ const ProgressBar: FC<{ round: number; authors: CustomLuroBet[] }> = ({ round, a
 };
 
 const BetCircleWinner: FC<{ player: Address; amount: number; percent: number; coef: string }> = ({ player, amount, percent, coef }) => {
-	console.log(player);
 	return (
 		<motion.div
 			initial={{ opacity: 0 }}
