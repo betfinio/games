@@ -5,7 +5,7 @@ import { ZeroAddress } from '@betfinio/hooks';
 import { valueToNumber } from '@betfinio/hooks/dist/utils';
 import { useQueryClient } from '@tanstack/react-query';
 import { BetValue } from 'betfinio_app/BetValue';
-import { useAllowance } from 'betfinio_app/lib/query/token';
+import { useAllowance, useBalance } from 'betfinio_app/lib/query/token';
 import { toast } from 'betfinio_app/use-toast';
 import cx from 'clsx';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -13,16 +13,15 @@ import { Coins, Loader } from 'lucide-react';
 import { type FC, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NumericFormat } from 'react-number-format';
-import type { Address } from 'viem';
-import { useAccount, useBalance } from 'wagmi';
+import { useAccount } from 'wagmi';
 
 export const PlaceBet = () => {
 	const { data: round } = useVisibleRound();
 
-	const { state: lotteryState } = useLuroState();
+	const { state: luroState } = useLuroState();
 
 	const renderScreen = () => {
-		switch (lotteryState.data.state) {
+		switch (luroState.data.state) {
 			case 'waiting':
 				return <WaitingScreen round={round} />;
 			case 'spinning':
@@ -41,7 +40,7 @@ export const PlaceBet = () => {
 const StandByScreen: FC<{ round: number }> = ({ round }) => {
 	const { t } = useTranslation('', { keyPrefix: 'lottery.placeBet' });
 	const [amount, setAmount] = useState<string>('1000');
-	const { address = ZeroAddress as Address } = useAccount();
+	const { address = ZeroAddress } = useAccount();
 	const { data: allowance = 0n, isFetching: loading } = useAllowance(address);
 	const { data: balance = 0n } = useBalance(address);
 	const { mutate: placeBet, isPending } = usePlaceBet(address);
@@ -298,7 +297,7 @@ const RoundResult: FC<{ round: number }> = ({ round }) => {
 				exit={{ opacity: 0 }}
 				transition={{ duration: 1, delay: 2 }}
 				onClick={() => {
-					jumpToCurrentRound();
+					jumpToCurrentRound(queryClient);
 				}}
 				className={'w-3/4 bg-yellow-400 py-3 text-black rounded-[10px]'}
 			>
