@@ -84,7 +84,7 @@ const columns = [
 		header: '',
 		id: 'actions',
 		cell: (props) => (
-			<Link to={`/lottery?round=${props.row.original.round}`} className={'w-full'}>
+			<Link to={`/luro?round=${props.row.original.round}`} className={'w-full'}>
 				<ArrowsPointingOutIcon className={'w-4 h-4 text-white'} />
 			</Link>
 		),
