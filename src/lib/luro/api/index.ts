@@ -98,10 +98,10 @@ export const fetchRoundBets = async (roundId: number, config: Config) => {
 		multicallAddress: defaultMulticall,
 		contracts: prepared,
 	});
-	return await Promise.all(result.map((e) => e.result as Address).map((bet) => fetchLotteryBet(bet, config)));
+	return await Promise.all(result.map((e) => e.result as Address).map((bet) => fetchLuroBet(bet, config)));
 };
 
-export const fetchLotteryBet = async (address: Address, config: Config): Promise<LuroBet> => {
+export const fetchLuroBet = async (address: Address, config: Config): Promise<LuroBet> => {
 	const betInfo = (await readContract(config, {
 		...LotteryBetContract,
 		address: address as Address,
@@ -226,7 +226,7 @@ export const fetchBetsCount = async (config: Config): Promise<number> => {
 };
 
 export const fetchTotalVolume = async (config: Config): Promise<bigint> => {
-	console.log('fetching total volume of lottery');
+	console.log('fetching total volume of luro');
 	return (await readContract(config, {
 		abi: BetsMemoryContract.abi,
 		address: BETS_MEMORY,
