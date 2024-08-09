@@ -17,8 +17,11 @@ import { LuckyRoundContract } from '@betfinio/abi';
 import { ZeroAddress } from '@betfinio/hooks';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { type WriteContractReturnType, readContract } from '@wagmi/core';
+import { getTransactionLink } from 'betfinio_app/helpers';
+import { toast } from 'betfinio_app/use-toast';
 import { useTranslation } from 'react-i18next';
 import type { Address, WriteContractErrorType } from 'viem';
+import { waitForTransactionReceipt } from 'viem/actions';
 import { useAccount, useConfig, useWatchContractEvent } from 'wagmi';
 
 export const useObserveBet = () => {
@@ -47,6 +50,15 @@ export const usePlaceBet = (address: Address) => {
 		},
 		onMutate: () => console.log('placeBet'),
 		onSuccess: async (data) => {
+			console.log(data);
+			const { update } = toast({
+				title: 'Placing a bet',
+				description: 'Transaction is pending',
+				variant: 'loading',
+				duration: 10000,
+			});
+			await waitForTransactionReceipt(config.getClient(), { hash: data });
+			update({ variant: 'default', description: 'Transaction is confirmed', title: 'Bet placed', action: getTransactionLink(data), duration: 5000 });
 			await queryClient.invalidateQueries({ queryKey: ['luro', 'bets', 'round'] });
 		},
 		onSettled: () => console.log('placeBet settled'),
@@ -101,7 +113,6 @@ export const useStartRound = (round: number) => {
 export const useRoundBets = (round: number) => {
 	const config = useConfig();
 	return useQuery<LuroBet[]>({
-		initialData: [],
 		queryKey: ['luro', 'bets', 'round', round],
 		queryFn: () => fetchRoundBets(round, config),
 	});
@@ -110,16 +121,14 @@ export const useRoundBets = (round: number) => {
 export const useRoundBank = (round: number) => {
 	const config = useConfig();
 	return useQuery<bigint>({
-		initialData: 0n,
 		queryKey: ['luro', 'bank', 'round', round],
-		queryFn: async () => {
-			return (await readContract(config, {
+		queryFn: async () =>
+			(await readContract(config, {
 				abi: LuckyRoundContract.abi,
 				address: LURO,
 				functionName: 'roundBank',
 				args: [BigInt(round)],
-			})) as bigint;
-		},
+			})) as bigint,
 	});
 };
 

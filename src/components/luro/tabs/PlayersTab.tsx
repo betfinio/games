@@ -15,7 +15,9 @@ import { useAccount } from 'wagmi';
 
 export const PlayersTab = () => {
 	const { data: round } = useVisibleRound();
-	const { data: bets } = useRoundBets(round);
+	console.log(round);
+	const { data: bets = [] } = useRoundBets(round);
+
 	const totalVolume = useMemo(() => {
 		return bets.reduce((acc, val) => acc + val.amount, 0n);
 	}, [bets]);

@@ -38,14 +38,13 @@ export const PlaceBet = () => {
 };
 
 const StandByScreen: FC<{ round: number }> = ({ round }) => {
-	const { t } = useTranslation('', { keyPrefix: 'lottery.placeBet' });
+	const { t } = useTranslation('', { keyPrefix: 'games.luro.placeBet' });
 	const [amount, setAmount] = useState<string>('1000');
 	const { address = ZeroAddress } = useAccount();
 	const { data: allowance = 0n, isFetching: loading } = useAllowance(address);
 	const { data: balance = 0n } = useBalance(address);
 	const { mutate: placeBet, isPending } = usePlaceBet(address);
-	const { data: bank = 0n } = useRoundBank(round);
-	const { data: bets } = useRoundBets(round);
+	const { data: bets = [] } = useRoundBets(round);
 
 	const handleBetChange = (value: string) => {
 		setAmount(value);
@@ -56,15 +55,15 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 			toast({
 				title: 'Please enter amount',
 				description: '',
-				variant: 'desctructive',
+				variant: 'destructive',
 			});
 			return;
 		}
-		if (Number(amount) < 1) {
+		if (Number(amount) < 1000) {
 			toast({
-				title: 'Minimum bet amount is 1 BET',
+				title: 'Minimum bet amount is 1000 BET',
 				description: '',
-				variant: 'desctructive',
+				variant: 'destructive',
 			});
 			return;
 		}
@@ -74,7 +73,7 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 			toast({
 				title: 'Invalid amount',
 				description: '',
-				variant: 'desctructive',
+				variant: 'destructive',
 			});
 			return;
 		}
@@ -89,14 +88,15 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 		return getCurrentRoundInfo(bets);
 	}, [bets]);
 
-	const expectedWinning = (valueToNumber(bank) + Number(amount) - valueToNumber(myBetVolume)) * 0.924;
+	const bank = useMemo(() => bets.reduce((acc, val) => acc + val.amount, 0n), [bets, address, round]);
+
+	console.log(bank, amount, myBetVolume);
+	const expectedWinning = (valueToNumber(bank) + Number(amount) - valueToNumber(myBetVolume)) * 0.914;
 	const coef = expectedWinning / Number(amount);
 
 	const myPercent = roundInfo.volume === 0 ? 0 : ((valueToNumber(myBetVolume) / roundInfo.volume) * 100).toFixed(2);
-	const potentialWin = roundInfo.volume * 0.924;
+	const potentialWin = roundInfo.volume * 0.914;
 	const myCoef = myBetVolume === 0n ? 0 : potentialWin / valueToNumber(myBetVolume);
-
-	console.log(loading, allowance, balance);
 
 	return (
 		<motion.div className={'flex flex-col grow justify-between duration-300'}>
@@ -143,16 +143,16 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 			<div className={cx('rounded-md bg-primaryLight p-3 relative w-full lg:w-full mt-3 border border-gray-800')}>
 				<div className={'grid grid-cols-2 gap-2 text-xs'}>
 					<div className={'bg-primary py-2 text-center flex flex-col gap-1 rounded-[8px]'}>
-						<p className={'text-[#6A6F84]'}>Your BET</p>
-						<p className={'text-[#27AE60] font-bold flex justify-center gap-1'}>
+						<div className={'text-[#6A6F84]'}>Your BET</div>
+						<div className={'text-[#27AE60] font-bold flex justify-center gap-1'}>
 							<BetValue value={valueToNumber(myBetVolume)} /> ({myPercent}%)
-						</p>
+						</div>
 					</div>
 					<div className={'bg-primary py-2 text-center flex flex-col gap-1 rounded-[8px]'}>
 						<p className={'text-[#6A6F84]'}>Potential win</p>
-						<p className={'text-[#EB5757] font-bold flex justify-center gap-1'}>
+						<div className={'text-[#EB5757] font-bold flex justify-center gap-1'}>
 							<BetValue value={potentialWin} /> {myBetVolume > 0 && `(${myCoef.toFixed(2)} x)`}
-						</p>
+						</div>
 					</div>
 				</div>
 			</div>
