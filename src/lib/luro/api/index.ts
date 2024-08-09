@@ -69,11 +69,14 @@ export const fetchRoundWinner = async (roundId: number, config: Config): Promise
 	if (logs.length === 0) return undefined;
 	const betInfo = (await readContract(config, {
 		abi: LuckyRoundBetContract.abi,
+		// @ts-ignore
 		address: logs[0].args.bet as Address,
 		functionName: 'getBetInfo',
 	})) as Address[];
 	return {
+		// @ts-ignore
 		offset: logs[0].args.winnerOffset,
+		// @ts-ignore
 		bet: logs[0].args.bet,
 		player: betInfo[0],
 		tx: logs[0].transactionHash,
@@ -138,15 +141,16 @@ export const getCurrentRoundInfo = (iBets: LuroBet[]): ICurrentRoundInfo => {
 
 export const fetchRounds = async (player: Address, onlyPlayers: boolean, config: Config): Promise<Round[]> => {
 	console.log('fetching rounds', LURO);
-	return [];
-	// const activeRounds = await getContractEvents(config.getClient(), {
-	// 	abi: LuckyRoundContract.abi,
-	// 	address: LURO,
-	// 	// fromBlock: 0n,
-	// 	eventName: 'RoundStart',
-	// });
-	// console.log('rounds', activeRounds);
-	// return (await Promise.all(activeRounds.reverse().map((e) => fetchRound(e.args.round, player, config)))).filter((e) => !onlyPlayers || e.player.bets > 0n);
+	// return [];
+	const activeRounds = await getContractEvents(config.getClient(), {
+		abi: LuckyRoundContract.abi,
+		address: LURO,
+		fromBlock: 10511041n,
+		eventName: 'RoundStart',
+	});
+	console.log('rounds', activeRounds);
+	// @ts-ignore
+	return (await Promise.all(activeRounds.reverse().map((e) => fetchRound(e.args.round, player, config)))).filter((e) => !onlyPlayers || e.player.bets > 0n);
 };
 
 export const fetchRound = async (round: number, player: Address, config: Config): Promise<Round> => {

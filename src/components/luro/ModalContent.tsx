@@ -1,3 +1,4 @@
+import { RoundCircle } from '@/src/components/luro/RoundCircle.tsx';
 import { mapBetsToRoundTable } from '@/src/lib/luro';
 import { useBonusDistribution, useDistributeBonus, useRound, useRoundBank, useRoundBets, useRoundBonusShare } from '@/src/lib/luro/query';
 import type { Round, RoundModalPlayer } from '@/src/lib/luro/types.ts';
@@ -12,8 +13,8 @@ import { XMarkIcon } from '@heroicons/react/24/outline';
 import { Link } from '@tanstack/react-router';
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { BetValue } from 'betfinio_app/BetValue';
+import { ScrollArea } from 'betfinio_app/scroll-area';
 import cx from 'clsx';
-import { motion } from 'framer-motion';
 import { DateTime } from 'luxon';
 import { type FC, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -26,7 +27,7 @@ export const ModalContent: FC<{
 	interval: number;
 	round: Round | null;
 }> = ({ onClose, interval, roundId, round }) => {
-	const { t } = useTranslation('', { keyPrefix: 'luro.roundModal' });
+	const { t } = useTranslation('', { keyPrefix: 'games.luro.roundModal' });
 
 	const start = DateTime.fromMillis(roundId * interval * 1000);
 	const end = DateTime.fromMillis((roundId + 1) * interval * 1000);
@@ -36,41 +37,45 @@ export const ModalContent: FC<{
 	const { data: bonusShare = 0n } = useRoundBonusShare(roundId);
 
 	return (
-		<motion.div
-			onClick={(e) => e.stopPropagation()}
-			className={
-				'border relative border-gray-800 bg-primaryLight mx-auto text-white h-full md:max-w-[1200px] lg:w-[1000px] min-h-[300px] rounded-lg flex flex-col p-2  lg:p-8 pt-5'
-			}
-		>
-			<XMarkIcon
-				className={'absolute top-5 right-5 w-6 h-6  border-2 border-white rounded-full cursor-pointer hover:text-[#EB5757] hover:border-[#EB5757] duration-300'}
-				onClick={() => onClose()}
-			/>
-			<div className={'flex flex-row gap-2 justify-start items-center'}>
-				<div className={'flex flex-col gap-1 w-1/3 whitespace-nowrap'}>
-					{isFinished ? (
-						<div className={'text-lg leading-6'}>
-							{t('titleFinished')} #{roundId}
-						</div>
-					) : (
-						<>
-							<div className={'text-lg'}>
-								{t('title')} #{roundId}
+		<ScrollArea className={'h-[98vh] w-[98vw] md:h-auto md:max-w-[1200px] lg:w-[1000px]'}>
+			<div
+				onClick={(e) => e.stopPropagation()}
+				className={'relative mx-auto text-white h-full w-full  min-h-[300px] rounded-lg flex flex-col p-2  lg:p-8 pt-5'}
+			>
+				<XMarkIcon
+					className={
+						'absolute top-5 right-5 w-6 h-6  border-2 border-white rounded-full cursor-pointer hover:text-[#EB5757] hover:border-[#EB5757] duration-300'
+					}
+					onClick={() => onClose()}
+				/>
+				<div className={'flex flex-row gap-2 justify-start items-center'}>
+					<div className={'flex flex-col gap-1 w-1/3 whitespace-nowrap'}>
+						{isFinished ? (
+							<div className={'text-lg leading-6'}>
+								{t('titleFinished')} #{roundId}
 							</div>
-						</>
-					)}
-					<span className={'-mt-1 text-sm'}>
-						{start.toFormat('dd.MM.yyyy / HH:mm')} - {end.toFormat('HH:mm')}
-					</span>
+						) : (
+							<>
+								<div className={'text-lg'}>
+									{t('title')} #{roundId}
+								</div>
+							</>
+						)}
+						<span className={'-mt-1 text-sm'}>
+							{start.toFormat('dd.MM.yyyy / HH:mm')} - {end.toFormat('HH:mm')}
+						</span>
+					</div>
 				</div>
-			</div>
 
-			<RoundDetails volume={volume} usersCount={Number(round?.total.bets)} />
-			<div className={'mt-4'}>{/*<LotteryRoundCircle round={roundId} />*/} todo</div>
-			<WinnerBetInfo round={roundId} />
-			<BetsTable round={roundId} volume={volume} bonusShare={bonusShare} winner={(round?.winner?.player || ZeroAddress).toLowerCase() as Address} />
-			<BonusDistribution round={roundId} />
-		</motion.div>
+				<RoundDetails volume={volume} usersCount={Number(round?.total.bets)} />
+				<div className={'mt-2 md:mt-3 lg:mt-4'}>
+					<RoundCircle round={roundId} />
+				</div>
+				<WinnerBetInfo round={roundId} />
+				<BetsTable round={roundId} volume={volume} bonusShare={bonusShare} winner={(round?.winner?.player || ZeroAddress).toLowerCase() as Address} />
+				<BonusDistribution round={roundId} />
+			</div>
+		</ScrollArea>
 	);
 };
 
@@ -103,8 +108,8 @@ const RoundDetails: FC<RoundDetailsProps> = ({ volume, usersCount }) => {
 	const staking = (volume / 1000n) * 36n;
 	const bonus = (volume / 100n) * 4n;
 	return (
-		<div className={'mt-10 grid lg:grid-cols-3 gap-5'}>
-			<div className={'border rounded-xl  border-gray-600 bg-primaryLighter min-h-[100px] flex flex-row justify-center items-center gap-2'}>
+		<div className={'mt-10 grid lg:grid-cols-3 gap-2 md:gap-3 lg:gap-4'}>
+			<div className={'border rounded-lg  border-gray-800 bg-primaryLighter min-h-[100px] flex flex-row justify-center items-center gap-2'}>
 				<People className={'w-20 h-20'} />
 				<div className={'flex flex-col'}>
 					<div className={'text-xl font-semibold'}>
@@ -117,7 +122,7 @@ const RoundDetails: FC<RoundDetailsProps> = ({ volume, usersCount }) => {
 					<div className={'mt-1 text-xs text-[#6A6F84]'}>Total bets</div>
 				</div>
 			</div>
-			<div className={'border rounded-xl border-gray-600 bg-primaryLighter min-h-[100px] flex flex-row justify-center items-center gap-2'}>
+			<div className={'border rounded-lg border-gray-800 bg-primaryLighter min-h-[100px] flex flex-row justify-center items-center gap-2'}>
 				<MoneyHand className={'w-16 h-16 text-yellow-400'} />
 				<div>
 					<div className={'mt-3 text-xl font-semibold'}>
@@ -126,7 +131,7 @@ const RoundDetails: FC<RoundDetailsProps> = ({ volume, usersCount }) => {
 					<div className={'mt-1 text-xs text-[#6A6F84]'}>Total bonus</div>
 				</div>
 			</div>
-			<div className={'border rounded-xl  border-gray-600 bg-primaryLighter min-h-[100px] flex flex-row justify-center items-center gap-2'}>
+			<div className={'border rounded-lg  border-gray-800 bg-primaryLighter min-h-[100px] flex flex-row justify-center items-center gap-2'}>
 				<Bank className={'w-20 h-20 text-yellow-400'} />
 				<div>
 					<div className={'mt-3 text-xl font-semibold'}>
@@ -269,44 +274,42 @@ const BetsTable: FC<{ round: number; className?: string; volume: bigint; bonusSh
 		getCoreRowModel: getCoreRowModel(),
 	});
 	return (
-		<div className={className}>
-			<div className={''}>
-				<table className={'w-full text-sm table border-separate border-spacing-y-[2px]'}>
-					<thead>
-						{table.getHeaderGroups().map((headerGroup) => (
-							<tr key={headerGroup.id} className={'text-gray-400 text-left'}>
-								{headerGroup.headers.map((header) => (
-									<th key={header.id} className={cx('h-[40px] pl-2', header.column.columnDef.meta?.className)}>
-										{header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-									</th>
-								))}
-							</tr>
-						))}
-					</thead>
-					<tbody className={cx({ 'blur-sm animate-pulse': !isRoundsFetched })}>
-						{table.getRowModel().rows.map((row) => (
-							<tr key={row.id} className={cx('h-[40px] p-0 cursor-pointer ', row.index % 2 ? 'bg-primaryLight' : 'bg-primaryLighter')}>
-								{row.getVisibleCells().map((cell) => {
-									return (
-										<td key={cell.id} className={cx('text-left px-2', cell.column.columnDef.meta?.className, { 'px-0': cell.column.id === 'color' })}>
-											{flexRender(cell.column.columnDef.cell, cell.getContext())}
-										</td>
-									);
-								})}
-							</tr>
-						))}
-					</tbody>
-					<tfoot>
-						{table.getFooterGroups().map((footerGroup) => (
-							<tr key={footerGroup.id}>
-								{footerGroup.headers.map((header) => (
-									<th key={header.id}>{header.isPlaceholder ? null : flexRender(header.column.columnDef.footer, header.getContext())}</th>
-								))}
-							</tr>
-						))}
-					</tfoot>
-				</table>
-			</div>
+		<div className={cx(className, 'min-h-[200px]')}>
+			<table className={'w-full text-sm table border-separate border-spacing-y-[2px]'}>
+				<thead>
+					{table.getHeaderGroups().map((headerGroup) => (
+						<tr key={headerGroup.id} className={'text-gray-400 text-left'}>
+							{headerGroup.headers.map((header) => (
+								<th key={header.id} className={cx('h-[40px] pl-2', header.column.columnDef.meta?.className)}>
+									{header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+								</th>
+							))}
+						</tr>
+					))}
+				</thead>
+				<tbody className={cx({ 'blur-sm animate-pulse': !isRoundsFetched })}>
+					{table.getRowModel().rows.map((row) => (
+						<tr key={row.id} className={cx('h-[40px] p-0 cursor-pointer ', row.index % 2 ? 'bg-primaryLight' : 'bg-primaryLighter')}>
+							{row.getVisibleCells().map((cell) => {
+								return (
+									<td key={cell.id} className={cx('text-left px-2', cell.column.columnDef.meta?.className, { 'px-0': cell.column.id === 'color' })}>
+										{flexRender(cell.column.columnDef.cell, cell.getContext())}
+									</td>
+								);
+							})}
+						</tr>
+					))}
+				</tbody>
+				<tfoot>
+					{table.getFooterGroups().map((footerGroup) => (
+						<tr key={footerGroup.id}>
+							{footerGroup.headers.map((header) => (
+								<th key={header.id}>{header.isPlaceholder ? null : flexRender(header.column.columnDef.footer, header.getContext())}</th>
+							))}
+						</tr>
+					))}
+				</tfoot>
+			</table>
 		</div>
 	);
 };

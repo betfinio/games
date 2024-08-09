@@ -1,5 +1,5 @@
 import { TabItem } from '@/src/components/luro/tabs/PlayersTab.tsx';
-import { hexToRgbA, jumpToCurrentRound, mapBetsToAuthors } from '@/src/lib/luro';
+import { getTimesByRound, hexToRgbA, jumpToCurrentRound, mapBetsToAuthors } from '@/src/lib/luro';
 import { useLuroState, useObserveBet, useRound, useRoundBank, useRoundBets, useStartRound, useVisibleRound } from '@/src/lib/luro/query';
 import type { CustomLuroBet } from '@/src/lib/luro/types.ts';
 import { addressToColor } from '@/src/lib/roulette';
@@ -174,22 +174,20 @@ export const RoundCircle: FC<{ round: number }> = ({ round }) => {
 			{currentRound !== round && (roundData?.total.volume || 0n) > 0n && (
 				<div className={cx('w-full h-full flex gap-4 flex-row items-center justify-evenly')}>
 					{roundData?.status === 0 && (
-						<>
-							<button
-								type={'button'}
-								onClick={handleSpin}
-								disabled={isPending}
-								className={'bg-yellow-400 disabled:bg-gray-500 rounded-lg px-6 py-2 text-black font-medium'}
-							>
-								{isPending ? 'Spinning...' : 'Spin the wheel'}
-							</button>
-						</>
+						<button
+							type={'button'}
+							onClick={handleSpin}
+							disabled={isPending}
+							className={'bg-yellow-400 disabled:bg-gray-500 rounded-lg px-6 py-2 text-black font-medium'}
+						>
+							{isPending ? 'Spinning...' : 'Spin the wheel'}
+						</button>
 					)}
 
 					{roundData?.status === 2 && (
 						<>
 							<div>
-								<img alt={'duck'} src={'/lucky_round/duck.png'} className={'max-h-[200px] md:h-[300px]'} />
+								<img alt={'duck'} src={'/luro/duck.png'} className={'max-h-[200px] md:h-[300px]'} />
 							</div>
 							<div className={'flex flex-col min-w-[220px] gap-4'}>
 								<div
@@ -312,9 +310,8 @@ const ProgressBar: FC<{ round: number; authors: CustomLuroBet[] }> = ({ round, a
 		},
 	};
 	const [progress, setProgress] = useState(0);
-	//todo: change interval
-	const start = round * 600 * 1000;
-	const end = (round + 1) * 600 * 1000;
+
+	const { start, end } = getTimesByRound(round);
 
 	const changeLotteryState = () => {
 		if (luroState.state === 'standby' && !isLotteryStateLoading && !isLotteryStatePending) {
@@ -381,7 +378,7 @@ const ProgressBar: FC<{ round: number; authors: CustomLuroBet[] }> = ({ round, a
 						className={'absolute flex flex-col items-center justify-center w-full h-full top-0'}
 					>
 						<div className={cx('text-md duration-300', Number(remaining.toFormat('ss')) < 30 && 'text-red-500')}>
-							{end > Date.now() ? remaining.toFormat('mm:ss') : 'Ended'}
+							{end > Date.now() ? remaining.toFormat('hh:mm:ss') : 'Ended'}
 						</div>
 						<div className={'text-[42px]'}>
 							<div className={'flex gap-2 items-center'}>

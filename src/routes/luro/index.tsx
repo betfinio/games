@@ -44,7 +44,7 @@ function Luro() {
 						<RoundMyInfo />
 					</div>
 					<RoundsTable className={'col-span-4 lg:col-[span_21_/_span_21] xl:col-span-4 mt-10'} />
-					<RoundModal round={search.round || 0} open={(search.round || 0) > 0} />
+					{search.round && <RoundModal round={search.round || 0} />}
 				</div>
 			</TooltipProvider>
 		</div>
