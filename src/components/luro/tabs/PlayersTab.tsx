@@ -8,14 +8,13 @@ import { BetValue } from 'betfinio_app/BetValue';
 import { useCustomUsername, useUsername } from 'betfinio_app/lib/query/username';
 import cx from 'clsx';
 import { AnimatePresence, motion } from 'framer-motion';
-import { type CSSProperties, type FC, useMemo } from 'react';
+import { type CSSProperties, type FC, useEffect, useMemo, useRef } from 'react';
 import { FixedSizeList as List } from 'react-window';
 import type { Address } from 'viem';
 import { useAccount } from 'wagmi';
 
 export const PlayersTab = () => {
 	const { data: round } = useVisibleRound();
-	console.log(round);
 	const { data: bets = [] } = useRoundBets(round);
 
 	const totalVolume = useMemo(() => {
@@ -34,11 +33,13 @@ export const PlayersTab = () => {
 		);
 	};
 
+	const ref = useRef<HTMLDivElement>(null);
+
 	return (
-		<div className={'grow flex flex-col gap-2 h-full'}>
+		<div className={'grow flex flex-col gap-2 h-full'} ref={ref}>
 			<AnimatePresence mode="popLayout">
 				<List
-					height={460} // Adjust height to fit your layout
+					height={ref.current?.offsetHeight || 460} // Adjust height to fit your layout
 					itemCount={players.length}
 					itemSize={74} // Adjust item size if necessary
 					width={'100%'}
