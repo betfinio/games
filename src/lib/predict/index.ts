@@ -1,11 +1,11 @@
-import {Game} from "@/src/lib/predict/types.ts";
+import type { Game } from '@/src/lib/predict/types.ts';
 
 export const games: Record<string, Game> = {
-	"BTCUSDT": {
+	BTCUSDT: {
 		address: import.meta.env.PUBLIC_BTCUSDT_GAME_ADDRESS,
 		dataFeed: import.meta.env.PUBLIC_BTCUSDT_FEED_ADDRESS,
-		name: "BTCUSDT",
+		name: 'BTCUSDT',
 		duration: 4,
-		interval: 270
-	}
-}
+		interval: 270,
+	},
+};
