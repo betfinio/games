@@ -19,6 +19,7 @@ import { CircularProgressbar } from 'react-circular-progressbar';
 import ConfettiExplosion from 'react-confetti-explosion';
 import type { Address } from 'viem';
 import { useAccount } from 'wagmi';
+import {TabItem} from "@/src/components/luro/tabs/PlayersTab.tsx";
 
 const largeProps = {
 	force: 0.8,
