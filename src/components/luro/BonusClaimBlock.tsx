@@ -1,12 +1,12 @@
-import { type FC, useState } from 'react';
+import {type FC, useState} from 'react';
 
-import { useAvailableBonus } from '@/src/lib/luro/query';
-import { LotteryContract } from '@betfinio/abi';
-import { ZeroAddress } from '@betfinio/abi';
-import { valueToNumber } from '@betfinio/hooks/dist/utils';
-import { writeContract } from '@wagmi/core';
-import { BetValue } from 'betfinio_app/BetValue';
-import { useAccount, useConfig } from 'wagmi';
+import {useAvailableBonus} from '@/src/lib/luro/query';
+import {LuckyRoundContract, ZeroAddress} from '@betfinio/abi';
+import {valueToNumber} from '@betfinio/hooks/dist/utils';
+import {writeContract} from '@wagmi/core';
+import {BetValue} from 'betfinio_app/BetValue';
+import {useAccount, useConfig} from 'wagmi';
+import {LURO} from '@/src/global.ts';
 
 const BonusClaimBlock: FC = () => {
 	const { address = ZeroAddress } = useAccount();
@@ -19,7 +19,8 @@ const BonusClaimBlock: FC = () => {
 		setLoading(true);
 		try {
 			const res = await writeContract(config, {
-				...LotteryContract,
+				abi: LuckyRoundContract.abi,
+				address: LURO,
 				functionName: 'claimBonus',
 				args: [address],
 			});
