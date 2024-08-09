@@ -1,5 +1,6 @@
 import { RoundCircle } from '@/src/components/luro/RoundCircle.tsx';
-import { mapBetsToRoundTable } from '@/src/lib/luro';
+import { ETHSCAN } from '@/src/global.ts';
+import { getTimesByRound, mapBetsToRoundTable } from '@/src/lib/luro';
 import { useBonusDistribution, useDistributeBonus, useRound, useRoundBank, useRoundBets, useRoundBonusShare } from '@/src/lib/luro/query';
 import type { Round, RoundModalPlayer } from '@/src/lib/luro/types.ts';
 import { addressToColor } from '@/src/lib/roulette';
@@ -29,9 +30,9 @@ export const ModalContent: FC<{
 }> = ({ onClose, interval, roundId, round }) => {
 	const { t } = useTranslation('', { keyPrefix: 'games.luro.roundModal' });
 
-	const start = DateTime.fromMillis(roundId * interval * 1000);
-	const end = DateTime.fromMillis((roundId + 1) * interval * 1000);
-	const isFinished = DateTime.fromMillis(Date.now()).diff(end).milliseconds > 0;
+	const { start, end } = getTimesByRound(roundId);
+
+	const isFinished = DateTime.fromMillis(Date.now()).diff(DateTime.fromMillis(end)).milliseconds > 0;
 
 	const { data: volume = 0n } = useRoundBank(roundId);
 	const { data: bonusShare = 0n } = useRoundBonusShare(roundId);
@@ -40,7 +41,7 @@ export const ModalContent: FC<{
 		<ScrollArea className={'h-[98vh] w-[98vw] md:h-auto md:max-w-[1200px] lg:w-[1000px]'}>
 			<div
 				onClick={(e) => e.stopPropagation()}
-				className={'relative mx-auto text-white h-full w-full  min-h-[300px] rounded-lg flex flex-col p-2  lg:p-8 pt-5'}
+				className={'relative mx-auto text-white h-full w-full  min-h-[300px] rounded-lg flex flex-col p-2 md:p-3 lg:p-4 pt-5'}
 			>
 				<XMarkIcon
 					className={
@@ -62,7 +63,7 @@ export const ModalContent: FC<{
 							</>
 						)}
 						<span className={'-mt-1 text-sm'}>
-							{start.toFormat('dd.MM.yyyy / HH:mm')} - {end.toFormat('HH:mm')}
+							{DateTime.fromMillis(start).toFormat('dd.MM.yyyy / HH:mm')} - {DateTime.fromMillis(end).toFormat('dd.MM.yyyy / HH:mm')}
 						</span>
 					</div>
 				</div>
@@ -106,7 +107,7 @@ const BonusDistribution: FC<{ round: number }> = ({ round }) => {
 
 const RoundDetails: FC<RoundDetailsProps> = ({ volume, usersCount }) => {
 	const staking = (volume / 1000n) * 36n;
-	const bonus = (volume / 100n) * 4n;
+	const bonus = (volume / 100n) * 5n;
 	return (
 		<div className={'mt-10 grid lg:grid-cols-3 gap-2 md:gap-3 lg:gap-4'}>
 			<div className={'border rounded-lg  border-gray-800 bg-primaryLighter min-h-[100px] flex flex-row justify-center items-center gap-2'}>
@@ -152,12 +153,12 @@ const WinnerBetInfo: FC<{ round: number }> = ({ round }) => {
 	return (
 		<div className={'py-5 border-t border-b border-[#1F222F] flex flex-col items-center text-sm font-semibold'}>
 			<p>Bet ID:</p>
-			<Link target={'_blank'} to={`${import.meta.env.VITE_ETHSCAN}/address/${data.winner.bet}`} className={'underline'}>
+			<Link target={'_blank'} to={`${ETHSCAN}/address/${data.winner.bet}`} className={'underline'}>
 				{data.winner.bet}
 			</Link>
 			<div className={'mt-5 flex gap-3'}>
 				<p className={'text-[#8794A1]'}>Proof of Random:</p>
-				<Link target={'_blank'} to={`${import.meta.env.VITE_ETHSCAN}/tx/${data.winner.tx}`} className={'underline'}>
+				<Link target={'_blank'} to={`${ETHSCAN}/tx/${data.winner.tx}`} className={'underline'}>
 					{truncateEthAddress(data.winner.tx)}
 				</Link>
 			</div>

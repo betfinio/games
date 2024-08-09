@@ -19,7 +19,7 @@ export const BonusInfo = () => {
 	const bonuses = useMemo(() => {
 		return bets.map((bet, index) => {
 			if (bonusShare === 0n) return { bet, bonus: 0 };
-			const bonusPool = (volume / 100n) * 4n;
+			const bonusPool = (volume / 100n) * 5n;
 			const weight = bet.amount * BigInt(bets.length - index);
 			return {
 				bet,
@@ -57,7 +57,9 @@ export const BonusInfo = () => {
 					</div>
 					<div className={'bg-primaryLight rounded-md px-[30px] py-5 border border-gray-800'}>
 						<div className={'relative'}>
-							<div className={'px-[120px] relative z-10'}>{/*<BonusChart bonuses={bonuses} />*/}</div>
+							<div className={'px-[120px] relative z-10'}>
+								<BonusChart bonuses={bonuses} />
+							</div>
 							<div className={'absolute bottom-[4px] w-full'}>
 								<div className={'flex justify-between text-[#6A6A9F] text-xs font-bold'}>
 									<p>First bet</p>

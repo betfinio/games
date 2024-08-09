@@ -94,8 +94,8 @@ export const getTimesByRound = (round: number) => {
 		const start = round * 60 * 60 * 24 * 1000 - 1000 * 60 * 60 * 6;
 		return { start, end: start + 60 * 60 * 24 * 1000 };
 	}
-	const start = round * 60 * 10;
-	return { start, end: start + 60 * 10 };
+	const start = round * 60 * 10 * 1000;
+	return { start, end: start + 60 * 10 * 1000 };
 };
 
 export const jumpToCurrentRound = (queryClient: QueryClient) => {

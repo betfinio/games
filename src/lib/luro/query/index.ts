@@ -197,8 +197,8 @@ export const useRound = (round: number) => {
 		},
 		onLogs: async (betLogs) => {
 			console.log('BET LOGS', betLogs);
-			// @ts-ignore
-			await queryClient.invalidateQueries({ queryKey: ['luro', 'round', Number(betLogs[0].args.round)] });
+			await queryClient.invalidateQueries({ queryKey: ['luro', 'round'] });
+			await queryClient.invalidateQueries({ queryKey: ['luro', 'bets'] });
 			// @ts-ignore
 			animateNewBet(betLogs[0]?.args?.player ?? ZeroAddress, 10, queryClient);
 		},

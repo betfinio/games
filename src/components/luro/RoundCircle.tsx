@@ -110,7 +110,7 @@ export const RoundCircle: FC<{ round: number }> = ({ round }) => {
 	}
 
 	const data: CustomLuroBet[] = useMemo(() => {
-		return mapBetsToAuthors(bets).map((bet) => ({
+		return bets.map((bet) => ({
 			id: bet.address,
 			label: bet.player,
 			value: valueToNumber(bet.amount),
@@ -418,7 +418,7 @@ const BetCircleWinner: FC<{ player: Address; amount: number; percent: number; co
 			transition={{ duration: 0.5 }}
 			className={'absolute flex flex-col items-center justify-center w-full h-full top-0 gap-2'}
 		>
-			<img alt={'crown'} src={'/lucky_round/crown.svg'} />
+			<img alt={'crown'} src={'/luro/crown.svg'} />
 			<TabItem player={player} amount={amount} percent={percent} />
 			<div>
 				<span className={'text-yellow-400'}>{coef}x</span> WIN
@@ -438,7 +438,7 @@ const RoundResult: FC<{ round: number }> = ({ round }) => {
 				<div className={'text-xl font-semibold mb-4'}>Round is over</div>
 				<div className={'w-full flex flex-row items-center justify-center gap-1'}>
 					You could win
-					<BetValue className={'text-yellow-400 text-sm'} value={valueToNumber((roundData.total.volume * 934n) / 1000n)} withIcon />
+					<BetValue className={'text-yellow-400 text-sm'} value={valueToNumber((roundData.total.volume * 935n) / 1000n)} withIcon />
 				</div>
 				<div className={'text-blue-500 text-xs'}>+bonus</div>
 			</>
@@ -450,14 +450,14 @@ const RoundResult: FC<{ round: number }> = ({ round }) => {
 			<>
 				<div className={'text-xl font-semibold mb-4'}>You WIN!</div>
 				<div className={'w-full flex flex-row items-center justify-center gap-1'}>
-					<BetValue className={'text-yellow-400 text-lg font-semibold'} value={valueToNumber((roundData.total.volume * 934n) / 1000n)} withIcon />
+					<BetValue className={'text-yellow-400 text-lg font-semibold'} value={valueToNumber((roundData.total.volume * 935n) / 1000n)} withIcon />
 				</div>
 				<div className={'text-blue-500 text-sm flex flex-row items-center justify-center gap-1'}>
 					+bonus <BetValue value={20} withIcon />
 				</div>
 
 				<div className={'text-gray-400 text-xs mt-2'}>total</div>
-				<BetValue className={'text-yellow-400 text-lg font-semibold'} value={valueToNumber((roundData.total.volume * 934n) / 1000n) + 20} withIcon />
+				<BetValue className={'text-yellow-400 text-lg font-semibold'} value={valueToNumber((roundData.total.volume * 935n) / 1000n) + 20} withIcon />
 			</>
 		);
 	}
