@@ -88,6 +88,7 @@ interface RoundDetailsProps {
 const BonusDistribution: FC<{ round: number }> = ({ round }) => {
 	const { data: distributed } = useBonusDistribution(round);
 	const { mutate: distribute } = useDistributeBonus();
+	const { end } = getTimesByRound(round);
 	const handleDistribute = () => {
 		console.log('distribute');
 		distribute({ round });
@@ -95,6 +96,10 @@ const BonusDistribution: FC<{ round: number }> = ({ round }) => {
 
 	if (distributed) {
 		return <div className={'flex flex-row items-center my-4 justify-center'}>Bonuses were distributed!</div>;
+	}
+
+	if (end > Date.now()) {
+		return null;
 	}
 	return (
 		<div className={'flex flex-row gap-2 items-center justify-end py-2'}>
