@@ -1,12 +1,13 @@
-import { hexToRgbA, mapBetsToAuthors } from '@/src/lib/luro';
+import { TabItem } from '@/src/components/luro/tabs/PlayersTab.tsx';
+import { hexToRgbA, jumpToCurrentRound, mapBetsToAuthors } from '@/src/lib/luro';
 import { useLuroState, useObserveBet, useRound, useRoundBank, useRoundBets, useStartRound, useVisibleRound } from '@/src/lib/luro/query';
-import type { LuroBet } from '@/src/lib/luro/types.ts';
+import type { CustomLuroBet } from '@/src/lib/luro/types.ts';
 import { addressToColor } from '@/src/lib/roulette';
 import { ZeroAddress } from '@betfinio/hooks/dist';
 import { valueToNumber } from '@betfinio/hooks/dist/utils';
 import { Bet } from '@betfinio/ui/dist/icons';
 import { Pie, type PieTooltipProps } from '@nivo/pie';
-// @ts-ignore
+import { useQueryClient } from '@tanstack/react-query';
 import anime from 'animejs';
 import { BetValue } from 'betfinio_app/BetValue';
 import cx from 'clsx';
@@ -107,7 +108,7 @@ export const RoundCircle: FC<{ round: number }> = ({ round }) => {
 		});
 	}
 
-	const data = useMemo(() => {
+	const data: CustomLuroBet[] = useMemo(() => {
 		return mapBetsToAuthors(bets).map((bet) => ({
 			id: bet.address,
 			label: bet.player,
@@ -287,11 +288,12 @@ const CustomTooltip =
 		value: number;
 		color: string;
 	}>) => <TabItem key={id} amount={value} className={'min-w-[250px]'} player={label as Address} percent={(value * 100) / valueToNumber(bank)} />;
-const ProgressBar: FC<{ round: number; authors: LuroBet[] }> = ({ round, authors }) => {
+const ProgressBar: FC<{ round: number; authors: CustomLuroBet[] }> = ({ round, authors }) => {
 	const { data: roundData, isLoading } = useRound(round);
 	const { data: bank } = useRoundBank(round);
+	const queryClient = useQueryClient();
 	const {
-		state: { data: lotteryState, isLoading: isLotteryStateLoading, isPending: isLotteryStatePending },
+		state: { data: luroState, isLoading: isLotteryStateLoading, isPending: isLotteryStatePending },
 		updateState,
 	} = useLuroState();
 	const styles = {
@@ -313,7 +315,7 @@ const ProgressBar: FC<{ round: number; authors: LuroBet[] }> = ({ round, authors
 	const end = (round + 1) * 600 * 1000;
 
 	const changeLotteryState = () => {
-		if (lotteryState.state === 'standby' && !isLotteryStateLoading && !isLotteryStatePending) {
+		if (luroState.state === 'standby' && !isLotteryStateLoading && !isLotteryStatePending) {
 			updateState({ state: 'waiting' });
 		}
 	};
@@ -321,7 +323,7 @@ const ProgressBar: FC<{ round: number; authors: LuroBet[] }> = ({ round, authors
 	const handleRoundEnd = () => {
 		console.log(bank);
 		if (bank === 0n) {
-			jumpToCurrentRound();
+			jumpToCurrentRound(queryClient);
 		} else {
 			changeLotteryState();
 		}
@@ -341,7 +343,7 @@ const ProgressBar: FC<{ round: number; authors: LuroBet[] }> = ({ round, authors
 			}, 500);
 			return () => clearInterval(i);
 		}
-	}, [round, bank, lotteryState.state]);
+	}, [round, bank, luroState.state]);
 
 	const [from, setFrom] = useState(0);
 	const to = useMemo(() => {

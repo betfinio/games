@@ -74,3 +74,10 @@ export interface PlaceBetParams {
 	amount: number;
 	player: Address;
 }
+
+export interface CustomLuroBet {
+	id: Address;
+	label: Address;
+	value: number;
+	color: string;
+}
