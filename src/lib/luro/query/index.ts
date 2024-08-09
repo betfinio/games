@@ -250,7 +250,7 @@ export interface ICurrentRoundInfo {
 export const useVisibleRound = () => {
 	const queryClient = useQueryClient();
 	const fetchRound = async (): Promise<number> => {
-		await queryClient.invalidateQueries({ queryKey: ['luro', 'bets', 'round'] });
+		await queryClient.invalidateQueries({ queryKey: ['luro'] });
 		return getCurrentRound();
 	};
 
