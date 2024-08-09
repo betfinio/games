@@ -2,10 +2,10 @@ import { ModalContent } from '@/src/components/luro/ModalContent.tsx';
 import { getLuroInterval } from '@/src/lib/luro';
 import { useRound } from '@/src/lib/luro/query';
 import { useNavigate } from '@tanstack/react-router';
-import { Dialog, DialogContent, DialogPortal } from 'betfinio_app/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogPortal, DialogTitle } from 'betfinio_app/dialog';
 import type { FC } from 'react';
 
-const RoundModal: FC<{ round: number; open: boolean }> = ({ round, open }) => {
+const RoundModal: FC<{ round: number }> = ({ round }) => {
 	const { data } = useRound(round);
 	const navigate = useNavigate();
 	if (!data) return null;
@@ -13,12 +13,12 @@ const RoundModal: FC<{ round: number; open: boolean }> = ({ round, open }) => {
 		await navigate({ to: '/luro' });
 	};
 	return (
-		<Dialog open={open}>
+		<Dialog open={true} onOpenChange={handleClose}>
 			<DialogPortal>
-				<DialogContent>
-					<div className={'max-h-[100vh] w-[100vw] overflow-y-scroll p-2 bg-black'} onClick={handleClose}>
-						<ModalContent onClose={handleClose} interval={getLuroInterval()} roundId={round} round={data} />
-					</div>
+				<DialogContent className={'games max-w-0 w-auto'}>
+					<DialogTitle className={'hidden'} />
+					<DialogDescription className={'hidden'} />
+					<ModalContent onClose={handleClose} interval={getLuroInterval()} roundId={round} round={data} />
 				</DialogContent>
 			</DialogPortal>
 		</Dialog>

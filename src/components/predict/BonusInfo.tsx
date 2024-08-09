@@ -24,7 +24,7 @@ const BonusInfo: FC<{ game: Game }> = ({ game }) => {
 	);
 
 	const bonuses = bets.map((bet, index) => {
-		const bonusPool = (((pool?.short || 0n) + (pool?.long || 0n)) / 100n) * 4n;
+		const bonusPool = (((pool?.short || 0n) + (pool?.long || 0n)) / 100n) * 5n;
 		const weight = bet.amount * BigInt(bets.length - index);
 		return {
 			bet,

@@ -1,4 +1,4 @@
-import { BETS_MEMORY, LURO, PARTNER } from '@/src/global.ts';
+import { BETS_MEMORY, FIRST_BLOCK, LURO, PARTNER } from '@/src/global.ts';
 import type { ICurrentRoundInfo } from '@/src/lib/luro/query';
 import type { LuroBet, PlaceBetParams, Round, RoundStatusEnum } from '@/src/lib/luro/types.ts';
 import { BetsMemoryContract, LuckyRoundBetContract, LuckyRoundContract, PartnerContract, defaultMulticall } from '@betfinio/abi';
@@ -61,19 +61,25 @@ export const fetchRoundWinner = async (roundId: number, config: Config): Promise
 	const logs = await getContractEvents(config.getClient(), {
 		abi: LuckyRoundContract.abi,
 		address: LURO,
+		fromBlock: BigInt(FIRST_BLOCK),
+		toBlock: 'latest',
 		eventName: 'WinnerCalculated',
 		args: {
 			round: BigInt(roundId),
 		},
 	});
+	console.log(logs);
 	if (logs.length === 0) return undefined;
 	const betInfo = (await readContract(config, {
 		abi: LuckyRoundBetContract.abi,
+		// @ts-ignore
 		address: logs[0].args.bet as Address,
 		functionName: 'getBetInfo',
 	})) as Address[];
 	return {
+		// @ts-ignore
 		offset: logs[0].args.winnerOffset,
+		// @ts-ignore
 		bet: logs[0].args.bet,
 		player: betInfo[0],
 		tx: logs[0].transactionHash,
@@ -138,15 +144,15 @@ export const getCurrentRoundInfo = (iBets: LuroBet[]): ICurrentRoundInfo => {
 
 export const fetchRounds = async (player: Address, onlyPlayers: boolean, config: Config): Promise<Round[]> => {
 	console.log('fetching rounds', LURO);
-	return [];
-	// const activeRounds = await getContractEvents(config.getClient(), {
-	// 	abi: LuckyRoundContract.abi,
-	// 	address: LURO,
-	// 	// fromBlock: 0n,
-	// 	eventName: 'RoundStart',
-	// });
-	// console.log('rounds', activeRounds);
-	// return (await Promise.all(activeRounds.reverse().map((e) => fetchRound(e.args.round, player, config)))).filter((e) => !onlyPlayers || e.player.bets > 0n);
+	// return [];
+	const activeRounds = await getContractEvents(config.getClient(), {
+		abi: LuckyRoundContract.abi,
+		address: LURO,
+		fromBlock: 10526041n,
+		eventName: 'RoundStart',
+	});
+	// @ts-ignore
+	return (await Promise.all(activeRounds.reverse().map((e) => fetchRound(e.args.round, player, config)))).filter((e) => !onlyPlayers || e.player.bets > 0n);
 };
 
 export const fetchRound = async (round: number, player: Address, config: Config): Promise<Round> => {
@@ -191,7 +197,7 @@ export const fetchRound = async (round: number, player: Address, config: Config)
 	const playerCount = data[3].result as bigint;
 	const status = data[4].result as RoundStatusEnum;
 	const winner = await fetchRoundWinner(round, config);
-	const bonus = (volume / 100n) * 4n;
+	const bonus = (volume / 100n) * 5n;
 
 	return {
 		round,
@@ -204,7 +210,7 @@ export const fetchRound = async (round: number, player: Address, config: Config)
 		player: {
 			volume: playerVolume,
 			bets: playerCount,
-			bonus: (playerVolume / 100n) * 4n,
+			bonus: (playerVolume / 100n) * 5n,
 		},
 		status,
 		address: ZeroAddress,

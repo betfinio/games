@@ -19,14 +19,14 @@ export const BonusInfo = () => {
 	const bonuses = useMemo(() => {
 		return bets.map((bet, index) => {
 			if (bonusShare === 0n) return { bet, bonus: 0 };
-			const bonusPool = (volume / 100n) * 4n;
+			const bonusPool = (volume / 100n) * 5n;
 			const weight = bet.amount * BigInt(bets.length - index);
 			return {
 				bet,
 				bonus: valueToNumber((bonusPool * weight) / bonusShare),
 			};
 		});
-	}, [bets, volume]);
+	}, [bets, volume, address]);
 
 	const myBonus = bonuses.reduce((acc, { bonus, bet }) => acc + (bet.player.toLowerCase() === address.toLowerCase() ? bonus : 0), 0);
 

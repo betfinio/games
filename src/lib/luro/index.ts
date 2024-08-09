@@ -77,9 +77,25 @@ export const getLuroInterval = () => {
 
 export const getCurrentRound = () => {
 	if (import.meta.env.PUBLIC_ENVIRONMENT.includes('prod')) {
-		return ((Math.floor(Date.now() / 1000) + 60 * 60 * 6) / 60) * 60 * 24;
+		return Math.floor((Date.now() + 1000 * 60 * 60 * 6) / 1000 / (60 * 60 * 24));
 	}
 	return Math.floor(Date.now() / 1000 / (60 * 10));
+};
+
+export const getRoundByTimestamp = (timestamp: number) => {
+	if (import.meta.env.PUBLIC_ENVIRONMENT.includes('prod')) {
+		return Math.floor((timestamp + 1000 * 60 * 60 * 6) / 1000 / (60 * 60 * 24));
+	}
+	return Math.floor(timestamp / 1000 / (60 * 10));
+};
+
+export const getTimesByRound = (round: number) => {
+	if (import.meta.env.PUBLIC_ENVIRONMENT.includes('prod')) {
+		const start = round * 60 * 60 * 24 * 1000 - 1000 * 60 * 60 * 6;
+		return { start, end: start + 60 * 60 * 24 * 1000 };
+	}
+	const start = round * 60 * 10 * 1000;
+	return { start, end: start + 60 * 10 * 1000 };
 };
 
 export const jumpToCurrentRound = (queryClient: QueryClient) => {

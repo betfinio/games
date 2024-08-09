@@ -2,9 +2,12 @@ import { useRoundBank, useRoundBets, useRoundBonusShare, useVisibleRound } from 
 import { addressToColor } from '@/src/lib/roulette';
 import { truncateEthAddress, valueToNumber } from '@betfinio/hooks/dist/utils';
 import Fox from '@betfinio/ui/dist/icons/Fox';
+import { BetValue } from 'betfinio_app/BetValue';
 import { useUsername } from 'betfinio_app/lib/query/username';
 import cx from 'clsx';
-import { type FC, useMemo } from 'react';
+import { AnimatePresence } from 'framer-motion';
+import { type CSSProperties, type FC, useMemo } from 'react';
+import { FixedSizeList as List } from 'react-window';
 import type { Address } from 'viem';
 
 export const BonusTab = () => {
@@ -13,10 +16,18 @@ export const BonusTab = () => {
 	const { data: volume = 0n } = useRoundBank(round);
 	const { data: bonusShare = 0n } = useRoundBonusShare(round);
 
+	const Row = ({ index, style }: { index: number; style: CSSProperties }) => {
+		const bet = bets[index];
+		return (
+			<div className={'px-2'} style={style}>
+				<TabItem player={bet.player} bonus={bonuses[index].bonus} />
+			</div>
+		);
+	};
 	const bonuses = useMemo(() => {
 		return bets.map((bet, index) => {
 			if (bonusShare === 0n) return { bet, bonus: 0 };
-			const bonusPool = (volume / 100n) * 4n;
+			const bonusPool = (volume / 100n) * 5n;
 			const weight = bet.amount * BigInt(bets.length - index);
 			return {
 				bet,
@@ -27,9 +38,16 @@ export const BonusTab = () => {
 
 	return (
 		<div className={'grow flex flex-col gap-2'}>
-			{bonuses.map(({ bet, bonus }, i) => {
-				return <TabItem key={i} player={bet.player} bonus={bonus} />;
-			})}
+			<AnimatePresence mode="popLayout">
+				<List
+					height={460} // Adjust height to fit your layout
+					itemCount={bets.length}
+					itemSize={74} // Adjust item size if necessary
+					width={'100%'}
+				>
+					{Row}
+				</List>
+			</AnimatePresence>
 		</div>
 	);
 };
@@ -51,9 +69,9 @@ const TabItem: FC<TabItemProps> = ({ player, bonus }) => {
 					</div>
 				</div>
 				<div className={'flex flex-col items-end text-xs gap-2'}>
-					<p className={'font-semibold text-sm text-[#FFC800]'}>
-						<BonusTab value={bonus} precision={2} withIcon={true} />
-					</p>
+					<div className={'font-semibold text-sm text-[#FFC800]'}>
+						<BetValue value={bonus} precision={2} withIcon={true} />
+					</div>
 				</div>
 			</div>
 			<div className={'w-[10px] rounded-r-[10px]'} style={{ backgroundColor: addressToColor(player) }} />

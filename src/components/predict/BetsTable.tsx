@@ -99,7 +99,7 @@ const BetsTable: FC<{ isFetching: boolean; bets: PredictBet[]; isFinished: boole
 						'text-yellow-500': props.getValue() === 1n,
 						'text-green-500': props.getValue() === 2n,
 						'text-red-500': props.getValue() === 3n,
-						'text-sky-500': props.getValue() === 4n,
+						'text-sky-500': props.getValue() === 5n,
 					})}
 				>
 					{t(`table.statuses.${props.getValue().toString() as '0' | '1' | '2' | '3' | '4'}`)}
