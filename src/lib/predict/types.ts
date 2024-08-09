@@ -32,8 +32,8 @@ export interface Result {
 export interface RoundPool {
 	long: bigint;
 	short: bigint;
-	longCount?: number;
-	shortCount?: number;
+	longCount: number;
+	shortCount: number;
 	longPlayersCount?: number;
 	shortPlayersCount?: number;
 }

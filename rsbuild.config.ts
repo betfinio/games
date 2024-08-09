@@ -47,9 +47,11 @@ export default defineConfig({
 	},
 	plugins: [pluginReact(), pluginSvgr()],
 	tools: {
-		rspack: (config, { appendPlugins }) => {
-			config.output!.uniqueName = 'betfinio_games';
-			appendPlugins([
+		rspack: {
+			output: {
+				uniqueName: 'betfinio_games',
+			},
+			plugins: [
 				TanStackRouterRspack(),
 				new ModuleFederationPlugin({
 					name: 'betfinio_games',
@@ -99,7 +101,7 @@ export default defineConfig({
 						},
 					},
 				}),
-			]);
+			],
 		},
 	},
 });

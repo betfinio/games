@@ -19,10 +19,11 @@ import { RouletteContract } from '@betfinio/abi';
 import { ZeroAddress } from '@betfinio/hooks';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useDebounce } from '@uidotdev/usehooks';
+import type { WriteContractReturnType } from '@wagmi/core';
 import { getTransactionLink } from 'betfinio_app/helpers';
 import { toast } from 'betfinio_app/use-toast';
 import { useTranslation } from 'react-i18next';
-import type { Address } from 'viem';
+import type { Address, WriteContractErrorType } from 'viem';
 import { waitForTransactionReceipt } from 'viem/actions';
 import { useAccount, useConfig, useWatchContractEvent } from 'wagmi';
 
@@ -81,7 +82,7 @@ export const useSelectedChip = () =>
 export const usePlace = () => {
 	const queryClient = useQueryClient();
 	const { data: chip = 0 } = useSelectedChip();
-	return useMutation<any, any, FuncProps>({
+	return useMutation<void, Error, FuncProps>({
 		mutationKey: ['roulette', 'place'],
 		mutationFn: (e) => place(e, chip),
 		onSettled: () => queryClient.invalidateQueries({ queryKey: ['roulette', 'local', 'bets'] }),
@@ -125,11 +126,13 @@ export const useSpin = () => {
 		},
 	});
 
-	return useMutation<any, any, SpinParams>({
+	return useMutation<WriteContractReturnType, WriteContractErrorType, SpinParams>({
 		mutationKey: ['roulette', 'spin'],
 		mutationFn: (params) => spin(params, config),
 		onError: (e) => {
+			// @ts-ignore
 			if (e.cause?.reason) {
+				// @ts-ignore
 				toast({ variant: 'destructive', description: errors(e.cause.reason) });
 			} else {
 				toast({ variant: 'destructive', description: errors('unknown') });
@@ -152,7 +155,7 @@ export const useSpin = () => {
 
 export const useUnplace = () => {
 	const queryClient = useQueryClient();
-	return useMutation<any, any, FuncProps>({
+	return useMutation<void, Error, FuncProps>({
 		mutationKey: ['roulette', 'unplace'],
 		mutationFn: (e) => unplace(e),
 		onSettled: () => queryClient.invalidateQueries({ queryKey: ['roulette', 'local', 'bets'] }),
@@ -182,7 +185,7 @@ export const useUndoPlace = () => {
 
 export const useChangeChip = () => {
 	const queryClient = useQueryClient();
-	return useMutation<any, any, { amount: number }>({
+	return useMutation<void, Error, { amount: number }>({
 		mutationKey: ['roulette', 'chip'],
 		mutationFn: changeChip,
 		onSuccess: () => queryClient.invalidateQueries({ queryKey: ['roulette', 'chip'] }),

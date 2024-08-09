@@ -310,10 +310,10 @@ const TableDesktop = () => {
 	const { mutate: place } = usePlace();
 
 	const handleAdditionalClick = (numbers: number[]) => {
-		numbers.forEach((number) => {
+		for (const number of numbers) {
 			const id = Object.keys(items).find((key) => items[Number(key)].length === 1 && items[Number(key)][0] === number);
 			place({ item: Number(id), numbers: [number] });
-		});
+		}
 	};
 	const handleAdditionalHover = (numbers: number[]) => {
 		setHighlight(numbers);
@@ -553,7 +553,8 @@ const TableDesktopControls: FC<TableDesktopControlsProps> = ({ onHighlight }) =>
 	const highlight = (item: number) => {
 		onHighlight({ item, numbers: items[item] || [] });
 	};
-	const handleClick = (item: number) => {
+	const handleClick = (iItem: number) => {
+		let item = iItem;
 		if (items[item] === undefined) return;
 		if ([30, 59, 88, 117, 146].includes(item)) item = 88;
 		if (
@@ -613,7 +614,8 @@ const TableDesktopControls: FC<TableDesktopControlsProps> = ({ onHighlight }) =>
 		mutate({ item, numbers: items[item] || [] });
 	};
 
-	const handleContextMenu = (item: number, e: MouseEvent<HTMLDivElement>) => {
+	const handleContextMenu = (iItem: number, e: MouseEvent<HTMLDivElement>) => {
+		let item = iItem;
 		e.preventDefault();
 		if (items[item] === undefined) return;
 		if ([30, 59, 88, 117, 146].includes(item)) item = 88;

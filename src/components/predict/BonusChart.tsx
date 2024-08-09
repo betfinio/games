@@ -16,14 +16,14 @@ const BonusChart: FC<{ bonuses: { bet: PredictBet; bonus: number }[]; oneWay?: b
 	const { address = ZeroAddress } = useAccount();
 	const colors: string[] = [];
 	const values: number[] = [];
-	bonuses.forEach(({ bet, bonus }) => {
+	for (const { bet, bonus } of bonuses) {
 		if (oneWay) {
 			values.push(bonus);
 		} else {
 			values.push(bet.side ? bonus : -bonus);
 		}
 		colors.push(bet.player === address ? '#FFC800' : bet.side ? '#27AE60' : '#EB5757');
-	});
+	}
 
 	console.log(bonuses);
 

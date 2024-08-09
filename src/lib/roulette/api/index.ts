@@ -228,7 +228,7 @@ export const unplace = async (params: FuncProps) => {
 };
 
 export const getRequiredAllowance = (): number => {
-	const bets = JSON.parse(localStorage.getItem('bets')!);
+	const bets = JSON.parse(localStorage.getItem('bets') || '[]');
 	return bets.reduce((acc: number, val: { amount: number }) => {
 		return acc + val.amount;
 	}, 0);
@@ -245,6 +245,7 @@ export const doublePlace = async () => {
 		return acc;
 	}, {});
 	const newBets = Object.values(betsMap).reduce((acc, bets) => {
+		// biome-ignore lint/performance/noAccumulatingSpread: <explanation>
 		return [...acc, ...bets.slice(0, 5)];
 	}, []);
 	localStorage.setItem('bets', JSON.stringify(newBets));
