@@ -24,7 +24,7 @@ function Luro() {
 	const search = Route.useSearch();
 
 	return (
-		<div className={'col-span-4 px-4 mt-[70px] lg:mt-0 lg:pt-4 lg:col-start-2'}>
+		<div className={'col-span-4 p-2 md:p-3 lg:p-4  lg:col-start-2'}>
 			<TooltipProvider delayDuration={0}>
 				<RoundInfo />
 
