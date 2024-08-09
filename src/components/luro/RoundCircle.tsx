@@ -1,5 +1,5 @@
 import { TabItem } from '@/src/components/luro/tabs/PlayersTab.tsx';
-import { hexToRgbA, jumpToCurrentRound, mapBetsToAuthors } from '@/src/lib/luro';
+import { getTimesByRound, hexToRgbA, jumpToCurrentRound, mapBetsToAuthors } from '@/src/lib/luro';
 import { useLuroState, useObserveBet, useRound, useRoundBank, useRoundBets, useStartRound, useVisibleRound } from '@/src/lib/luro/query';
 import type { CustomLuroBet } from '@/src/lib/luro/types.ts';
 import { addressToColor } from '@/src/lib/roulette';
@@ -110,7 +110,7 @@ export const RoundCircle: FC<{ round: number }> = ({ round }) => {
 	}
 
 	const data: CustomLuroBet[] = useMemo(() => {
-		return mapBetsToAuthors(bets).map((bet) => ({
+		return bets.map((bet) => ({
 			id: bet.address,
 			label: bet.player,
 			value: valueToNumber(bet.amount),
@@ -174,22 +174,20 @@ export const RoundCircle: FC<{ round: number }> = ({ round }) => {
 			{currentRound !== round && (roundData?.total.volume || 0n) > 0n && (
 				<div className={cx('w-full h-full flex gap-4 flex-row items-center justify-evenly')}>
 					{roundData?.status === 0 && (
-						<>
-							<button
-								type={'button'}
-								onClick={handleSpin}
-								disabled={isPending}
-								className={'bg-yellow-400 disabled:bg-gray-500 rounded-lg px-6 py-2 text-black font-medium'}
-							>
-								{isPending ? 'Spinning...' : 'Spin the wheel'}
-							</button>
-						</>
+						<button
+							type={'button'}
+							onClick={handleSpin}
+							disabled={isPending}
+							className={'bg-yellow-400 disabled:bg-gray-500 rounded-lg px-6 py-2 text-black font-medium'}
+						>
+							{isPending ? 'Spinning...' : 'Spin the wheel'}
+						</button>
 					)}
 
 					{roundData?.status === 2 && (
 						<>
 							<div>
-								<img alt={'duck'} src={'/lucky_round/duck.png'} className={'max-h-[200px] md:h-[300px]'} />
+								<img alt={'duck'} src={'/luro/duck.png'} className={'max-h-[200px] md:h-[300px]'} />
 							</div>
 							<div className={'flex flex-col min-w-[220px] gap-4'}>
 								<div
@@ -312,9 +310,8 @@ const ProgressBar: FC<{ round: number; authors: CustomLuroBet[] }> = ({ round, a
 		},
 	};
 	const [progress, setProgress] = useState(0);
-	//todo: change interval
-	const start = round * 600 * 1000;
-	const end = (round + 1) * 600 * 1000;
+
+	const { start, end } = getTimesByRound(round);
 
 	const changeLotteryState = () => {
 		if (luroState.state === 'standby' && !isLotteryStateLoading && !isLotteryStatePending) {
@@ -382,7 +379,7 @@ const ProgressBar: FC<{ round: number; authors: CustomLuroBet[] }> = ({ round, a
 						className={'absolute flex flex-col items-center justify-center w-full h-full top-0'}
 					>
 						<div className={cx('text-md duration-300', Number(remaining.toFormat('ss')) < 30 && 'text-red-500')}>
-							{end > Date.now() ? remaining.toFormat('mm:ss') : 'Ended'}
+							{end > Date.now() ? remaining.toFormat('hh:mm:ss') : 'Ended'}
 						</div>
 						<div className={'text-[42px]'}>
 							<div className={'flex gap-2 items-center'}>
@@ -424,7 +421,7 @@ const BetCircleWinner: FC<{ player: Address; amount: number; percent: number; co
 			transition={{ duration: 0.5 }}
 			className={'absolute flex flex-col items-center justify-center w-full h-full top-0 gap-2'}
 		>
-			<img alt={'crown'} src={'/lucky_round/crown.svg'} />
+			<img alt={'crown'} src={'/luro/crown.svg'} />
 			<TabItem player={player} amount={amount} percent={percent} />
 			<div>
 				<span className={'text-yellow-400'}>{coef}x</span> WIN
@@ -444,7 +441,7 @@ const RoundResult: FC<{ round: number }> = ({ round }) => {
 				<div className={'text-xl font-semibold mb-4'}>Round is over</div>
 				<div className={'w-full flex flex-row items-center justify-center gap-1'}>
 					You could win
-					<BetValue className={'text-yellow-400 text-sm'} value={valueToNumber((roundData.total.volume * 934n) / 1000n)} withIcon />
+					<BetValue className={'text-yellow-400 text-sm'} value={valueToNumber((roundData.total.volume * 935n) / 1000n)} withIcon />
 				</div>
 				<div className={'text-blue-500 text-xs'}>+bonus</div>
 			</>
@@ -456,14 +453,14 @@ const RoundResult: FC<{ round: number }> = ({ round }) => {
 			<>
 				<div className={'text-xl font-semibold mb-4'}>You WIN!</div>
 				<div className={'w-full flex flex-row items-center justify-center gap-1'}>
-					<BetValue className={'text-yellow-400 text-lg font-semibold'} value={valueToNumber((roundData.total.volume * 934n) / 1000n)} withIcon />
+					<BetValue className={'text-yellow-400 text-lg font-semibold'} value={valueToNumber((roundData.total.volume * 935n) / 1000n)} withIcon />
 				</div>
 				<div className={'text-blue-500 text-sm flex flex-row items-center justify-center gap-1'}>
 					+bonus <BetValue value={20} withIcon />
 				</div>
 
 				<div className={'text-gray-400 text-xs mt-2'}>total</div>
-				<BetValue className={'text-yellow-400 text-lg font-semibold'} value={valueToNumber((roundData.total.volume * 934n) / 1000n) + 20} withIcon />
+				<BetValue className={'text-yellow-400 text-lg font-semibold'} value={valueToNumber((roundData.total.volume * 935n) / 1000n) + 20} withIcon />
 			</>
 		);
 	}

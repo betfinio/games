@@ -220,7 +220,7 @@ const RoundResult: FC<{ round: number }> = ({ round }) => {
 					<div className={'text-xl font-semibold mb-4'}>Round is over</div>
 					<div className={'w-full flex flex-row items-center justify-center gap-1'}>
 						You could win
-						<BetValue className={'text-yellow-400 text-sm'} value={valueToNumber((roundData.total.volume * 934n) / 1000n)} withIcon />
+						<BetValue className={'text-yellow-400 text-sm'} value={valueToNumber((roundData.total.volume * 935n) / 1000n)} withIcon />
 					</div>
 					<div className={'text-blue-500 text-xs'}>+bonus</div>
 				</div>
@@ -252,14 +252,14 @@ const RoundResult: FC<{ round: number }> = ({ round }) => {
 				<div className={'flex flex-col w-3/4 h-[200px] items-center justify-center border rounded-[10px] border-yellow-400'}>
 					<div className={'text-xl font-semibold mb-4'}>You WIN!</div>
 					<div className={'w-full flex flex-row items-center justify-center gap-1'}>
-						<BetValue className={'text-yellow-400 text-lg font-semibold'} value={valueToNumber((roundData.total.volume * 934n) / 1000n)} withIcon />
+						<BetValue className={'text-yellow-400 text-lg font-semibold'} value={valueToNumber((roundData.total.volume * 935n) / 1000n)} withIcon />
 					</div>
 					<div className={'text-blue-500 text-sm flex flex-row items-center justify-center gap-1'}>
 						+bonus <BetValue value={20} withIcon />
 					</div>
 
 					<div className={'text-gray-400 text-xs mt-2'}>total</div>
-					<BetValue className={'text-yellow-400 text-lg font-semibold'} value={valueToNumber((roundData.total.volume * 934n) / 1000n) + 20} withIcon />
+					<BetValue className={'text-yellow-400 text-lg font-semibold'} value={valueToNumber((roundData.total.volume * 935n) / 1000n) + 20} withIcon />
 				</div>
 
 				<motion.button

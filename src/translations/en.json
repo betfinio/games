@@ -119,6 +119,15 @@
 			"expected": "Expected winnings from this bet",
 			"bet": "Bet"
 		},
+		"roundModal": {
+			"title": "Round",
+			"titleFinished": "Result for round",
+			"activity": "Betting Activity",
+			"volume": "Total round volume",
+			"staking": "Staking contribution",
+			"users": "{players} users",
+			"bets": "{bets} bets"
+		},
 		"table": {
 			"round": "Round ID",
 			"bets": "Total bets",

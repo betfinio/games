@@ -36,7 +36,7 @@ export const RoundMyInfo = () => {
 			<div className={'bg-primary rounded-lg p-[10px] flex justify-between gap-1 items-center font-semibold'}>
 				<div className={'flex flex-row items-center gap-1 text-[#6A6F84]'}>Total Bonus</div>
 				<div className={cx('text-blue-400', { 'blur-sm animate-pulse': !isFetched })}>
-					<BetValue value={valueToNumber((volume / 100n) * 4n)} withIcon />
+					<BetValue value={valueToNumber((volume / 100n) * 5n)} withIcon />
 				</div>
 			</div>
 		</div>
