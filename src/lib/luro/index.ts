@@ -68,6 +68,13 @@ export const handleError = (e: Error, t: TFunction) => {
 	toast({ variant: 'destructive', description: t(e.cause?.reason || 'unknown') });
 };
 
+export const getLuroInterval = () => {
+	if (import.meta.env.PUBLIC_ENVIRONMENT.includes('prod')) {
+		return 60 * 60 * 24;
+	}
+	return 60 * 2;
+};
+
 export const getCurrentRound = () => {
 	if (import.meta.env.PUBLIC_ENVIRONMENT.includes('prod')) {
 		return ((Math.floor(Date.now() / 1000) + 60 * 60 * 6) / 60) * 60 * 24;
