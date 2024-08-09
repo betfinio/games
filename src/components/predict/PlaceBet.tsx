@@ -16,6 +16,7 @@ import {toast} from "betfinio_app/use-toast";
 import millify from "millify";
 import {ArrowDownIcon, ArrowUpIcon} from "lucide-react";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "betfinio_app/tooltip";
+import {ETHSCAN} from "@/src/global.ts";
 
 const PlaceBet: FC<{ game: Game }> = ({game}) => {
 	const {t} = useTranslation('', {keyPrefix: "games.predict.placeBet"})
