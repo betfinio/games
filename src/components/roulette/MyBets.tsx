@@ -1,17 +1,17 @@
-import { getColor } from '@/src/lib/roulette';
-import { useRouletteBets } from '@/src/lib/roulette/query';
-import type { RouletteBet } from '@/src/lib/roulette/types.ts';
-import { ZeroAddress } from '@betfinio/hooks';
-import { truncateEthAddress, valueToNumber } from '@betfinio/hooks/dist/utils';
-import { createColumnHelper } from '@tanstack/react-table';
-import { BetValue } from 'betfinio_app/BetValue';
-import { DataTable } from 'betfinio_app/DataTable';
-import { Dialog, DialogContent } from 'betfinio_app/dialog';
+import {getColor} from '@/src/lib/roulette';
+import {useRouletteBets} from '@/src/lib/roulette/query';
+import type {RouletteBet} from '@/src/lib/roulette/types.ts';
+import {ZeroAddress} from '@betfinio/hooks';
+import {truncateEthAddress, valueToNumber} from '@betfinio/hooks/dist/utils';
+import {createColumnHelper} from '@tanstack/react-table';
+import {BetValue} from 'betfinio_app/BetValue';
+import {DataTable} from 'betfinio_app/DataTable';
+import {Dialog, DialogContent} from 'betfinio_app/dialog';
 import cx from 'clsx';
-import { DateTime } from 'luxon';
-import { useState } from 'react';
-import { useAccount } from 'wagmi';
-import { RoundModal } from './HistoryTable';
+import {DateTime} from 'luxon';
+import {useState} from 'react';
+import {useAccount} from 'wagmi';
+import {RoundModal} from './HistoryTable';
 
 const columnHelper = createColumnHelper<RouletteBet>();
 
