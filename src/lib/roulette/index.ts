@@ -1,5 +1,5 @@
-import {LocalBet, RouletteSubBet} from "@/src/lib/roulette/types.ts";
-import {Address} from "viem";
+import type { LocalBet, RouletteSubBet } from '@/src/lib/roulette/types.ts';
+import type { Address } from 'viem';
 
 export const betCodes: Record<string, number> = {
 	'0': 14,
@@ -147,30 +147,29 @@ export const betCodes: Record<string, number> = {
 	'33&36': 1011,
 	'34&35': 10026,
 	'34&35&36': 10040,
-	'35&36': 10012
+	'35&36': 10012,
 };
 
 export function encodeBet(bet: LocalBet): bigint[] {
 	const value: bigint = bet.numbers.reduce((sum, num) => {
 		return sum + 2n ** BigInt(num);
-	}, 0n)
-	return [BigInt(bet.amount) * 10n ** 18n, value]
+	}, 0n);
+	return [BigInt(bet.amount) * 10n ** 18n, value];
 }
 
-
-export function getColor(num: number): "RED" | "BLACK" | "GREEN" {
-	if (num === 0) return "GREEN"
-	if ([1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 36, 34].includes(num)) return "RED"
-	return "BLACK"
+export function getColor(num: number): 'RED' | 'BLACK' | 'GREEN' {
+	if (num === 0) return 'GREEN';
+	if ([1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 36, 34].includes(num)) return 'RED';
+	return 'BLACK';
 }
 
 export const getBlack = () => {
-	return [2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35]
-}
+	return [2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35];
+};
 
 export const getRed = () => {
-	return [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 36, 34]
-}
+	return [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 36, 34];
+};
 
 export const addressToColor = (walletAddress: Address) => {
 	if (!walletAddress) return '#ffffff';
@@ -180,28 +179,25 @@ export const addressToColor = (walletAddress: Address) => {
 		walletHash.substring(0, chunkLength),
 		walletHash.substring(chunkLength, chunkLength * 2),
 		walletHash.substring(chunkLength * 2, walletHash.length),
-	]
-	
-	
-	const red = parseInt(firstChunk, 16) % 256;
-	const green = parseInt(secondChunk, 16) % 256;
-	const blue = parseInt(thirdChunk, 16) % 256;
-	const result = [red, green, blue].map(color => `${color < 16 ? "0" : ""}${color.toString(16)}`).join('');
+	];
+
+	const red = Number.parseInt(firstChunk, 16) % 256;
+	const green = Number.parseInt(secondChunk, 16) % 256;
+	const blue = Number.parseInt(thirdChunk, 16) % 256;
+	const result = [red, green, blue].map((color) => `${color < 16 ? '0' : ''}${color.toString(16)}`).join('');
 	return `#${result}`;
-}
+};
 
-
-export function bitMapToNumbers(bet: RouletteSubBet): { amount: bigint, numbers: number[], value: number } {
-	const {amount, bitmap} = bet;
+export function bitMapToNumbers(bet: RouletteSubBet): { amount: bigint; numbers: number[]; value: number } {
+	const { amount, bitmap } = bet;
 	const binaryString = bitmap.toString(2);
 	const numbers: number[] = [];
-	
+
 	for (let i = binaryString.length - 1; i >= 0; i--) {
 		if (binaryString[i] === '1') {
 			numbers.push(binaryString.length - 1 - i);
 		}
 	}
-	
-	
-	return {numbers, amount, value: betCodes[numbers.join('&')]};
+
+	return { numbers, amount, value: betCodes[numbers.join('&')] };
 }
