@@ -97,7 +97,7 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 	const potentialWin = roundInfo.volume * 0.924;
 	const myCoef = myBetVolume === 0n ? 0 : potentialWin / valueToNumber(myBetVolume);
 
-	console.log(loading, allowance, balance)
+	console.log(loading, allowance, balance);
 
 	return (
 		<motion.div className={'flex flex-col grow justify-between duration-300'}>
@@ -278,7 +278,6 @@ const RoundResult: FC<{ round: number }> = ({ round }) => {
 			</motion.div>
 		);
 	}
-
 
 	return (
 		<motion.div
