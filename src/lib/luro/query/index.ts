@@ -1,5 +1,5 @@
-import {LURO} from '@/src/global.ts';
-import {animateNewBet, getCurrentRound, handleError} from '@/src/lib/luro';
+import { LURO } from '@/src/global.ts';
+import { animateNewBet, getCurrentRound, handleError } from '@/src/lib/luro';
 import {
 	distributeBonus,
 	fetchAvailableBonus,
@@ -12,14 +12,14 @@ import {
 	placeBet,
 	startRound,
 } from '@/src/lib/luro/api';
-import type {LuroBet, PlaceBetParams, Round, WheelState} from '@/src/lib/luro/types.ts';
-import {LuckyRoundContract} from '@betfinio/abi';
-import {ZeroAddress} from '@betfinio/hooks';
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import {type WriteContractReturnType, readContract} from '@wagmi/core';
-import {useTranslation} from 'react-i18next';
-import type {Address, WriteContractErrorType} from 'viem';
-import {useAccount, useConfig, useWatchContractEvent} from 'wagmi';
+import type { LuroBet, PlaceBetParams, Round, WheelState } from '@/src/lib/luro/types.ts';
+import { LuckyRoundContract } from '@betfinio/abi';
+import { ZeroAddress } from '@betfinio/hooks';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { type WriteContractReturnType, readContract } from '@wagmi/core';
+import { useTranslation } from 'react-i18next';
+import type { Address, WriteContractErrorType } from 'viem';
+import { useAccount, useConfig, useWatchContractEvent } from 'wagmi';
 
 export const useObserveBet = () => {
 	const queryClient = useQueryClient();
@@ -28,14 +28,14 @@ export const useObserveBet = () => {
 	};
 	const query = useQuery<{ address: Address; strength: number }>({
 		queryKey: ['luro', 'bets', 'newBet'],
-		initialData: {address: ZeroAddress, strength: 0},
+		initialData: { address: ZeroAddress, strength: 0 },
 	});
 
-	return {query, resetObservedBet};
+	return { query, resetObservedBet };
 };
 
 export const usePlaceBet = (address: Address) => {
-	const {t} = useTranslation('', {keyPrefix: 'shared.errors'});
+	const { t } = useTranslation('', { keyPrefix: 'shared.errors' });
 	const queryClient = useQueryClient();
 	const config = useConfig();
 	return useMutation<WriteContractReturnType, WriteContractErrorType, PlaceBetParams>({
@@ -47,15 +47,15 @@ export const usePlaceBet = (address: Address) => {
 		},
 		onMutate: () => console.log('placeBet'),
 		onSuccess: async (data) => {
-			await queryClient.invalidateQueries({queryKey: ['luro', 'bets', 'round']});
+			await queryClient.invalidateQueries({ queryKey: ['luro', 'bets', 'round'] });
 		},
 		onSettled: () => console.log('placeBet settled'),
 	});
 };
 
 export const useStartRound = (round: number) => {
-	const {t} = useTranslation('', {keyPrefix: 'shared.errors'});
-	const {updateState} = useLuroState();
+	const { t } = useTranslation('', { keyPrefix: 'shared.errors' });
+	const { updateState } = useLuroState();
 	const config = useConfig();
 	useWatchContractEvent({
 		abi: LuckyRoundContract.abi,
@@ -66,7 +66,7 @@ export const useStartRound = (round: number) => {
 			// @ts-ignore
 			if (Number(rolledLogs[0].args.round) === round) {
 				console.log('START SPINNING');
-				updateState({state: 'spinning'});
+				updateState({ state: 'spinning' });
 			}
 		},
 	});
@@ -81,7 +81,7 @@ export const useStartRound = (round: number) => {
 			if (Number(landedLogs[0].args.round) === round) {
 				console.log('LANDED, STOP SPINNING');
 				// @ts-ignore
-				updateState({state: 'landed', result: Number(landedLogs[0].args.result), bet: landedLogs[0].args.bet});
+				updateState({ state: 'landed', result: Number(landedLogs[0].args.result), bet: landedLogs[0].args.bet });
 			}
 		},
 	});
@@ -140,7 +140,7 @@ export const useRoundBonusShare = (round: number) => {
 };
 
 export const useDistributeBonus = () => {
-	const {t} = useTranslation('', {keyPrefix: 'shared.errors'});
+	const { t } = useTranslation('', { keyPrefix: 'shared.errors' });
 	const queryClient = useQueryClient();
 	const config = useConfig();
 	return useMutation<WriteContractReturnType, WriteContractErrorType, { round: number }>({
@@ -153,7 +153,7 @@ export const useDistributeBonus = () => {
 		onMutate: () => console.log('distribute bonus'),
 		onSuccess: async (data) => {
 			console.log(data);
-			await queryClient.invalidateQueries({queryKey: ['luro', 'bonus']});
+			await queryClient.invalidateQueries({ queryKey: ['luro', 'bonus'] });
 		},
 		onSettled: () => console.log('placeBet settled'),
 	});
@@ -176,7 +176,7 @@ export const useAvailableBonus = (address: Address) => {
 };
 
 export const useRound = (round: number) => {
-	const {address = ZeroAddress} = useAccount();
+	const { address = ZeroAddress } = useAccount();
 	const queryClient = useQueryClient();
 	const config = useConfig();
 	useWatchContractEvent({
@@ -188,9 +188,8 @@ export const useRound = (round: number) => {
 		},
 		onLogs: async (betLogs) => {
 			console.log('BET LOGS', betLogs);
-			await queryClient.invalidateQueries({queryKey: ['luro', 'round', Number(betLogs[0].args.round)]});
+			await queryClient.invalidateQueries({ queryKey: ['luro', 'round', Number(betLogs[0].args.round)] });
 			animateNewBet(betLogs[0]?.args?.player ?? ZeroAddress, 10, queryClient);
-
 		},
 	});
 
@@ -201,7 +200,7 @@ export const useRound = (round: number) => {
 		onLogs: async (logs) => {
 			console.log('winner', logs[0]);
 			console.log('round', Number(logs[0].args.round));
-			await queryClient.invalidateQueries({queryKey: ['luro', 'round', Number(logs[0].args.round)]});
+			await queryClient.invalidateQueries({ queryKey: ['luro', 'round', Number(logs[0].args.round)] });
 		},
 	});
 	useWatchContractEvent({
@@ -213,7 +212,7 @@ export const useRound = (round: number) => {
 			// @ts-ignore
 			console.log('round', Number(logs[0].args.round));
 			// @ts-ignore
-			queryClient.invalidateQueries({queryKey: ['luro', 'round', Number(logs[0].args.round)]});
+			queryClient.invalidateQueries({ queryKey: ['luro', 'round', Number(logs[0].args.round)] });
 		},
 	});
 	return useQuery<Round>({
@@ -228,14 +227,14 @@ export const useLuroState = () => {
 	const queryClient = useQueryClient();
 	const state = useQuery<WheelState>({
 		queryKey: ['luro', 'state'],
-		initialData: {state: 'standby'},
+		initialData: { state: 'standby' },
 	});
 
 	const updateState = (st: WheelState) => {
 		queryClient.setQueryData(['luro', 'state'], st);
 	};
 
-	return {state, updateState};
+	return { state, updateState };
 };
 
 export interface ICurrentRoundInfo {
@@ -247,7 +246,7 @@ export interface ICurrentRoundInfo {
 export const useVisibleRound = () => {
 	const queryClient = useQueryClient();
 	const fetchRound = async (): Promise<number> => {
-		await queryClient.invalidateQueries({queryKey: ['luro', 'bets', 'round']});
+		await queryClient.invalidateQueries({ queryKey: ['luro', 'bets', 'round'] });
 		return getCurrentRound();
 	};
 
@@ -271,7 +270,7 @@ export const useRounds = (player: Address, onlyPlayers = false) => {
 
 export const useRoundInfo = (round: number) => {
 	const config = useConfig();
-	const {address = ZeroAddress} = useAccount();
+	const { address = ZeroAddress } = useAccount();
 	return useQuery<Round>({
 		queryKey: ['luro', 'round', round],
 		queryFn: () => fetchRound(round, address, config),

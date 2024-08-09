@@ -1,3 +1,4 @@
+import { TabItem } from '@/src/components/luro/tabs/PlayersTab.tsx';
 import { hexToRgbA, mapBetsToAuthors } from '@/src/lib/luro';
 import { useLuroState, useObserveBet, useRound, useRoundBank, useRoundBets, useStartRound, useVisibleRound } from '@/src/lib/luro/query';
 import type { LuroBet } from '@/src/lib/luro/types.ts';
@@ -19,7 +20,6 @@ import { CircularProgressbar } from 'react-circular-progressbar';
 import ConfettiExplosion from 'react-confetti-explosion';
 import type { Address } from 'viem';
 import { useAccount } from 'wagmi';
-import {TabItem} from "@/src/components/luro/tabs/PlayersTab.tsx";
 
 const largeProps = {
 	force: 0.8,
