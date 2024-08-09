@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
 
+import { ENV } from '@/src/global.ts';
 import { useBetsCount, useTotalVolume, useVisibleRound } from '@/src/lib/luro/query';
 import { valueToNumber } from '@betfinio/hooks/dist/utils';
 import { BetValue } from 'betfinio_app/BetValue';
 import cx from 'clsx';
 import { AlertCircle } from 'lucide-react';
-import { ENV } from '@/src/global.ts';
 
 const Stats = () => {
 	const { data: betsCount = 0, isFetched: isBetsFetched } = useBetsCount();
