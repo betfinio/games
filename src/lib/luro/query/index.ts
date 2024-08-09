@@ -47,7 +47,6 @@ export const usePlaceBet = (address: Address) => {
 		},
 		onMutate: () => console.log('placeBet'),
 		onSuccess: async (data) => {
-			animateNewBet(address, 10, queryClient);
 			await queryClient.invalidateQueries({ queryKey: ['luro', 'bets', 'round'] });
 		},
 		onSettled: () => console.log('placeBet settled'),
@@ -189,10 +188,8 @@ export const useRound = (round: number) => {
 		},
 		onLogs: async (betLogs) => {
 			console.log('BET LOGS', betLogs);
-			await queryClient.invalidateQueries({ queryKey: ['luro', 'round', Number(logs[0].args.round)] });
-			if (betLogs[0]?.args?.player !== address) {
-				animateNewBet(betLogs[0]?.args?.player ?? ZeroAddress, 10, queryClient);
-			}
+			await queryClient.invalidateQueries({ queryKey: ['luro', 'round', Number(betLogs[0].args.round)] });
+			animateNewBet(betLogs[0]?.args?.player ?? ZeroAddress, 10, queryClient);
 		},
 	});
 
