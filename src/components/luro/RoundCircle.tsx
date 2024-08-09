@@ -125,11 +125,7 @@ export const RoundCircle: FC<{ round: number }> = ({ round }) => {
 				'border border-gray-800 relative p-4 xl:p-8 rounded-md bg-primaryLight flex flex-col md:flex-row items-center justify-center gap-10 duration-300',
 			)}
 		>
-			{
-				currentRound === round && (
-					<EffectsLayer />
-				)
-			}
+			{currentRound === round && <EffectsLayer />}
 
 			<div className={'h-full max-h-[250px] xl:max-h-[325px]'} ref={boxRef}>
 				<div className={'relative'}>
@@ -235,7 +231,6 @@ const EffectsLayer = () => {
 	};
 
 	useEffect(() => {
-
 		if (observedBetAuthor.address === address) {
 			setParticles(generateParticles(address));
 			setTimeout(() => {
@@ -405,14 +400,10 @@ const ProgressBar: FC<{ round: number; authors: CustomLuroBet[] }> = ({ round, a
 		<>
 			<motion.div className={cx('absolute w-[115%] h-[115%] -top-[7.5%] -left-[7.5%]')}>
 				<div className={'rotate-180 absolute z-10 top-3 left-1/2 -translate-x-1/2'}>
-
-				<TriangleIcon
-					fill={'#FFC800'}
-					className={cx(
-						'text-yellow-400 w-4 h-4  opacity-0 duration-300 delay-300 ',
-						wheelState.data.state !== 'standby' && 'opacity-100',
-					)}
-				/>
+					<TriangleIcon
+						fill={'#FFC800'}
+						className={cx('text-yellow-400 w-4 h-4  opacity-0 duration-300 delay-300 ', wheelState.data.state !== 'standby' && 'opacity-100')}
+					/>
 				</div>
 
 				<CircularProgressbar className={cx('opacity-100 duration-300', wheelState.data.state !== 'standby' && '!opacity-0')} styles={styles} value={progress} />
@@ -424,7 +415,7 @@ const ProgressBar: FC<{ round: number; authors: CustomLuroBet[] }> = ({ round, a
 };
 
 const BetCircleWinner: FC<{ player: Address; amount: number; percent: number; coef: string }> = ({ player, amount, percent, coef }) => {
-	console.log(player)
+	console.log(player);
 	return (
 		<motion.div
 			initial={{ opacity: 0 }}
