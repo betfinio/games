@@ -31,9 +31,10 @@ const largeProps = {
 
 export const RoundCircle: FC<{ round: number }> = ({ round }) => {
 	const [confettiExploding, setConfettiExploding] = useState(false);
-	const { data: bets } = useRoundBets(round);
+	const { data: bets = [] } = useRoundBets(round);
 	const { data: currentRound } = useVisibleRound();
 	const { data: roundData } = useRound(round);
+
 	const {
 		state: { data: wheelState },
 		updateState: updateWheelState,
@@ -290,7 +291,8 @@ const CustomTooltip =
 	}>) => <TabItem key={id} amount={value} className={'min-w-[250px]'} player={label as Address} percent={(value * 100) / valueToNumber(bank)} />;
 const ProgressBar: FC<{ round: number; authors: CustomLuroBet[] }> = ({ round, authors }) => {
 	const { data: roundData, isLoading } = useRound(round);
-	const { data: bank } = useRoundBank(round);
+	const { data: bank = 0n } = useRoundBank(round);
+
 	const queryClient = useQueryClient();
 	const {
 		state: { data: luroState, isLoading: isLotteryStateLoading, isPending: isLotteryStatePending },

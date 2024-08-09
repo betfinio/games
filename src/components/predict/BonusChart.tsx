@@ -25,8 +25,6 @@ const BonusChart: FC<{ bonuses: { bet: PredictBet; bonus: number }[]; oneWay?: b
 		colors.push(bet.player === address ? '#FFC800' : bet.side ? '#27AE60' : '#EB5757');
 	}
 
-	console.log(bonuses);
-
 	const options = useMemo<ChartOptions<'bar'>>(
 		() => ({
 			plugins: {
