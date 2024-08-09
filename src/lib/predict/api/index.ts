@@ -157,7 +157,7 @@ export async function fetchPlayerRounds(options: Options, params: { game: Addres
 			game: PREDICT_ADDRESS,
 		},
 	});
-	const g = Object.values(games).find((g) => g.address === game)!;
+	const g = Object.values(games).find((g) => g.address === game) as Game;
 	const rounds = await Promise.all(
 		logs.map(async (log) => {
 			const block = log.blockNumber;

@@ -22,7 +22,7 @@ import { type WriteContractReturnType, writeContract } from '@wagmi/core';
 import { getTransactionLink } from 'betfinio_app/helpers';
 import { useSupabase } from 'betfinio_app/supabase';
 import { toast } from 'betfinio_app/use-toast';
-import type { Address } from 'viem';
+import type { Address, WriteContractErrorType } from 'viem';
 import { waitForTransactionReceipt } from 'viem/actions';
 import { useAccount, useConfig, useWatchContractEvent } from 'wagmi';
 
@@ -182,7 +182,7 @@ export const usePlayerRounds = (game: Address) => {
 export const usePlaceBet = () => {
 	const client = useQueryClient();
 	const config = useConfig();
-	return useMutation<WriteContractReturnType, any, PlaceBetParams>({
+	return useMutation<WriteContractReturnType, WriteContractErrorType, PlaceBetParams>({
 		mutationKey: ['predict', 'bets', 'place'],
 		mutationFn: (params) => placeBet(params, { config }),
 		onError: (e) => {
@@ -209,7 +209,7 @@ export const useCalculate = () => {
 	const client = useQueryClient();
 	const config = useConfig();
 	const { client: supabase } = useSupabase();
-	return useMutation<WriteContractReturnType, any, CalculateRoundParams>({
+	return useMutation<WriteContractReturnType, WriteContractErrorType, CalculateRoundParams>({
 		mutationKey: ['predict', 'bets', 'calculate'],
 		mutationFn: (params) => calculateRound(params, { config, supabase }),
 		onError: (e) => {
