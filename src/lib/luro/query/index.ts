@@ -13,7 +13,7 @@ import {
 	startRound,
 } from '@/src/lib/luro/api';
 import type { LuroBet, PlaceBetParams, Round, WheelState } from '@/src/lib/luro/types.ts';
-import { LotteryContract } from '@betfinio/abi';
+import { LuckyRoundContract } from '@betfinio/abi';
 import { ZeroAddress } from '@betfinio/hooks';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { type WriteContractReturnType, readContract } from '@wagmi/core';
@@ -59,7 +59,7 @@ export const useStartRound = (round: number) => {
 	const { updateState } = useLuroState();
 	const config = useConfig();
 	useWatchContractEvent({
-		abi: LotteryContract.abi,
+		abi: LuckyRoundContract.abi,
 		address: LURO,
 		eventName: 'RequestedCalculation',
 		onLogs: (rolledLogs) => {
@@ -73,7 +73,7 @@ export const useStartRound = (round: number) => {
 	});
 
 	useWatchContractEvent({
-		abi: LotteryContract.abi,
+		abi: LuckyRoundContract.abi,
 		address: LURO,
 		eventName: 'WinnerCalculated',
 		onLogs: (landedLogs) => {
@@ -115,7 +115,7 @@ export const useRoundBank = (round: number) => {
 		queryKey: ['luro', 'bank', 'round', round],
 		queryFn: async () => {
 			return (await readContract(config, {
-				abi: LotteryContract.abi,
+				abi: LuckyRoundContract.abi,
 				address: LURO,
 				functionName: 'roundBank',
 				args: [BigInt(round)],
@@ -131,7 +131,7 @@ export const useRoundBonusShare = (round: number) => {
 		queryKey: ['luro', 'bonus', 'round', round],
 		queryFn: async () => {
 			return (await readContract(config, {
-				abi: LotteryContract.abi,
+				abi: LuckyRoundContract.abi,
 				address: LURO,
 				functionName: 'roundBonusShares',
 				args: [BigInt(round)],
@@ -181,7 +181,7 @@ export const useRound = (round: number) => {
 	const queryClient = useQueryClient();
 	const config = useConfig();
 	useWatchContractEvent({
-		abi: LotteryContract.abi,
+		abi: LuckyRoundContract.abi,
 		address: LURO,
 		eventName: 'BetCreated',
 		args: {
@@ -197,7 +197,7 @@ export const useRound = (round: number) => {
 	});
 
 	useWatchContractEvent({
-		abi: LotteryContract.abi,
+		abi: LuckyRoundContract.abi,
 		address: LURO,
 		eventName: 'WinnerCalculated',
 		onLogs: async (logs) => {
@@ -207,7 +207,7 @@ export const useRound = (round: number) => {
 		},
 	});
 	useWatchContractEvent({
-		abi: LotteryContract.abi,
+		abi: LuckyRoundContract.abi,
 		address: LURO,
 		eventName: 'RequestedCalculation',
 		onLogs: (logs) => {
@@ -268,8 +268,6 @@ export const useRounds = (player: Address, onlyPlayers = false) => {
 	return useQuery<Round[]>({
 		queryKey: ['luro', 'rounds', player, onlyPlayers],
 		queryFn: () => fetchRounds(player, onlyPlayers, config),
-		refetchOnMount: false,
-		refetchOnWindowFocus: false,
 	});
 };
 
