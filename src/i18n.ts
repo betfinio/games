@@ -1,9 +1,9 @@
 import * as i18 from 'i18next';
-import {initReactI18next} from 'react-i18next';
+import type { i18n } from 'i18next';
+import ICU from 'i18next-icu';
+import { initReactI18next } from 'react-i18next';
 import enJSON from './translations/en.json';
 import ruJSON from './translations/ru.json';
-import {i18n} from "i18next";
-import ICU from 'i18next-icu';
 
 // @ts-ignore
 import enShared from 'betfinio_app/locales/en';
@@ -14,14 +14,14 @@ const resources = {
 	en: {
 		translation: {
 			games: enJSON,
-			shared: enShared
-		}
+			shared: enShared,
+		},
 	},
 	ru: {
 		translation: {
 			games: ruJSON,
-			shared: ruShared
-		}
+			shared: ruShared,
+		},
 	},
 };
 
@@ -33,8 +33,8 @@ instance
 		resources: resources,
 		lng: 'en', // default language
 		fallbackLng: 'en',
-		interpolation: {escapeValue: false},
-		react: {useSuspense: true},
+		interpolation: { escapeValue: false },
+		react: { useSuspense: true },
 	});
 
 export default instance;
