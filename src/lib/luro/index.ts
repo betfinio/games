@@ -79,7 +79,7 @@ export const getCurrentRound = () => {
 	if (import.meta.env.PUBLIC_ENVIRONMENT.includes('prod')) {
 		return ((Math.floor(Date.now() / 1000) + 60 * 60 * 6) / 60) * 60 * 24;
 	}
-	return (Math.floor(Date.now() / 1000) / 60) * 60 * 24;
+	return Math.floor(Date.now() / 1000 / (60 * 10));
 };
 
 export const jumpToCurrentRound = (queryClient: QueryClient) => {

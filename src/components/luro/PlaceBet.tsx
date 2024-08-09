@@ -96,6 +96,8 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 	const potentialWin = roundInfo.volume * 0.924;
 	const myCoef = myBetVolume === 0n ? 0 : potentialWin / valueToNumber(myBetVolume);
 
+	console.log(loading, allowance, balance);
+
 	return (
 		<motion.div className={'flex flex-col grow justify-between duration-300'}>
 			<div className={cx('rounded-md bg-primaryLight border drop-shadow-[0_0_35px_rgba(87,101,242,0.75)] border-gray-800 p-5 relative w-full')}>
@@ -128,7 +130,7 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 					}
 				>
 					{isPending ? (
-						<Loader size={30} color={'black animate-spin'} />
+						<Loader size={30} color={'black'} className={'animate-spin'} />
 					) : (
 						<span className={'flex flex-row items-center gap-1 text-base uppercase'}>
 							{t('bet')}
