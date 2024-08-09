@@ -1,23 +1,15 @@
 import { useMemo } from 'react';
 
-import { useVisibleRound } from '@/src/lib/luro/query';
+import { useBetsCount, useTotalVolume, useVisibleRound } from '@/src/lib/luro/query';
 import { valueToNumber } from '@betfinio/hooks/dist/utils';
 import { BetValue } from 'betfinio_app/BetValue';
 import cx from 'clsx';
 import { AlertCircle } from 'lucide-react';
 
 const Stats = () => {
-	const useBetsCount = () => {
-		return { data: 0, isFetched: true };
-	};
-
-	const useTotalVolume = () => {
-		return { data: 0n, isFetched: true };
-	};
-
 	const { data: betsCount = 0, isFetched: isBetsFetched } = useBetsCount();
-
 	const { data: volume = 0n, isFetched: isVolumeFetched } = useTotalVolume();
+
 	const staking = useMemo(() => {
 		return (volume * 36n) / 1000n;
 	}, [volume]);
