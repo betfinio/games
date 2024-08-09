@@ -6,7 +6,7 @@ import { BetValue } from 'betfinio_app/BetValue';
 import { useUsername } from 'betfinio_app/lib/query/username';
 import cx from 'clsx';
 import { AnimatePresence } from 'framer-motion';
-import { type CSSProperties, type FC, useMemo } from 'react';
+import { type CSSProperties, type FC, useMemo, useRef } from 'react';
 import { FixedSizeList as List } from 'react-window';
 import type { Address } from 'viem';
 
@@ -35,12 +35,13 @@ export const BonusTab = () => {
 			};
 		});
 	}, [bets, volume]);
+	const ref = useRef<HTMLDivElement>(null);
 
 	return (
-		<div className={'grow flex flex-col gap-2'}>
+		<div className={'grow flex flex-col gap-2 h-full'} ref={ref}>
 			<AnimatePresence mode="popLayout">
 				<List
-					height={460} // Adjust height to fit your layout
+					height={ref.current?.offsetHeight || 460} // Adjust height to fit your layout
 					itemCount={bets.length}
 					itemSize={74} // Adjust item size if necessary
 					width={'100%'}
