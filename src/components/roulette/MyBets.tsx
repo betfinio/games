@@ -3,11 +3,11 @@ import { useRouletteBets } from '@/src/lib/roulette/query';
 import type { RouletteBet } from '@/src/lib/roulette/types.ts';
 import { ZeroAddress } from '@betfinio/hooks';
 import { truncateEthAddress, valueToNumber } from '@betfinio/hooks/dist/utils';
-import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
+import { createColumnHelper } from '@tanstack/react-table';
 import { BetValue } from 'betfinio_app/BetValue';
+import { DataTable } from 'betfinio_app/DataTable';
 import { Dialog, DialogContent } from 'betfinio_app/dialog';
 import cx from 'clsx';
-import { motion } from 'framer-motion';
 import { DateTime } from 'luxon';
 import { useState } from 'react';
 import { useAccount } from 'wagmi';
@@ -64,12 +64,6 @@ export const MyBetsTable = () => {
 		}),
 	];
 
-	const table = useReactTable<RouletteBet>({ columns: columns, data: bets, getCoreRowModel: getCoreRowModel() });
-
-	const handleClick = (bet: RouletteBet) => {
-		setSelected(bet);
-	};
-
 	if (bets.length === 0) {
 		return <div className={'flex justify-center p-3'}>No bets yet</div>;
 	}
@@ -81,54 +75,8 @@ export const MyBetsTable = () => {
 					<RoundModal selectedBet={selected} onClose={() => setSelected(null)} />
 				</DialogContent>
 			</Dialog>
-
-			<table className={'w-full text-sm border-separate border-spacing-y-[2px]'}>
-				<thead>
-					{table.getHeaderGroups().map((headerGroup) => (
-						<tr key={headerGroup.id} className={'text-gray-400 text-left'}>
-							{headerGroup.headers.map((header) => (
-								<th
-									key={header.id}
-									className={cx(' h-[40px] px-2 md:px-6', {
-										'hidden md:table-cell': ['created'].includes(header.id),
-									})}
-								>
-									{header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-								</th>
-							))}
-						</tr>
-					))}
-				</thead>
-				<tbody className={cx({ 'blur-sm animate-pulse': !isBetsFetched })}>
-					{table.getRowModel().rows.map((row) => (
-						<motion.tr
-							key={row.id}
-							onClick={() => handleClick(bets[Number(row.id)])}
-							className={cx('h-[50px] p-0 cursor-pointer ', row.index % 2 ? 'bg-primaryLight' : 'bg-primaryLighter')}
-						>
-							{row.getVisibleCells().map((cell) => (
-								<td
-									key={cell.id}
-									className={cx('text-left px-2 md:px-6', {
-										'hidden md:table-cell': ['created'].includes(cell.getContext().column.id),
-									})}
-								>
-									{flexRender(cell.column.columnDef.cell, cell.getContext())}
-								</td>
-							))}
-						</motion.tr>
-					))}
-				</tbody>
-				<tfoot>
-					{table.getFooterGroups().map((footerGroup) => (
-						<tr key={footerGroup.id}>
-							{footerGroup.headers.map((header) => (
-								<th key={header.id}>{header.isPlaceholder ? null : flexRender(header.column.columnDef.footer, header.getContext())}</th>
-							))}
-						</tr>
-					))}
-				</tfoot>
-			</table>
+			{/*// @ts-ignore*/}
+			<DataTable columns={columns} data={bets} />
 		</div>
 	);
 };
