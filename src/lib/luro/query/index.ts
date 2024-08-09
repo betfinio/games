@@ -98,7 +98,6 @@ export const useStartRound = (round: number) => {
 			}
 
 			await queryClient.invalidateQueries({ queryKey: ['luro', 'round', Number(landedLogs[0].args.round)] });
-
 		},
 	});
 
@@ -206,7 +205,6 @@ export const useRound = (round: number) => {
 		},
 	});
 
-
 	useWatchContractEvent({
 		abi: LuckyRoundContract.abi,
 		address: LURO,
@@ -222,7 +220,7 @@ export const useRound = (round: number) => {
 	return useQuery<Round>({
 		queryKey: ['luro', 'round', round],
 		queryFn: () => {
-			return fetchRound(round, address, config)
+			return fetchRound(round, address, config);
 		},
 	});
 };
