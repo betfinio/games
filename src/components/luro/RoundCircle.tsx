@@ -58,6 +58,7 @@ export const RoundCircle: FC<{ round: number }> = ({ round }) => {
 			spinWheel();
 		}
 		if (wheelState.state === 'landed') {
+			console.log(wheelState.winnerOffset);
 			stopWheel((wheelState.winnerOffset * 360) / valueToNumber(roundData?.total.volume), wheelState.bet);
 		}
 		if (wheelState.state === 'stopped') {
@@ -98,6 +99,9 @@ export const RoundCircle: FC<{ round: number }> = ({ round }) => {
 		const wheelMaxNumberOfSpins = 2;
 
 		const totalRotation = Math.floor(Math.random() * (wheelMaxNumberOfSpins - wheelMinNumberOfSpins + 1) + wheelMinNumberOfSpins) * 360 + result;
+
+		console.log('result!!!', result, totalRotation);
+
 		anime.remove('.LOTTERY');
 		anime({
 			targets: ['.LOTTERY'],
@@ -155,6 +159,8 @@ export const RoundCircle: FC<{ round: number }> = ({ round }) => {
 								enableArcLabels={false}
 								enableArcLinkLabels={false}
 								width={boxRef.current?.clientHeight || 300}
+								padAngle={0.1}
+								cornerRadius={2}
 								height={boxRef.current?.clientHeight || 300}
 								isInteractive={wheelState.state === 'standby' || wheelState.state === 'waiting'}
 								tooltip={CustomTooltip(roundData?.total.volume || 0n)}
@@ -292,7 +298,7 @@ const CustomTooltip =
 	}>) => <TabItem key={id} amount={value} className={'min-w-[250px]'} player={label as Address} percent={(value * 100) / valueToNumber(bank)} />;
 const ProgressBar: FC<{ round: number; authors: CustomLuroBet[] }> = ({ round, authors }) => {
 	const { data: currentRound } = useVisibleRound();
-	const { data: roundData, isLoading } = useRound(currentRound);
+	const { data: roundData, isLoading } = useRound(round);
 	const { data: bank = 0n } = useRoundBank(round);
 
 	const queryClient = useQueryClient();
