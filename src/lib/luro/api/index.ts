@@ -1,14 +1,14 @@
-import {BETS_MEMORY, LURO, PARTNER} from '@/src/global.ts';
-import type {ICurrentRoundInfo} from '@/src/lib/luro/query';
-import type {LuroBet, PlaceBetParams, Round, RoundStatusEnum} from '@/src/lib/luro/types.ts';
-import {BetsMemoryContract, defaultMulticall, LuckyRoundBetContract, LuckyRoundContract, PartnerContract} from '@betfinio/abi';
+import { BETS_MEMORY, LURO, PARTNER } from '@/src/global.ts';
+import type { ICurrentRoundInfo } from '@/src/lib/luro/query';
+import type { LuroBet, PlaceBetParams, Round, RoundStatusEnum } from '@/src/lib/luro/types.ts';
+import { BetsMemoryContract, LuckyRoundBetContract, LuckyRoundContract, PartnerContract, defaultMulticall } from '@betfinio/abi';
 import arrayFrom from '@betfinio/abi/dist/utils';
-import {ZeroAddress} from '@betfinio/hooks';
-import {valueToNumber} from '@betfinio/hooks/dist/utils';
-import {multicall, readContract, writeContract} from '@wagmi/core';
-import {type Address, encodeAbiParameters, parseAbiParameters} from 'viem';
-import {getContractEvents} from 'viem/actions';
-import type {Config} from 'wagmi';
+import { ZeroAddress } from '@betfinio/hooks';
+import { valueToNumber } from '@betfinio/hooks/dist/utils';
+import { multicall, readContract, writeContract } from '@wagmi/core';
+import { type Address, encodeAbiParameters, parseAbiParameters } from 'viem';
+import { getContractEvents } from 'viem/actions';
+import type { Config } from 'wagmi';
 
 export async function placeBet({ round, amount, player }: PlaceBetParams, config: Config) {
 	try {
