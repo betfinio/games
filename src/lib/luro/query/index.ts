@@ -97,6 +97,7 @@ export const useStartRound = (round: number) => {
 				updateState({ state: 'landed', winnerOffset: Number(landedLogs[0].args.winnerOffset), bet: landedLogs[0].args.bet });
 			}
 
+			// @ts-ignore
 			await queryClient.invalidateQueries({ queryKey: ['luro', 'round', Number(landedLogs[0].args.round)] });
 		},
 	});
@@ -248,7 +249,7 @@ export interface ICurrentRoundInfo {
 }
 
 export const useVisibleRound = () => {
-	const queryClient = useQlueryClient();
+	const queryClient = useQueryClient();
 	const fetchRound = async (): Promise<number> => {
 		await queryClient.invalidateQueries({ queryKey: ['luro', 'bets', 'round'] });
 		return getCurrentRound();
