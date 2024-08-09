@@ -58,7 +58,6 @@ export const RoundCircle: FC<{ round: number }> = ({ round }) => {
 			spinWheel();
 		}
 		if (wheelState.state === 'landed') {
-			console.log(wheelState.winnerOffset);
 			stopWheel((wheelState.winnerOffset * 360) / valueToNumber(roundData?.total.volume), wheelState.bet);
 		}
 		if (wheelState.state === 'stopped') {
@@ -182,16 +181,7 @@ export const RoundCircle: FC<{ round: number }> = ({ round }) => {
 			</div>
 			{currentRound !== round && (roundData?.total.volume || 0n) > 0n && (
 				<div className={cx('w-full h-full flex gap-4 flex-row items-center justify-evenly')}>
-					{roundData?.status === 0 && (
-						<button
-							type={'button'}
-							onClick={handleSpin}
-							disabled={isPending}
-							className={'bg-yellow-400 disabled:bg-gray-500 rounded-lg px-6 py-2 text-black font-medium'}
-						>
-							{isPending ? 'Spinning...' : 'Spin the wheel'}
-						</button>
-					)}
+					{roundData?.status === 0 && 'Waiting for transaction. Any second now...'}
 
 					{roundData?.status === 2 && (
 						<>
@@ -258,7 +248,7 @@ const EffectsLayer = () => {
 			<AnimatePresence>
 				{particles?.map((particle, i) => (
 					<motion.div
-						key={i}
+						key={particle.color + i}
 						initial={{ opacity: 0, y: 300 }}
 						animate={{ opacity: 1, y: -500 }}
 						transition={{ duration: Math.random() * 2.3 + 1, delay: i * 0.01 }}
@@ -297,7 +287,6 @@ const CustomTooltip =
 		color: string;
 	}>) => <TabItem key={id} amount={value} className={'min-w-[250px]'} player={label as Address} percent={(value * 100) / valueToNumber(bank)} />;
 const ProgressBar: FC<{ round: number; authors: CustomLuroBet[] }> = ({ round, authors }) => {
-	const { data: currentRound } = useVisibleRound();
 	const { data: roundData, isLoading } = useRound(round);
 	const { data: bank = 0n } = useRoundBank(round);
 
@@ -330,7 +319,6 @@ const ProgressBar: FC<{ round: number; authors: CustomLuroBet[] }> = ({ round, a
 	};
 
 	const handleRoundEnd = () => {
-		console.log(bank);
 		if (bank === 0n) {
 			jumpToCurrentRound(queryClient);
 		} else {
@@ -369,7 +357,6 @@ const ProgressBar: FC<{ round: number; authors: CustomLuroBet[] }> = ({ round, a
 	const renderInside = () => {
 		switch (wheelState.data.state) {
 			case 'stopped': {
-				console.log('ROOOOOOOOUNNNND', round);
 				const author = authors.find((author) => author.label === roundData?.winner?.player);
 
 				const authorVolume = author?.value ?? 0;
