@@ -31,6 +31,7 @@ const largeProps = {
 
 export const RoundCircle: FC<{ round: number }> = ({ round }) => {
 	const [confettiExploding, setConfettiExploding] = useState(false);
+	const { address } = useAccount();
 	const { data: bets = [] } = useRoundBets(round);
 	const { data: currentRound } = useVisibleRound();
 	const { data: roundData } = useRound(round);
@@ -60,9 +61,11 @@ export const RoundCircle: FC<{ round: number }> = ({ round }) => {
 			stopWheel((wheelState.winnerOffset * 360) / valueToNumber(roundData?.total.volume), wheelState.bet);
 		}
 		if (wheelState.state === 'stopped') {
-			setConfettiExploding(true);
-		} else {
-			setConfettiExploding(false);
+			if (roundData.winner?.player === address) {
+				setConfettiExploding(true);
+			} else {
+				setConfettiExploding(false);
+			}
 		}
 	}, [wheelState]);
 
@@ -288,7 +291,8 @@ const CustomTooltip =
 		color: string;
 	}>) => <TabItem key={id} amount={value} className={'min-w-[250px]'} player={label as Address} percent={(value * 100) / valueToNumber(bank)} />;
 const ProgressBar: FC<{ round: number; authors: CustomLuroBet[] }> = ({ round, authors }) => {
-	const { data: roundData, isLoading } = useRound(round);
+	const { data: currentRound } = useVisibleRound();
+	const { data: roundData, isLoading } = useRound(currentRound);
 	const { data: bank = 0n } = useRoundBank(round);
 
 	const queryClient = useQueryClient();
@@ -359,6 +363,7 @@ const ProgressBar: FC<{ round: number; authors: CustomLuroBet[] }> = ({ round, a
 	const renderInside = () => {
 		switch (wheelState.data.state) {
 			case 'stopped': {
+				console.log('ROOOOOOOOUNNNND', round);
 				const author = authors.find((author) => author.label === roundData?.winner?.player);
 
 				const authorVolume = author?.value ?? 0;
