@@ -5,6 +5,7 @@ import { valueToNumber } from '@betfinio/hooks/dist/utils';
 import { BetValue } from 'betfinio_app/BetValue';
 import cx from 'clsx';
 import { AlertCircle } from 'lucide-react';
+import { ENV } from '@/src/global.ts';
 
 const Stats = () => {
 	const { data: betsCount = 0, isFetched: isBetsFetched } = useBetsCount();
@@ -52,7 +53,7 @@ export const RoundInfo = () => {
 			<div className={'flex items-center gap-10'}>
 				<div className={'text-sm leading-4 hidden sm:block'}>
 					<div className={'font-bold text-yellow-400'}>Lucky round</div>
-					<div>10 min</div>
+					<div>{ENV.includes('prod') ? '1 day' : '10 min'}</div>
 				</div>
 				<div className={' flex flex-row items-center justify-start md:justify-center gap-4'}>
 					<p className={'font-bold text-lg'}>
