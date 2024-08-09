@@ -14,7 +14,7 @@ import {
 } from '@/src/lib/luro/api';
 import type { LuroBet, PlaceBetParams, Round, WheelState } from '@/src/lib/luro/types.ts';
 import { LuckyRoundContract } from '@betfinio/abi';
-import { ZeroAddress } from '@betfinio/hooks';
+import { ZeroAddress } from '@betfinio/abi';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { type WriteContractReturnType, readContract } from '@wagmi/core';
 import { getTransactionLink } from 'betfinio_app/helpers';
@@ -66,6 +66,7 @@ export const usePlaceBet = (address: Address) => {
 };
 
 export const useStartRound = (round: number) => {
+	const queryClient = useQueryClient();
 	const { t } = useTranslation('', { keyPrefix: 'shared.errors' });
 	const { updateState } = useLuroState();
 	const config = useConfig();
@@ -87,14 +88,17 @@ export const useStartRound = (round: number) => {
 		abi: LuckyRoundContract.abi,
 		address: LURO,
 		eventName: 'WinnerCalculated',
-		onLogs: (landedLogs) => {
+		onLogs: async (landedLogs) => {
 			console.log('CALCULATED LOGS', landedLogs);
 			// @ts-ignore
 			if (Number(landedLogs[0].args.round) === round) {
 				console.log('LANDED, STOP SPINNING');
 				// @ts-ignore
-				updateState({ state: 'landed', result: Number(landedLogs[0].args.result), bet: landedLogs[0].args.bet });
+				updateState({ state: 'landed', winnerOffset: Number(landedLogs[0].args.winnerOffset), bet: landedLogs[0].args.bet });
 			}
+
+			await queryClient.invalidateQueries({ queryKey: ['luro', 'round', Number(landedLogs[0].args.round)] });
+
 		},
 	});
 
@@ -202,16 +206,7 @@ export const useRound = (round: number) => {
 		},
 	});
 
-	useWatchContractEvent({
-		abi: LuckyRoundContract.abi,
-		address: LURO,
-		eventName: 'WinnerCalculated',
-		onLogs: async (logs) => {
-			console.log('winner', logs[0]);
-			console.log('round', Number(logs[0].args.round));
-			await queryClient.invalidateQueries({ queryKey: ['luro', 'round', Number(logs[0].args.round)] });
-		},
-	});
+
 	useWatchContractEvent({
 		abi: LuckyRoundContract.abi,
 		address: LURO,
@@ -226,9 +221,9 @@ export const useRound = (round: number) => {
 	});
 	return useQuery<Round>({
 		queryKey: ['luro', 'round', round],
-		queryFn: () => fetchRound(round, address, config),
-		refetchOnMount: false,
-		refetchOnWindowFocus: false,
+		queryFn: () => {
+			return fetchRound(round, address, config)
+		},
 	});
 };
 
@@ -274,15 +269,6 @@ export const useRounds = (player: Address, onlyPlayers = false) => {
 	return useQuery<Round[]>({
 		queryKey: ['luro', 'rounds', player, onlyPlayers],
 		queryFn: () => fetchRounds(player, onlyPlayers, config),
-	});
-};
-
-export const useRoundInfo = (round: number) => {
-	const config = useConfig();
-	const { address = ZeroAddress } = useAccount();
-	return useQuery<Round>({
-		queryKey: ['luro', 'round', round],
-		queryFn: () => fetchRound(round, address, config),
 	});
 };
 
