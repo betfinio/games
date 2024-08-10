@@ -99,7 +99,13 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 	const myCoef = myBetVolume === 0n ? 0 : potentialWin / valueToNumber(myBetVolume);
 
 	return (
-		<motion.div className={'flex flex-col grow justify-between duration-300'}>
+		<motion.div
+			initial={{ opacity: 0 }}
+			animate={{ opacity: 1 }}
+			exit={{ opacity: 0 }}
+			transition={{ duration: 0.3 }}
+			className={'flex flex-col grow justify-between duration-300'}
+		>
 			<div className={cx('rounded-md bg-primaryLight border drop-shadow-[0_0_35px_rgba(87,101,242,0.75)] border-gray-800 p-5 relative w-full')}>
 				<h2 className={'text-lg font-semibold text-center'}>{t('title')}</h2>
 				<h4 className={'font-medium text-center text-gray-500 text-xs mt-[10px]'}>{t('amount')}</h4>
@@ -161,11 +167,6 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 };
 
 const WaitingScreen: FC<{ round: number }> = ({ round }) => {
-	const { mutate: startRound, isPending } = useStartRound(round);
-
-	const handleSpin = () => {
-		startRound();
-	};
 	return (
 		<motion.div
 			initial={{ opacity: 0 }}
@@ -175,14 +176,6 @@ const WaitingScreen: FC<{ round: number }> = ({ round }) => {
 			className={'grow flex flex-col items-center justify-center min-h-[390px]'}
 		>
 			<span>Waiting for polygon block...</span>
-			<button
-				type={'button'}
-				onClick={handleSpin}
-				disabled={isPending}
-				className={'bg-yellow-400 disabled:bg-gray-500 rounded-lg px-6 py-2 text-black font-medium'}
-			>
-				{isPending ? 'Spinning...' : 'Spin the wheel'}
-			</button>
 		</motion.div>
 	);
 };
