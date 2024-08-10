@@ -155,8 +155,6 @@ export const RoundCircle: FC<{ round: number }> = ({ round }) => {
 									enableArcLabels={false}
 									enableArcLinkLabels={false}
 									width={boxRef.current?.clientHeight || 300}
-									padAngle={0.1}
-									cornerRadius={2}
 									height={boxRef.current?.clientHeight || 300}
 									isInteractive={wheelState.state === 'standby' || wheelState.state === 'waiting'}
 									tooltip={CustomTooltip(roundData?.total.volume || 0n)}
