@@ -26,7 +26,7 @@ const Stats = () => {
 			<div className={'flex flex-col'}>
 				<span>Total Volume</span>
 				<div className={cx('font-semibold flex flex-row items-center gap-1 duration-300', !isVolumeFetched && 'animate-pulse blur-sm')}>
-					<BetValue precision={1} value={valueToNumber(staking)} withIcon={true} iconClassName={'w-3 h-3'} />
+					<BetValue precision={1} value={valueToNumber(volume)} withIcon={true} iconClassName={'w-3 h-3'} />
 				</div>
 			</div>
 			<div className={'w-[1px] bg-white h-[36px] hidden md:block'} />
