@@ -10,6 +10,7 @@ import { Pie, type PieTooltipProps } from '@nivo/pie';
 import { useQueryClient } from '@tanstack/react-query';
 import anime from 'animejs';
 import { BetValue } from 'betfinio_app/BetValue';
+import { Tooltip, TooltipContent, TooltipTrigger } from 'betfinio_app/tooltip';
 import cx from 'clsx';
 import { AnimatePresence, animate, motion } from 'framer-motion';
 import { Loader, PlusIcon, TriangleIcon } from 'lucide-react';
@@ -42,9 +43,6 @@ export const RoundCircle: FC<{ round: number }> = ({ round }) => {
 	} = useLuroState();
 
 	const { mutate: startRound, isPending } = useStartRound(round);
-	const handleSpin = () => {
-		startRound();
-	};
 
 	const singleRotationDuration = 5000;
 
@@ -94,10 +92,10 @@ export const RoundCircle: FC<{ round: number }> = ({ round }) => {
 
 	async function stopWheel(result: number, bet: string) {
 		const bezier = [0.165, 0.84, 0.44, 1.005];
-		const wheelMinNumberOfSpins = 1;
-		const wheelMaxNumberOfSpins = 2;
+		const wheelMinNumberOfSpins = 3;
+		const wheelMaxNumberOfSpins = 4;
 
-		const totalRotation = Math.floor(Math.random() * (wheelMaxNumberOfSpins - wheelMinNumberOfSpins + 1) + wheelMinNumberOfSpins) * 360 + result;
+		const totalRotation = Math.floor(Math.random() * (wheelMaxNumberOfSpins - wheelMinNumberOfSpins + 1) + wheelMinNumberOfSpins) * 360 - result;
 
 		anime.remove('.LOTTERY');
 		anime({
@@ -124,82 +122,84 @@ export const RoundCircle: FC<{ round: number }> = ({ round }) => {
 
 	const boxRef = useRef<HTMLDivElement | null>(null);
 	return (
-		<motion.div
-			className={cx(
-				'border border-gray-800 relative p-4 xl:p-8 rounded-md bg-primaryLight flex flex-col md:flex-row items-center justify-center gap-10 duration-300',
-			)}
-		>
-			{currentRound === round && <EffectsLayer />}
+		<Tooltip>
+			<motion.div
+				className={cx(
+					'border border-gray-800 relative p-4 xl:p-8 rounded-md bg-primaryLight flex flex-col md:flex-row items-center justify-center gap-10 duration-300',
+				)}
+			>
+				{currentRound === round && <EffectsLayer />}
 
-			<div className={'h-full max-h-[250px] xl:max-h-[325px]'} ref={boxRef}>
-				<div className={'relative'}>
-					<ProgressBar round={round} authors={data} />
+				<div className={'h-full max-h-[250px] xl:max-h-[325px]'} ref={boxRef}>
+					<div className={'relative'}>
+						<ProgressBar round={round} authors={data} />
 
-					{confettiExploding && (
-						<div className={'top-1/2 left-1/2'}>
-							<ConfettiExplosion
-								force={largeProps.force}
-								duration={largeProps.duration}
-								particleCount={largeProps.particleCount}
-								width={largeProps.width}
-								colors={largeProps.colors}
-							/>
-						</div>
-					)}
+						{confettiExploding && (
+							<div className={'top-1/2 left-1/2'}>
+								<ConfettiExplosion
+									force={largeProps.force}
+									duration={largeProps.duration}
+									particleCount={largeProps.particleCount}
+									width={largeProps.width}
+									colors={largeProps.colors}
+								/>
+							</div>
+						)}
 
-					{data.length > 0 ? (
-						<div className={'LOTTERY'}>
+						{data.length > 0 ? (
+							<div className={'LOTTERY'}>
+								<Pie
+									data={data}
+									colors={{ datum: 'data.color' }}
+									innerRadius={0.7}
+									enableArcLabels={false}
+									enableArcLinkLabels={false}
+									width={boxRef.current?.clientHeight || 300}
+									padAngle={0.1}
+									cornerRadius={2}
+									height={boxRef.current?.clientHeight || 300}
+									isInteractive={wheelState.state === 'standby' || wheelState.state === 'waiting'}
+									tooltip={CustomTooltip(roundData?.total.volume || 0n)}
+								/>
+							</div>
+						) : (
 							<Pie
-								data={data}
+								data={[{ id: 'none', value: 100, color: '#777' }]}
 								colors={{ datum: 'data.color' }}
 								innerRadius={0.7}
 								enableArcLabels={false}
 								enableArcLinkLabels={false}
 								width={boxRef.current?.clientHeight || 300}
-								padAngle={0.1}
-								cornerRadius={2}
 								height={boxRef.current?.clientHeight || 300}
-								isInteractive={wheelState.state === 'standby' || wheelState.state === 'waiting'}
-								tooltip={CustomTooltip(roundData?.total.volume || 0n)}
+								tooltip={() => null}
 							/>
-						</div>
-					) : (
-						<Pie
-							data={[{ id: 'none', value: 100, color: '#777' }]}
-							colors={{ datum: 'data.color' }}
-							innerRadius={0.7}
-							enableArcLabels={false}
-							enableArcLinkLabels={false}
-							width={boxRef.current?.clientHeight || 300}
-							height={boxRef.current?.clientHeight || 300}
-							tooltip={() => null}
-						/>
-					)}
+						)}
+					</div>
 				</div>
-			</div>
-			{currentRound !== round && (roundData?.total.volume || 0n) > 0n && (
-				<div className={cx('w-full h-full flex gap-4 flex-row items-center justify-evenly')}>
-					{roundData?.status === 0 && 'Waiting for transaction. Any second now...'}
+				{currentRound !== round && (roundData?.total.volume || 0n) > 0n && (
+					<div className={cx('w-full h-full flex gap-4 flex-row items-center justify-evenly')}>
+						{roundData?.status === 0 && 'Waiting for transaction. Any second now...'}
 
-					{roundData?.status === 2 && (
-						<>
-							<div>
-								<img alt={'duck'} src={'/luro/duck.png'} className={'max-h-[200px] md:h-[300px]'} />
-							</div>
-							<div className={'flex flex-col min-w-[220px] gap-4'}>
-								<div
-									className={cx(
-										'border border-yellow-400 bg-primary flex flex-col py-4 items-center rounded-lg min-h-[130px] justify-center drop-shadow-[0_0_35px_rgba(87,101,242,0.75)] duration-300',
-									)}
-								>
-									<RoundResult round={round} />
+						{roundData?.status === 2 && (
+							<>
+								<div>
+									<img alt={'duck'} src={'/luro/duck.png'} className={'max-h-[200px] md:h-[300px]'} />
 								</div>
-							</div>
-						</>
-					)}
-				</div>
-			)}
-		</motion.div>
+								<div className={'flex flex-col min-w-[220px] gap-4'}>
+									<div
+										className={cx(
+											'border border-yellow-400 bg-primary flex flex-col py-4 items-center rounded-lg min-h-[130px] justify-center drop-shadow-[0_0_35px_rgba(87,101,242,0.75)] duration-300',
+										)}
+									>
+										<RoundResult round={round} />
+									</div>
+								</div>
+							</>
+						)}
+					</div>
+				)}
+			</motion.div>
+		</Tooltip>
 	);
 };
 
@@ -355,14 +355,14 @@ const ProgressBar: FC<{ round: number; authors: CustomLuroBet[] }> = ({ round, a
 	const renderInside = () => {
 		switch (wheelState.data.state) {
 			case 'stopped': {
-				const author = authors.find((author) => author.label === roundData?.winner?.player);
+				const bet = authors.find((author) => author.id === roundData?.winner?.bet);
 
-				const authorVolume = author?.value ?? 0;
+				const authorVolume = bet?.value ?? 0;
 				const volume = valueToNumber(roundData?.total.volume ?? 1n);
 
 				const percent = (authorVolume / volume) * 100;
 				const coef = (volume / authorVolume).toFixed(2);
-				return <BetCircleWinner player={author?.label ?? '0x123'} amount={author?.value ?? 20} percent={percent} coef={coef} />;
+				return <BetCircleWinner player={bet?.label ?? '0x123'} amount={bet?.value ?? 20} percent={percent} coef={coef} />;
 			}
 			default: {
 				const remaining = DateTime.fromMillis(end).diffNow();
@@ -473,6 +473,21 @@ const RoundResult: FC<{ round: number }> = ({ round }) => {
 export const Counter: FC<{ from: number; to: number; doMillify?: boolean }> = ({ from, to, doMillify = false }) => {
 	const nodeRef = useRef<HTMLParagraphElement | null>(null);
 
+	function formatNumber(value) {
+		if (value === 0) return '0';
+		if (value < 1000) return value.toFixed(0);
+		const formattedValue = millify(value, {
+			precision: 3,
+			lowercase: false,
+		});
+
+		const [number, unit] = formattedValue.split(/([a-zA-Z]+)/);
+
+		const paddedNumber = number.length > 5 ? number.slice(0, 5) : number;
+
+		return `${paddedNumber}${unit}`;
+	}
+
 	useEffect(() => {
 		const node = nodeRef.current;
 
@@ -480,7 +495,7 @@ export const Counter: FC<{ from: number; to: number; doMillify?: boolean }> = ({
 			duration: 0.5,
 			onUpdate(value) {
 				if (node) {
-					node.textContent = doMillify ? millify(value) : Math.floor(value).toLocaleString();
+					node.textContent = doMillify ? formatNumber(value) : Math.floor(value).toLocaleString();
 				}
 			},
 		});
@@ -488,5 +503,14 @@ export const Counter: FC<{ from: number; to: number; doMillify?: boolean }> = ({
 		return () => controls.stop();
 	}, [from, to]);
 
-	return <p ref={nodeRef} />;
+	return (
+		<>
+			<TooltipTrigger>
+				<div>
+					<div className={'relative'} ref={nodeRef} />
+				</div>
+			</TooltipTrigger>
+			<TooltipContent className={'text-[#959DAD] border border-yellow-400 rounded-lg bg-black bg-opacity-[90] py-2 px-3'}>{to}</TooltipContent>
+		</>
+	);
 };
