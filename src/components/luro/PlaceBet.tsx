@@ -104,7 +104,8 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 			animate={{ opacity: 1 }}
 			exit={{ opacity: 0 }}
 			transition={{ duration: 0.3 }}
-			className={'flex flex-col grow justify-between duration-300'}>
+			className={'flex flex-col grow justify-between duration-300'}
+		>
 			<div className={cx('rounded-md bg-primaryLight border drop-shadow-[0_0_35px_rgba(87,101,242,0.75)] border-gray-800 p-5 relative w-full')}>
 				<h2 className={'text-lg font-semibold text-center'}>{t('title')}</h2>
 				<h4 className={'font-medium text-center text-gray-500 text-xs mt-[10px]'}>{t('amount')}</h4>
@@ -166,7 +167,6 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 };
 
 const WaitingScreen: FC<{ round: number }> = ({ round }) => {
-
 	return (
 		<motion.div
 			initial={{ opacity: 0 }}
