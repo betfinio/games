@@ -77,3 +77,24 @@ html, body {
 	background-position-y: bottom;
 	background-size: contain;
 }
+
+.SCROLLBAR::-webkit-scrollbar {
+    background-color: #fff;
+    width: 0px;
+    height: 0px;
+    border-radius: 10px;
+}
+
+
+/* Track */
+.SCROLLBAR::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 10px;
+
+}
+
+/* Handle */
+.SCROLLBAR::-webkit-scrollbar-thumb {
+    background: rgba(213, 213, 213, 0.7);
+    border-radius: 10px;
+}
