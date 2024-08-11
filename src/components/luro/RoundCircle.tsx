@@ -284,7 +284,7 @@ const CustomTooltip =
 	}>) => <TabItem key={id} amount={value} className={'min-w-[250px]'} player={label as Address} percent={(value * 100) / valueToNumber(bank)} />;
 const ProgressBar: FC<{ round: number; authors: CustomLuroBet[] }> = ({ round, authors }) => {
 	const { data: roundData, isLoading } = useRound(round);
-	const { data: bank = 0n } = useRoundBank(round);
+	const { data: bank = 0n, isLoading: isBankLoading } = useRoundBank(round);
 
 	const queryClient = useQueryClient();
 	const {
@@ -339,14 +339,15 @@ const ProgressBar: FC<{ round: number; authors: CustomLuroBet[] }> = ({ round, a
 	}, [round, bank, luroState.state]);
 
 	const [from, setFrom] = useState(0);
+
 	const to = useMemo(() => {
-		const value = Math.floor(valueToNumber(isLoading ? 0n : roundData?.total.volume));
+		const value = Math.floor(valueToNumber(isBankLoading ? 0n : bank));
 
 		setTimeout(() => {
 			setFrom(value);
 		}, 1000);
 		return value;
-	}, [isLoading, roundData]);
+	}, [isBankLoading, bank]);
 
 	const { state: wheelState } = useLuroState();
 
@@ -375,7 +376,7 @@ const ProgressBar: FC<{ round: number; authors: CustomLuroBet[] }> = ({ round, a
 						<div className={cx('text-md duration-300', Number(remaining.toFormat('ss')) < 30 && 'text-red-500')}>
 							{end > Date.now() ? remaining.toFormat('hh:mm:ss') : 'Ended'}
 						</div>
-						<div className={'text-[42px]'}>
+						<div className={'text-[28px]  xl:text-[36px]'}>
 							<div className={'flex gap-2 items-center'}>
 								<Counter doMillify={true} from={from} to={to} />
 								<Bet className={'w-6 h-6'} />
@@ -425,6 +426,7 @@ const BetCircleWinner: FC<{ player: Address; amount: number; percent: number; co
 
 const RoundResult: FC<{ round: number }> = ({ round }) => {
 	const { data: roundData, isLoading, isFetching } = useRound(round);
+
 	const { address = ZeroAddress } = useAccount();
 	if (isLoading || isFetching) return <Loader size={40} className={'animate-spin'} color={'white'} />;
 	if (!roundData) return null;
@@ -501,14 +503,5 @@ export const Counter: FC<{ from: number; to: number; doMillify?: boolean }> = ({
 		return () => controls.stop();
 	}, [from, to]);
 
-	return (
-		<>
-			<TooltipTrigger>
-				<div>
-					<div className={'relative'} ref={nodeRef} />
-				</div>
-			</TooltipTrigger>
-			<TooltipContent className={'text-[#959DAD] border border-yellow-400 rounded-lg bg-black bg-opacity-[90] py-2 px-3'}>{to}</TooltipContent>
-		</>
-	);
+	return <div className={'relative'} ref={nodeRef} />;
 };

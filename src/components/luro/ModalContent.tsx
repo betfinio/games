@@ -38,7 +38,7 @@ export const ModalContent: FC<{
 	const { data: bonusShare = 0n } = useRoundBonusShare(roundId);
 
 	return (
-		<ScrollArea className={'h-[98vh] w-[98vw] md:h-auto md:max-w-[1200px] lg:w-[1000px]'}>
+		<ScrollArea className={'h-[98vh] SCROLLBAR max-h-[98vh] w-[98vw] md:h-auto md:max-w-[1200px] lg:w-[1000px]'}>
 			<div
 				onClick={(e) => e.stopPropagation()}
 				className={'relative mx-auto text-white h-full w-full  min-h-[300px] rounded-lg flex flex-col p-2 md:p-3 lg:p-4 pt-5'}

@@ -1,6 +1,6 @@
 import { jumpToCurrentRound } from '@/src/lib/luro';
 import { getCurrentRoundInfo } from '@/src/lib/luro/api';
-import { useLuroState, usePlaceBet, useRound, useRoundBank, useRoundBets, useStartRound, useVisibleRound } from '@/src/lib/luro/query';
+import { useLuroState, usePlaceBet, useRound, useRoundBank, useRoundBets, useRoundBonusShare, useStartRound, useVisibleRound } from '@/src/lib/luro/query';
 import { ZeroAddress } from '@betfinio/hooks';
 import { valueToNumber } from '@betfinio/hooks/dist/utils';
 import { useQueryClient } from '@tanstack/react-query';
@@ -168,15 +168,17 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 
 const WaitingScreen: FC<{ round: number }> = ({ round }) => {
 	return (
-		<motion.div
-			initial={{ opacity: 0 }}
-			animate={{ opacity: 1 }}
-			exit={{ opacity: 0 }}
-			transition={{ duration: 0.3 }}
-			className={'grow flex flex-col items-center justify-center min-h-[390px]'}
-		>
-			<span>Waiting for polygon block...</span>
-		</motion.div>
+		<>
+			<motion.div
+				initial={{ opacity: 0 }}
+				animate={{ opacity: 1 }}
+				exit={{ opacity: 0 }}
+				transition={{ duration: 0.3 }}
+				className={'grow flex flex-col items-center justify-center min-h-[390px]'}
+			>
+				<span>Waiting for polygon block...</span>
+			</motion.div>
+		</>
 	);
 };
 
@@ -200,6 +202,24 @@ const RoundResult: FC<{ round: number }> = ({ round }) => {
 	const { data: roundData } = useRound(round);
 	const { address = ZeroAddress } = useAccount();
 	if (!roundData) return null;
+
+	const { data: bets = [] } = useRoundBets(round);
+	const { data: volume = 0n } = useRoundBank(round);
+	const { data: bonusShare = 0n } = useRoundBonusShare(round);
+
+	const bonus = useMemo(() => {
+		const bonuses = bets.map((bet, index) => {
+			if (bonusShare === 0n) return { bet, bonus: 0 };
+			const bonusPool = (volume / 100n) * 5n;
+			const weight = bet.amount * BigInt(bets.length - index);
+			return {
+				bet,
+				bonus: valueToNumber((bonusPool * weight) / bonusShare),
+			};
+		});
+		return bonuses.find((bonus) => bonus?.bet?.address === roundData?.winner?.bet);
+	}, [bets, volume, address]);
+
 	if (roundData.player.bets === 0n) {
 		return (
 			<motion.div
@@ -248,11 +268,15 @@ const RoundResult: FC<{ round: number }> = ({ round }) => {
 						<BetValue className={'text-yellow-400 text-lg font-semibold'} value={valueToNumber((roundData.total.volume * 935n) / 1000n)} withIcon />
 					</div>
 					<div className={'text-blue-500 text-sm flex flex-row items-center justify-center gap-1'}>
-						+bonus <BetValue value={20} withIcon />
+						+bonus <BetValue value={bonus.bonus ?? 0} withIcon />
 					</div>
 
 					<div className={'text-gray-400 text-xs mt-2'}>total</div>
-					<BetValue className={'text-yellow-400 text-lg font-semibold'} value={valueToNumber((roundData.total.volume * 935n) / 1000n) + 20} withIcon />
+					<BetValue
+						className={'text-yellow-400 text-lg font-semibold'}
+						value={valueToNumber((roundData.total.volume * 935n) / 1000n) + (bonus?.bonus ?? 0)}
+						withIcon
+					/>
 				</div>
 
 				<motion.button
@@ -282,7 +306,7 @@ const RoundResult: FC<{ round: number }> = ({ round }) => {
 			<div className={'flex flex-col w-3/4 h-[200px] items-center justify-center border rounded-[10px] border-yellow-400'}>
 				<div className={'text-xl font-semibold mb-4'}>Your bonus:</div>
 				<div className={'text-blue-500 text-sm flex flex-row items-center justify-center gap-1'}>
-					+<BetValue value={20} withIcon />
+					+<BetValue value={bonus ?? 0} withIcon />
 				</div>
 			</div>
 
