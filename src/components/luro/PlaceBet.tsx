@@ -167,7 +167,6 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 };
 
 const WaitingScreen: FC<{ round: number }> = ({ round }) => {
-
 	return (
 		<>
 			<motion.div
