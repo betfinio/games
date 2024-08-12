@@ -1,12 +1,11 @@
-import type { Options } from '@/lib/types';
-import type { BetInterface } from '@betfinio/hooks/dist/types/game';
+import type { BetInterface, Options } from '@/lib/types';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Address } from 'viem';
 import type { Config } from 'wagmi';
 export declare const fetchLastBets: (count: number, address: Address, options: Options) => Promise<{
     hash: `0x${string}`;
-    address: string;
-    player: string;
+    address: Address;
+    player: Address;
     game: string;
     amount: bigint;
     result: bigint;
@@ -18,8 +17,8 @@ export declare const fetchLastBets: (count: number, address: Address, options: O
 export declare function fetchBetInterface(address: Address, member: Address, options: Options): Promise<BetInterface>;
 export declare const fetchPlayerBets: (count: number, player: Address, options: Options) => Promise<{
     hash: `0x${string}`;
-    address: string;
-    player: string;
+    address: Address;
+    player: Address;
     game: string;
     amount: bigint;
     result: bigint;
@@ -37,7 +36,7 @@ export declare function fetchLastStakes(count: number, address: Address, options
     pool: Address;
     amount: bigint;
     ended: boolean;
-    hash?: string;
+    hash?: Address;
     staking?: string;
     reward?: bigint;
     block?: number;

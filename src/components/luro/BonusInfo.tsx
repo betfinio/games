@@ -45,13 +45,14 @@ export const BonusInfo = () => {
 							<AlertCircle className={'text-yellow-400'} width={24} />
 						</TooltipTrigger>
 						<TooltipContent className={'text-[#959DAD] border border-yellow-400 rounded-lg bg-black bg-opacity-75 py-2 px-3'}>
-							<div className={'text-xs italic'}>
+							<div className={'text-sm italic'}>
 								<div className={'text-center'}>
-									The bonus represents <span className={'text-[#FFC800]'}>4%</span> of all bets{' '}
-									<span className={'text-[#FFC800]'}>({valueToNumber(volume)} BET)</span> that are split among winners according to{' '}
+									The bonus represents <span className={'text-[#FFC800]'}>5%</span> of all bets{' '}
+									<span className={'text-[#FFC800]'}>({valueToNumber(volume).toLocaleString()} BET)</span> that are split among players according to{' '}
 									<span className={'text-[#FFC800]'}>order</span> and <span className={'text-[#FFC800]'}>size</span> of bets.
 								</div>
-								<div className={'text-center font-bold'}>The sooner and more you bet the bigger bonus you get.</div>
+								<div className={'text-center font-bold text-[#FFC800]'}>The sooner and more you bet the bigger bonus you get.</div>
+								<div className={'text-center font-bold'}>Bonus is paid to every player!</div>
 							</div>
 						</TooltipContent>
 					</div>

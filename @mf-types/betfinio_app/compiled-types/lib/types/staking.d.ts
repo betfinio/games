@@ -11,7 +11,7 @@ export interface Stake {
     pool: Address;
     amount: bigint;
     ended: boolean;
-    hash?: string;
+    hash?: Address;
     staking?: string;
     reward?: bigint;
     block?: number;

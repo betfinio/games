@@ -62,6 +62,14 @@ export const TabItem: FC<TabItemProps> = ({ player, amount, percent, className }
 	const { data: username } = useUsername(player);
 	const { address = ZeroAddress } = useAccount();
 	const { data: customUsername } = useCustomUsername(address, player);
+
+	const formatPlayer = (player: string) => {
+		if (player.length > 12) {
+			return `${player.slice(0, 12)}...`;
+		}
+		return player;
+	};
+
 	return (
 		<motion.div
 			key={player}
@@ -76,7 +84,7 @@ export const TabItem: FC<TabItemProps> = ({ player, amount, percent, className }
 				<div className={'flex items-start gap-[10px]'}>
 					<Fox className={'w-5 h-5'} />
 					<div className={'flex flex-col text-[#6A6F84] text-xs gap-2'}>
-						<p className={'font-semibold text-sm !text-gray-300'}>{customUsername || username || truncateEthAddress(player)}</p>
+						<p className={'font-semibold text-sm !text-gray-300'}>{formatPlayer(customUsername || username || truncateEthAddress(player))}</p>
 						<p className={cx('opacity-0')}>{truncateEthAddress(player)}</p>
 					</div>
 				</div>
