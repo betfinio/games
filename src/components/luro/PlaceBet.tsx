@@ -1,7 +1,7 @@
 import { jumpToCurrentRound } from '@/src/lib/luro';
 import { getCurrentRoundInfo } from '@/src/lib/luro/api';
-import { useLuroState, usePlaceBet, useRound, useRoundBank, useRoundBets, useRoundBonusShare, useStartRound, useVisibleRound } from '@/src/lib/luro/query';
-import { ZeroAddress } from '@betfinio/hooks';
+import { useLuroState, usePlaceBet, useRound, useRoundBank, useRoundBets, useRoundBonusShare, useVisibleRound } from '@/src/lib/luro/query';
+import { ZeroAddress } from '@betfinio/abi';
 import { valueToNumber } from '@betfinio/hooks/dist/utils';
 import { useQueryClient } from '@tanstack/react-query';
 import { BetValue } from 'betfinio_app/BetValue';
@@ -166,7 +166,7 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 	);
 };
 
-const WaitingScreen: FC<{ round: number }> = ({ round }) => {
+const WaitingScreen: FC<{ round: number }> = () => {
 	return (
 		<>
 			<motion.div
