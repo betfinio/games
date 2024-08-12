@@ -451,7 +451,8 @@ const RoundResult: FC<{ round: number }> = ({ round }) => {
 					<BetValue className={'text-yellow-400 text-lg font-semibold'} value={valueToNumber((roundData.total.volume * 935n) / 1000n)} withIcon />
 				</div>
 				<div className={'text-blue-500 text-sm flex flex-row items-center justify-center gap-1'}>
-					+bonus <BetValue value={20} withIcon />
+					{/*TODO: return bonus*/}
+					+bonus
 				</div>
 
 				<div className={'text-gray-400 text-xs mt-2'}>total</div>
