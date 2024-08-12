@@ -39,7 +39,7 @@ export const PlaceBet = () => {
 
 const StandByScreen: FC<{ round: number }> = ({ round }) => {
 	const { t } = useTranslation('', { keyPrefix: 'games.luro.placeBet' });
-	const [amount, setAmount] = useState<string>('1000');
+	const [amount, setAmount] = useState<string>('10000');
 	const { address = ZeroAddress } = useAccount();
 	const { data: allowance = 0n, isFetching: loading } = useAllowance(address);
 	const { data: balance = 0n } = useBalance(address);

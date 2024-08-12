@@ -36,8 +36,8 @@ function Luro() {
 								<Trans i18nKey={'games.luro.feeStaking'} components={{ b: <b className={'text-yellow-400 font-medium'} /> }} />
 							</Link>
 						</div>
-						<BonusClaimBlock />
 						<BonusInfo />
+						<BonusClaimBlock />
 					</div>
 					<div className={'col-span-4 md:col-span-2 lg:col-[span_6_/_span_6] xl:col-span-1 flex flex-col gap-4'}>
 						<BetsInfo />

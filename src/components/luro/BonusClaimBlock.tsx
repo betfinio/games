@@ -31,7 +31,7 @@ const BonusClaimBlock: FC = () => {
 		}
 	};
 	return (
-		<div className={'border border-gray-800 min-h-[100px] bg-primaryLight flex flex-row items-center justify-between rounded-lg p-4 md:px-8'}>
+		<div className={'border border-gray-800 min-h-[100px] bg-primaryLight flex flex-row items-center justify-between rounded-lg p-4 mt-5 md:px-8'}>
 			<div className={'flex flex-col items-start justify-between'}>
 				<span className={'text-gray-400 text-sm'}>Available for claim:</span>
 				<BetValue value={valueToNumber(availableBonus)} className={'text-yellow-400 text-xl'} withIcon />

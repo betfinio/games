@@ -199,9 +199,9 @@ const BetsTable: FC<{ round: number; className?: string; volume: bigint; bonusSh
 			header: '',
 			id: 'color',
 			meta: {
-				className: '!w-[8px] hidden lg:table-cell',
+				className: '!w-[8px] !px-0 hidden lg:table-cell',
 			},
-			cell: (props) => <div className={'h-[40px]'} style={{ backgroundColor: addressToColor(props.row.getValue('player')) }} />,
+			cell: (props) => <div className={'h-[40px] w-[8px]'} style={{ backgroundColor: addressToColor(props.row.getValue('player')) }} />,
 		}),
 		columnHelper.display({
 			header: '',
@@ -211,10 +211,10 @@ const BetsTable: FC<{ round: number; className?: string; volume: bigint; bonusSh
 			},
 			cell: (props) => (
 				<div className={'w-full h-full flex items-center justify-center'}>
-					{props.row.getValue('player') === address ? (
+					{props.row.getValue('player') === address.toLowerCase() ? (
 						<div className={'text-[10px] text-[#6A6F84] font-semibold'}>YOU</div>
 					) : (
-						props.row.index < 3 && getTrophyColor(props.row.index)
+						props.row.getValue('player') === winner && <GoldenTrophy />
 					)}
 				</div>
 			),
@@ -248,7 +248,11 @@ const BetsTable: FC<{ round: number; className?: string; volume: bigint; bonusSh
 				const amount = props.getValue();
 				const isWinner = props.row.getValue('player') === winner;
 				if (winner === ZeroAddress) return <div className={'text-gray-500'}>Pending</div>;
-				return isWinner ? <BetValue value={valueToNumber(amount)} withIcon={true} /> : <div className={'text-[#EE5E5F] font-semibold'}>Lost</div>;
+				return isWinner ? (
+					<BetValue value={valueToNumber(amount)} withIcon={true} className={'text-green-600'} />
+				) : (
+					<div className={'text-[#EE5E5F] font-semibold'}>Lost</div>
+				);
 			},
 		}),
 		columnHelper.accessor('bonus', {
