@@ -3,6 +3,7 @@ import { useCurrentRound, usePlaceBet, usePlayerBets, useRoundBets } from '@/src
 import type { Game, RoundPool } from '@/src/lib/predict/types';
 import { ZeroAddress, valueToNumber } from '@betfinio/abi';
 import { Bet } from '@betfinio/ui/dist/icons';
+import { useAllowanceModal } from 'betfinio_app/allowance';
 import { useAllowance, useBalance, useIncreaseAllowance } from 'betfinio_app/lib/query/token';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from 'betfinio_app/tooltip';
 import { toast } from 'betfinio_app/use-toast';
@@ -14,7 +15,6 @@ import { type FC, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NumericFormat } from 'react-number-format';
 import { useAccount } from 'wagmi';
-import { useAllowanceModal } from 'betfinio_app/allowance';
 
 const PlaceBet: FC<{ game: Game }> = ({ game }) => {
 	const { t } = useTranslation('', { keyPrefix: 'games.predict.placeBet' });
