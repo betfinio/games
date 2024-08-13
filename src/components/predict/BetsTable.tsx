@@ -5,10 +5,10 @@ import { Predict } from '@betfinio/ui/dist/icons';
 import { type Row, createColumnHelper, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { BetValue } from 'betfinio_app/BetValue';
 import cx from 'clsx';
+import { ExternalLink } from 'lucide-react';
 import { type FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAccount } from 'wagmi';
-import {ExternalLink} from "lucide-react";
 
 // todo rewrite tables
 

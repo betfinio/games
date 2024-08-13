@@ -1,7 +1,7 @@
 import { ETHSCAN } from '@/src/global.ts';
 import { useCurrentRound, usePlaceBet, usePlayerBets, useRoundBets } from '@/src/lib/predict/query';
 import type { Game, RoundPool } from '@/src/lib/predict/types';
-import {valueToNumber, ZeroAddress} from '@betfinio/abi';
+import { ZeroAddress, valueToNumber } from '@betfinio/abi';
 import { Bet } from '@betfinio/ui/dist/icons';
 import { useAllowance, useBalance, useIncreaseAllowance } from 'betfinio_app/lib/query/token';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from 'betfinio_app/tooltip';
@@ -86,7 +86,7 @@ const PlaceBet: FC<{ game: Game }> = ({ game }) => {
 			toast({
 				title: "You don't have enough allowance",
 				variant: 'destructive',
-			})
+			});
 			return;
 		}
 		placeBet({ amount: BigInt(amount) * 10n ** 18n, side, game: game.address });

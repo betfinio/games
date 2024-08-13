@@ -6,8 +6,8 @@ import {
 	GameContract,
 	PartnerContract,
 	PredictBetContract,
-	defaultMulticall,
 	ZeroAddress,
+	defaultMulticall,
 } from '@betfinio/abi';
 import { type WriteContractReturnType, getBlock, multicall, readContract, writeContract } from '@wagmi/core';
 import type { Options } from 'betfinio_app/lib/types';

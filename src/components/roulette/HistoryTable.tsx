@@ -4,7 +4,7 @@ import { ETHSCAN } from '@/src/global.ts';
 import { bitMapToNumbers, getColor } from '@/src/lib/roulette';
 import { useProofRandom } from '@/src/lib/roulette/query';
 import type { RouletteBet } from '@/src/lib/roulette/types.ts';
-import { truncateEthAddress, valueToNumber, ZeroAddress } from '@betfinio/abi';
+import { ZeroAddress, truncateEthAddress, valueToNumber } from '@betfinio/abi';
 import { Link } from '@tanstack/react-router';
 import { BetValue } from 'betfinio_app/BetValue';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from 'betfinio_app/tabs';
