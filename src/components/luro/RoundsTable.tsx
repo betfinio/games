@@ -1,8 +1,7 @@
 import { useRounds } from '@/src/lib/luro/query';
 import type { Round } from '@/src/lib/luro/types.ts';
-import { ZeroAddress } from '@betfinio/hooks';
-import { truncateEthAddress, valueToNumber } from '@betfinio/hooks/dist/utils';
-import { ArrowsPointingOutIcon } from '@heroicons/react/24/outline';
+import { ZeroAddress } from '@betfinio/abi';
+import { truncateEthAddress, valueToNumber } from '@betfinio/abi';
 import { Link } from '@tanstack/react-router';
 import { createColumnHelper } from '@tanstack/react-table';
 import { BetValue } from 'betfinio_app/BetValue';
@@ -12,6 +11,7 @@ import cx from 'clsx';
 import { motion } from 'framer-motion';
 import type { FC } from 'react';
 import { useAccount } from 'wagmi';
+import {Expand} from "lucide-react";
 
 const RoundsTable: FC<{ className?: string }> = ({ className = '' }) => {
 	return (
@@ -85,7 +85,7 @@ const columns = [
 		id: 'actions',
 		cell: (props) => (
 			<Link to={`/luro?round=${props.row.original.round}`} className={'w-full'}>
-				<ArrowsPointingOutIcon className={'w-4 h-4 text-white'} />
+				<Expand className={'w-4 h-4 text-white'} />
 			</Link>
 		),
 	}),

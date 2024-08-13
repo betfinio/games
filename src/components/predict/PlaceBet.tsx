@@ -1,11 +1,8 @@
 import { ETHSCAN } from '@/src/global.ts';
 import { useCurrentRound, usePlaceBet, usePlayerBets, useRoundBets } from '@/src/lib/predict/query';
 import type { Game, RoundPool } from '@/src/lib/predict/types';
-import { ZeroAddress } from '@betfinio/hooks/dist';
-import { valueToNumber } from '@betfinio/hooks/dist/utils';
+import {valueToNumber, ZeroAddress} from '@betfinio/abi';
 import { Bet } from '@betfinio/ui/dist/icons';
-import ActionModal from '@betfinio/ui/dist/shared/modal/ActionModal';
-import type { Action } from '@betfinio/ui/dist/shared/modal/types';
 import { useAllowance, useBalance, useIncreaseAllowance } from 'betfinio_app/lib/query/token';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from 'betfinio_app/tooltip';
 import { toast } from 'betfinio_app/use-toast';
@@ -52,13 +49,13 @@ const PlaceBet: FC<{ game: Game }> = ({ game }) => {
 
 	const [s, setSide] = useState<boolean>(false);
 
-	const handleAction = (action: Action) => {
-		if (action.type === 'sign_transaction') {
-			handleBet(s);
-		} else if (action.type === 'request_allowance') {
-			increase();
-		}
-	};
+	// const handleAction = (action: Action) => {
+	// 	if (action.type === 'sign_transaction') {
+	// 		handleBet(s);
+	// 	} else if (action.type === 'request_allowance') {
+	// 		increase();
+	// 	}
+	// };
 	const handleBet = async (side: boolean) => {
 		if (amount === '') {
 			toast({
@@ -86,6 +83,10 @@ const PlaceBet: FC<{ game: Game }> = ({ game }) => {
 		if (valueToNumber(allowance) < Number(amount)) {
 			setSide(s);
 			setOpen(true);
+			toast({
+				title: "You don't have enough allowance",
+				variant: 'destructive',
+			})
 			return;
 		}
 		placeBet({ amount: BigInt(amount) * 10n ** 18n, side, game: game.address });
@@ -153,17 +154,17 @@ const PlaceBet: FC<{ game: Game }> = ({ game }) => {
 					<h4 className={'font-medium text-gray-500 text-center mb-2'}>Expected winnings</h4>
 					<PlayersExpectedWinnings game={game} />
 				</div>
-				{open && (
-					<ActionModal
-						open={open}
-						onClose={() => setOpen(false)}
-						onAction={handleAction}
-						requiredAllowance={BigInt(amount) * 10n ** 18n}
-						allowance={allowance}
-						tx={data}
-						scan={ETHSCAN}
-					/>
-				)}
+				{/*{open && (*/}
+				{/*	<ActionModal*/}
+				{/*		open={open}*/}
+				{/*		onClose={() => setOpen(false)}*/}
+				{/*		onAction={handleAction}*/}
+				{/*		requiredAllowance={BigInt(amount) * 10n ** 18n}*/}
+				{/*		allowance={allowance}*/}
+				{/*		tx={data}*/}
+				{/*		scan={ETHSCAN}*/}
+				{/*	/>*/}
+				{/*)}*/}
 			</div>
 		</div>
 	);

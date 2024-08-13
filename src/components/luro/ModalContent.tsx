@@ -5,12 +5,11 @@ import { useBonusDistribution, useDistributeBonus, useRound, useRoundBank, useRo
 import type { Round, RoundModalPlayer } from '@/src/lib/luro/types.ts';
 import { addressToColor } from '@/src/lib/roulette';
 import { ZeroAddress } from '@betfinio/abi';
-import { truncateEthAddress, valueToNumber } from '@betfinio/hooks/dist/utils';
+import { truncateEthAddress, valueToNumber } from '@betfinio/abi';
 import Bank from '@betfinio/ui/dist/icons/Bank';
 import GoldenTrophy from '@betfinio/ui/dist/icons/GoldenTrophy';
 import MoneyHand from '@betfinio/ui/dist/icons/MoneyHand';
 import People from '@betfinio/ui/dist/icons/People';
-import { XMarkIcon } from '@heroicons/react/24/outline';
 import { Link } from '@tanstack/react-router';
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { BetValue } from 'betfinio_app/BetValue';
@@ -21,6 +20,7 @@ import { type FC, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { Address } from 'viem';
 import { useAccount } from 'wagmi';
+import { X } from 'lucide-react';
 
 export const ModalContent: FC<{
 	onClose: () => void;
@@ -43,7 +43,7 @@ export const ModalContent: FC<{
 				onClick={(e) => e.stopPropagation()}
 				className={'relative mx-auto text-white h-full w-full  min-h-[300px] rounded-lg flex flex-col p-2 md:p-3 lg:p-4 pt-5'}
 			>
-				<XMarkIcon
+				<X
 					className={
 						'absolute top-5 right-5 w-6 h-6  border-2 border-white rounded-full cursor-pointer hover:text-[#EB5757] hover:border-[#EB5757] duration-300'
 					}

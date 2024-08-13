@@ -1,14 +1,14 @@
 import { ETHSCAN } from '@/src/global.ts';
 import type { PredictBet } from '@/src/lib/predict/types.ts';
-import { truncateEthAddress, valueToNumber } from '@betfinio/hooks/dist/utils';
+import { truncateEthAddress, valueToNumber } from '@betfinio/abi';
 import { Predict } from '@betfinio/ui/dist/icons';
-import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
 import { type Row, createColumnHelper, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { BetValue } from 'betfinio_app/BetValue';
 import cx from 'clsx';
 import { type FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAccount } from 'wagmi';
+import {ExternalLink} from "lucide-react";
 
 // todo rewrite tables
 
@@ -37,7 +37,7 @@ const BetsTable: FC<{ isFetching: boolean; bets: PredictBet[]; isFinished: boole
 					rel="noreferrer"
 				>
 					{truncateEthAddress(props.getValue())}
-					<ArrowTopRightOnSquareIcon className={'w-[14px] h-[16px]'} />
+					<ExternalLink className={'w-[14px] h-[16px]'} />
 				</a>
 			),
 		}),

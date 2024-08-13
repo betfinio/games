@@ -2,7 +2,7 @@ import 'react-circular-progressbar/dist/styles.css';
 import i18n from '@/src/i18n.ts';
 import { useCurrentRound, useLatestPrice, usePrice } from '@/src/lib/predict/query';
 import { type Game, defaultResult } from '@/src/lib/predict/types';
-import { valueToNumber } from '@betfinio/hooks/dist/utils';
+import { valueToNumber } from '@betfinio/abi';
 import cx from 'clsx';
 import { DateTime } from 'luxon';
 import { type FC, useEffect, useState } from 'react';

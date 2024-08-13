@@ -4,7 +4,7 @@ import { ETHSCAN } from '@/src/global.ts';
 import { bitMapToNumbers, getColor } from '@/src/lib/roulette';
 import { useProofRandom } from '@/src/lib/roulette/query';
 import type { RouletteBet } from '@/src/lib/roulette/types.ts';
-import { truncateEthAddress, valueToNumber } from '@betfinio/hooks/dist/utils';
+import { truncateEthAddress, valueToNumber, ZeroAddress } from '@betfinio/abi';
 import { Link } from '@tanstack/react-router';
 import { BetValue } from 'betfinio_app/BetValue';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from 'betfinio_app/tabs';
@@ -121,7 +121,7 @@ export const RoundModal: FC<{
 					className={'block text-center underline cursor-pointer hover:text-[#7366FF] duration-300 px-4 sm:hidden'}
 					target={'_blank'}
 				>
-					{truncateEthAddress(selectedBet?.address ?? '', 7)}
+					{truncateEthAddress(selectedBet?.address || ZeroAddress, 7)}
 				</Link>
 				<Link
 					to={`${ETHSCAN}/address/${selectedBet?.address}`}

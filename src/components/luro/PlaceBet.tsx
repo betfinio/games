@@ -2,7 +2,7 @@ import { jumpToCurrentRound } from '@/src/lib/luro';
 import { getCurrentRoundInfo } from '@/src/lib/luro/api';
 import { useLuroState, usePlaceBet, useRound, useRoundBank, useRoundBets, useRoundBonusShare, useVisibleRound } from '@/src/lib/luro/query';
 import { ZeroAddress } from '@betfinio/abi';
-import { valueToNumber } from '@betfinio/hooks/dist/utils';
+import { valueToNumber } from '@betfinio/abi';
 import { useQueryClient } from '@tanstack/react-query';
 import { BetValue } from 'betfinio_app/BetValue';
 import { useAllowance, useBalance } from 'betfinio_app/lib/query/token';
@@ -268,7 +268,7 @@ const RoundResult: FC<{ round: number }> = ({ round }) => {
 						<BetValue className={'text-yellow-400 text-lg font-semibold'} value={valueToNumber((roundData.total.volume * 935n) / 1000n)} withIcon />
 					</div>
 					<div className={'text-blue-500 text-sm flex flex-row items-center justify-center gap-1'}>
-						+bonus <BetValue value={bonus.bonus ?? 0} withIcon />
+						+bonus <BetValue value={bonus?.bonus || 0} withIcon />
 					</div>
 
 					<div className={'text-gray-400 text-xs mt-2'}>total</div>
@@ -306,7 +306,7 @@ const RoundResult: FC<{ round: number }> = ({ round }) => {
 			<div className={'flex flex-col w-3/4 h-[200px] items-center justify-center border rounded-[10px] border-yellow-400'}>
 				<div className={'text-xl font-semibold mb-4'}>Your bonus:</div>
 				<div className={'text-blue-500 text-sm flex flex-row items-center justify-center gap-1'}>
-					+<BetValue value={bonus ?? 0} withIcon />
+					+<BetValue value={bonus?.bonus ?? 0} withIcon />
 				</div>
 			</div>
 

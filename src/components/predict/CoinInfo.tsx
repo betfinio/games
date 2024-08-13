@@ -1,4 +1,4 @@
-import { valueToNumber } from '@betfinio/hooks/dist/utils';
+import { valueToNumber } from '@betfinio/abi';
 import { Dialog, DialogContent, DialogTrigger } from 'betfinio_app/dialog';
 import cx from 'clsx';
 import { motion } from 'framer-motion';

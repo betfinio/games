@@ -3,7 +3,7 @@ import { type FC, useState } from 'react';
 import { LURO } from '@/src/global.ts';
 import { useAvailableBonus } from '@/src/lib/luro/query';
 import { LuckyRoundContract, ZeroAddress } from '@betfinio/abi';
-import { valueToNumber } from '@betfinio/hooks/dist/utils';
+import { valueToNumber } from '@betfinio/abi';
 import { writeContract } from '@wagmi/core';
 import { BetValue } from 'betfinio_app/BetValue';
 import { useAccount, useConfig } from 'wagmi';
