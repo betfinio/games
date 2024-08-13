@@ -14,6 +14,7 @@ import { type FC, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NumericFormat } from 'react-number-format';
 import { useAccount } from 'wagmi';
+import { useAllowanceModal } from 'betfinio_app/allowance';
 
 const PlaceBet: FC<{ game: Game }> = ({ game }) => {
 	const { t } = useTranslation('', { keyPrefix: 'games.predict.placeBet' });
@@ -22,10 +23,19 @@ const PlaceBet: FC<{ game: Game }> = ({ game }) => {
 	const { data: allowance = 0n, isFetching: loading } = useAllowance(address);
 	const { data: balance = 0n } = useBalance(address);
 	const { data: round } = useCurrentRound(game.interval);
-	const { mutate: placeBet, data } = usePlaceBet();
-	const { mutate: increase } = useIncreaseAllowance();
+	const { requestAllowance, requested, setResult } = useAllowanceModal();
+	useEffect(() => {
+		if (requested) {
+			handleBet(s);
+		}
+	}, [requested]);
+	const { mutate: placeBet, data, isSuccess } = usePlaceBet();
+	useEffect(() => {
+		if (data && isSuccess) {
+			setResult?.(data);
+		}
+	}, [isSuccess, data]);
 	const { data: roundBets = [] } = useRoundBets(game.address, round);
-	const [open, setOpen] = useState(false);
 	const [pool, setPool] = useState<RoundPool>({
 		long: 0n,
 		short: 0n,
@@ -49,13 +59,6 @@ const PlaceBet: FC<{ game: Game }> = ({ game }) => {
 
 	const [s, setSide] = useState<boolean>(false);
 
-	// const handleAction = (action: Action) => {
-	// 	if (action.type === 'sign_transaction') {
-	// 		handleBet(s);
-	// 	} else if (action.type === 'request_allowance') {
-	// 		increase();
-	// 	}
-	// };
 	const handleBet = async (side: boolean) => {
 		if (amount === '') {
 			toast({
@@ -82,7 +85,7 @@ const PlaceBet: FC<{ game: Game }> = ({ game }) => {
 		}
 		if (valueToNumber(allowance) < Number(amount)) {
 			setSide(s);
-			setOpen(true);
+			requestAllowance?.('bet', BigInt(amount) * 10n ** 18n);
 			toast({
 				title: "You don't have enough allowance",
 				variant: 'destructive',
