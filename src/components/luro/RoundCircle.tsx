@@ -3,7 +3,7 @@ import { getTimesByRound, hexToRgbA, jumpToCurrentRound, mapBetsToAuthors } from
 import { useLuroState, useObserveBet, useRound, useRoundBank, useRoundBets, useStartRound, useVisibleRound } from '@/src/lib/luro/query';
 import type { CustomLuroBet } from '@/src/lib/luro/types.ts';
 import { addressToColor } from '@/src/lib/roulette';
-import {valueToNumber, ZeroAddress} from '@betfinio/abi';
+import { ZeroAddress, valueToNumber } from '@betfinio/abi';
 import { Bet } from '@betfinio/ui/dist/icons';
 import { Pie, type PieTooltipProps } from '@nivo/pie';
 import { useQueryClient } from '@tanstack/react-query';

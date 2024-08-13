@@ -1,9 +1,9 @@
 import type { PredictBet } from '@/src/lib/predict/types.ts';
+import { ZeroAddress } from '@betfinio/abi';
 import { BarElement, CategoryScale, Chart as ChartJS, type ChartOptions, Legend, LinearScale, Title, Tooltip } from 'chart.js';
 import { type FC, useMemo } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { useAccount } from 'wagmi';
-import {ZeroAddress} from "@betfinio/abi";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 

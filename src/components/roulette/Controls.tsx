@@ -14,7 +14,7 @@ import CloseIcon from '@betfinio/ui/dist/icons/Close';
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from 'betfinio_app/dialog';
 import { useAllowance, useIncreaseAllowance } from 'betfinio_app/lib/query/token';
 import { toast } from 'betfinio_app/use-toast';
-import {Loader, Undo2} from 'lucide-react';
+import { Loader, Undo2 } from 'lucide-react';
 import { useAccount } from 'wagmi';
 
 const RouletteControls = () => {
@@ -119,7 +119,7 @@ const RouletteControls = () => {
 			toast({
 				description: 'Please increase your allowance',
 				variant: 'destructive',
-			})
+			});
 			return;
 		}
 

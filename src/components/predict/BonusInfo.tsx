@@ -1,7 +1,7 @@
 import BonusChart from '@/src/components/predict/BonusChart.tsx';
 import { useCurrentRound, usePool, useRoundBets } from '@/src/lib/predict/query';
 import type { Game } from '@/src/lib/predict/types';
-import {valueToNumber, ZeroAddress} from '@betfinio/abi';
+import { ZeroAddress, valueToNumber } from '@betfinio/abi';
 import { BetValue } from 'betfinio_app/BetValue';
 import { type FC, useMemo } from 'react';
 import { useAccount } from 'wagmi';

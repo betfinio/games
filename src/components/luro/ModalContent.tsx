@@ -15,12 +15,12 @@ import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from '
 import { BetValue } from 'betfinio_app/BetValue';
 import { ScrollArea } from 'betfinio_app/scroll-area';
 import cx from 'clsx';
+import { X } from 'lucide-react';
 import { DateTime } from 'luxon';
 import { type FC, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { Address } from 'viem';
 import { useAccount } from 'wagmi';
-import { X } from 'lucide-react';
 
 export const ModalContent: FC<{
 	onClose: () => void;

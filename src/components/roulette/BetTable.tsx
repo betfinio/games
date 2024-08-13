@@ -3,17 +3,17 @@ import { getBlack, getColor, getRed } from '@/src/lib/roulette';
 import { getRequiredAllowance } from '@/src/lib/roulette/api';
 import { useLocalBets, usePlace, useRouletteState, useSpin, useUnplace } from '@/src/lib/roulette/query';
 import type { FuncProps } from '@/src/lib/roulette/types.ts';
-import {arrayFrom, valueToNumber, ZeroAddress} from '@betfinio/abi';
+import { ZeroAddress, arrayFrom, valueToNumber } from '@betfinio/abi';
 import Additional from '@betfinio/ui/dist/icons/Additional';
 import Chip from '@betfinio/ui/dist/icons/Chip';
 import { useAllowance, useIncreaseAllowance } from 'betfinio_app/lib/query/token';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from 'betfinio_app/tooltip';
+import { toast } from 'betfinio_app/use-toast';
 import cx from 'clsx';
 import { motion } from 'framer-motion';
 import { Loader } from 'lucide-react';
 import { type FC, type MouseEvent, useState } from 'react';
 import { useAccount } from 'wagmi';
-import {toast} from "betfinio_app/use-toast";
 
 const RouletteBetTable: FC = () => {
 	return (
@@ -347,7 +347,7 @@ const TableDesktop = () => {
 			toast({
 				title: 'Insufficient allowance',
 				variant: 'destructive',
-			})
+			});
 			return;
 		}
 		spin({ bets });

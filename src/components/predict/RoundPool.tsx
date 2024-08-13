@@ -4,9 +4,9 @@ import { valueToNumber } from '@betfinio/abi';
 import { Bet } from '@betfinio/ui/dist/icons';
 import { BetValue } from 'betfinio_app/BetValue';
 import cx from 'clsx';
+import { ArrowDownIcon, ArrowUpIcon, UserIcon } from 'lucide-react';
 import millify from 'millify';
 import { type FC, useEffect, useState } from 'react';
-import {ArrowDownIcon, ArrowUpIcon, UserIcon} from "lucide-react";
 
 const RoundPoolInfo: FC<{ game: Game }> = ({ game }) => {
 	const { data: round } = useCurrentRound(game.interval);

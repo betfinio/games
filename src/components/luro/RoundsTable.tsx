@@ -9,9 +9,9 @@ import { DataTable } from 'betfinio_app/DataTable';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from 'betfinio_app/tabs';
 import cx from 'clsx';
 import { motion } from 'framer-motion';
+import { Expand } from 'lucide-react';
 import type { FC } from 'react';
 import { useAccount } from 'wagmi';
-import {Expand} from "lucide-react";
 
 const RoundsTable: FC<{ className?: string }> = ({ className = '' }) => {
 	return (
