@@ -1,7 +1,7 @@
 import { populateRouletteBet } from '@/src/lib/roulette/api';
 import { useRouletteBets, useRouletteState } from '@/src/lib/roulette/query';
-import { ZeroAddress } from '@betfinio/hooks';
-import { valueToNumber } from '@betfinio/hooks/dist/utils';
+import { ZeroAddress } from '@betfinio/abi';
+import { valueToNumber } from '@betfinio/abi';
 import { useQueryClient } from '@tanstack/react-query';
 import anime from 'animejs';
 import { toast } from 'betfinio_app/use-toast';

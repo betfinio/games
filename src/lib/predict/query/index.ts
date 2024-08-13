@@ -16,7 +16,7 @@ import {
 } from '@/src/lib/predict/api';
 import { type CalculateRoundParams, type Game, type PlaceBetParams, type PredictBet, type Result, defaultResult } from '@/src/lib/predict/types.ts';
 import { BetsMemoryContract, GameContract } from '@betfinio/abi';
-import { ZeroAddress } from '@betfinio/hooks';
+import { ZeroAddress } from '@betfinio/abi';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { WriteContractReturnType } from '@wagmi/core';
 import { getTransactionLink } from 'betfinio_app/helpers';

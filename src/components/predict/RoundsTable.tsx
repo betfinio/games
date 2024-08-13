@@ -1,6 +1,6 @@
 import { useCurrentRound, usePlayerRounds, useRoundInfo, useRounds } from '@/src/lib/predict/query';
 import { type Game, Round, type RoundStatus } from '@/src/lib/predict/types';
-import { valueToNumber } from '@betfinio/hooks/dist/utils';
+import { valueToNumber } from '@betfinio/abi';
 import { Link } from '@tanstack/react-router';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from 'betfinio_app/tabs';
 import cx from 'clsx';

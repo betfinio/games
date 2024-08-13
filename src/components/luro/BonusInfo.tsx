@@ -1,7 +1,7 @@
 import { BonusChart } from '@/src/components/luro/BonusChart.tsx';
 import { useRoundBank, useRoundBets, useRoundBonusShare, useVisibleRound } from '@/src/lib/luro/query';
 import { ZeroAddress } from '@betfinio/abi';
-import { valueToNumber } from '@betfinio/hooks/dist/utils';
+import { valueToNumber } from '@betfinio/abi';
 import { BetValue } from 'betfinio_app/BetValue';
 import { Tooltip, TooltipContent, TooltipTrigger } from 'betfinio_app/tooltip';
 import { AnimatePresence, motion } from 'framer-motion';

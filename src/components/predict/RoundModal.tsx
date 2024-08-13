@@ -2,7 +2,7 @@ import BetsTable from '@/src/components/predict/BetsTable.tsx';
 import BonusChart from '@/src/components/predict/BonusChart.tsx';
 import { useCalculate, useRoundBets, useRoundInfo } from '@/src/lib/predict/query';
 import type { Game, PredictBet, RoundStatus } from '@/src/lib/predict/types';
-import { valueToNumber } from '@betfinio/hooks/dist/utils';
+import { valueToNumber } from '@betfinio/abi';
 import { Bank, MoneyHand, People } from '@betfinio/ui/dist/icons';
 import { useRouter } from '@tanstack/react-router';
 import { BetValue } from 'betfinio_app/BetValue';

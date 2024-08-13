@@ -1,7 +1,7 @@
 import { getColor } from '@/src/lib/roulette';
 import { useLastRouletteBets } from '@/src/lib/roulette/query';
 import type { RouletteBet } from '@/src/lib/roulette/types.ts';
-import { truncateEthAddress, valueToNumber } from '@betfinio/hooks/dist/utils';
+import { truncateEthAddress, valueToNumber } from '@betfinio/abi';
 import Fox from '@betfinio/ui/dist/icons/Fox';
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { BetValue } from 'betfinio_app/BetValue';

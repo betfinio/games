@@ -1,6 +1,6 @@
 import { TabItem } from '@/src/components/luro/tabs/PlayersTab.tsx';
 import { useRoundBets, useVisibleRound } from '@/src/lib/luro/query';
-import { valueToNumber } from '@betfinio/hooks/dist/utils';
+import { valueToNumber } from '@betfinio/abi';
 import { AnimatePresence } from 'framer-motion';
 import { type CSSProperties, useMemo, useRef } from 'react';
 import { FixedSizeList as List } from 'react-window';

@@ -3,12 +3,9 @@ import { getBlack, getColor, getRed } from '@/src/lib/roulette';
 import { getRequiredAllowance } from '@/src/lib/roulette/api';
 import { useLocalBets, usePlace, useRouletteState, useSpin, useUnplace } from '@/src/lib/roulette/query';
 import type { FuncProps } from '@/src/lib/roulette/types.ts';
-import { ZeroAddress } from '@betfinio/hooks';
-import arrayFrom, { valueToNumber } from '@betfinio/hooks/dist/utils';
+import {arrayFrom, valueToNumber, ZeroAddress} from '@betfinio/abi';
 import Additional from '@betfinio/ui/dist/icons/Additional';
 import Chip from '@betfinio/ui/dist/icons/Chip';
-import ActionModal from '@betfinio/ui/dist/shared/modal/ActionModal';
-import type { Action } from '@betfinio/ui/dist/shared/modal/types';
 import { useAllowance, useIncreaseAllowance } from 'betfinio_app/lib/query/token';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from 'betfinio_app/tooltip';
 import cx from 'clsx';
@@ -16,6 +13,7 @@ import { motion } from 'framer-motion';
 import { Loader } from 'lucide-react';
 import { type FC, type MouseEvent, useState } from 'react';
 import { useAccount } from 'wagmi';
+import {toast} from "betfinio_app/use-toast";
 
 const RouletteBetTable: FC = () => {
 	return (
@@ -333,20 +331,23 @@ const TableDesktop = () => {
 
 	const [open, setOpen] = useState(false);
 
-	const handleAction = (action: Action) => {
-		if (action.type === 'sign_transaction') {
-			console.log(allowance);
-			handleSpin();
-		} else if (action.type === 'request_allowance') {
-			increase();
-		}
-	};
+	// const handleAction = (action: Action) => {
+	// 	if (action.type === 'sign_transaction') {
+	// 		console.log(allowance);
+	// 		handleSpin();
+	// 	} else if (action.type === 'request_allowance') {
+	// 		increase();
+	// 	}
+	// };
 
 	const handleSpin = () => {
 		if (wheelState.state === 'spinning') return;
 
 		if (valueToNumber(allowance) < Number(getRequiredAllowance())) {
-			setOpen(true);
+			toast({
+				title: 'Insufficient allowance',
+				variant: 'destructive',
+			})
 			return;
 		}
 		spin({ bets });
@@ -527,17 +528,17 @@ const TableDesktop = () => {
 					}}
 				/>
 
-				{open && (
-					<ActionModal
-						open={open}
-						onClose={() => setOpen(false)}
-						onAction={handleAction}
-						requiredAllowance={BigInt(getRequiredAllowance()) * 10n ** 18n}
-						allowance={allowance}
-						tx={data}
-						scan={ETHSCAN}
-					/>
-				)}
+				{/*{open && (*/}
+				{/*	<ActionModal*/}
+				{/*		open={open}*/}
+				{/*		onClose={() => setOpen(false)}*/}
+				{/*		onAction={handleAction}*/}
+				{/*		requiredAllowance={BigInt(getRequiredAllowance()) * 10n ** 18n}*/}
+				{/*		allowance={allowance}*/}
+				{/*		tx={data}*/}
+				{/*		scan={ETHSCAN}*/}
+				{/*	/>*/}
+				{/*)}*/}
 			</div>
 		</div>
 	);

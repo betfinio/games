@@ -12,8 +12,7 @@
 		"preview": "rsbuild preview"
 	},
 	"dependencies": {
-		"@betfinio/abi": "^1.0.3",
-		"@betfinio/hooks": "^1.4.1",
+		"@betfinio/abi": "^1.0.4",
 		"@betfinio/ui": "^1.0.0",
 		"@module-federation/enhanced": "^0.3.3",
 		"@nivo/bar": "^0.87.0",

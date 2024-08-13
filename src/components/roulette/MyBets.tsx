@@ -1,8 +1,8 @@
 import { getColor } from '@/src/lib/roulette';
 import { useRouletteBets } from '@/src/lib/roulette/query';
 import type { RouletteBet } from '@/src/lib/roulette/types.ts';
-import { ZeroAddress } from '@betfinio/hooks';
-import { truncateEthAddress, valueToNumber } from '@betfinio/hooks/dist/utils';
+import { ZeroAddress } from '@betfinio/abi';
+import { truncateEthAddress, valueToNumber } from '@betfinio/abi';
 import { createColumnHelper } from '@tanstack/react-table';
 import { BetValue } from 'betfinio_app/BetValue';
 import { DataTable } from 'betfinio_app/DataTable';

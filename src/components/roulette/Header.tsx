@@ -1,7 +1,7 @@
 import Paytable from '@/src/components/roulette/Paytable.tsx';
 import { DYNAMIC_STAKING } from '@/src/global.ts';
 import { useLocalBets, usePotentialWin } from '@/src/lib/roulette/query';
-import { valueToNumber } from '@betfinio/hooks/dist/utils';
+import { valueToNumber } from '@betfinio/abi';
 import { Bag } from '@betfinio/ui/dist/icons';
 import { BetValue } from 'betfinio_app/BetValue';
 import { Button } from 'betfinio_app/button';

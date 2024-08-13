@@ -1,6 +1,6 @@
 import { getCurrentRoundInfo } from '@/src/lib/luro/api';
 import { useRoundBank, useRoundBets, useVisibleRound } from '@/src/lib/luro/query';
-import { valueToNumber } from '@betfinio/hooks/dist/utils';
+import { valueToNumber } from '@betfinio/abi';
 import { Bet } from '@betfinio/ui/dist/icons';
 import { BetValue } from 'betfinio_app/BetValue';
 import cx from 'clsx';

@@ -1,6 +1,14 @@
 import { games } from '@/src/lib/predict';
-import { BetInterfaceContract, BetsMemoryContract, DataFeedContract, GameContract, PartnerContract, PredictBetContract, defaultMulticall } from '@betfinio/abi';
-import { ZeroAddress } from '@betfinio/hooks/dist';
+import {
+	BetInterfaceContract,
+	BetsMemoryContract,
+	DataFeedContract,
+	GameContract,
+	PartnerContract,
+	PredictBetContract,
+	defaultMulticall,
+	ZeroAddress,
+} from '@betfinio/abi';
 import { type WriteContractReturnType, getBlock, multicall, readContract, writeContract } from '@wagmi/core';
 import type { Options } from 'betfinio_app/lib/types';
 import { getBlockByTimestamp } from 'betfinio_app/lib/utils';
@@ -100,7 +108,7 @@ export async function fetchPrice(options: Options, params: { address: Address; t
 		console.log('fetching price', address, time);
 		const block = await getBlockByTimestamp(time, options.supabase);
 		const data = (await readContract(options.config, {
-			...DataFeedContract,
+			abi: DataFeedContract.abi,
 			address: address,
 			functionName: 'latestRoundData',
 			blockNumber: block,
@@ -326,13 +334,13 @@ export const calculateRound = async ({ round, game }: CalculateRoundParams, opti
 	const startBlock = await getBlockByTimestamp(start, options.supabase);
 	const endBlock = await getBlockByTimestamp(end, options.supabase);
 	const priceStart = (await readContract(config, {
-		...DataFeedContract,
+		abi: DataFeedContract.abi,
 		address: game.dataFeed,
 		functionName: 'latestRoundData',
 		blockNumber: startBlock,
 	})) as bigint[];
 	const priceEnd = (await readContract(config, {
-		...DataFeedContract,
+		abi: DataFeedContract.abi,
 		address: game.dataFeed,
 		functionName: 'latestRoundData',
 		blockNumber: endBlock,

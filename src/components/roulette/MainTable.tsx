@@ -1,7 +1,7 @@
 import Wheel from '@/src/components/roulette/Wheel.tsx';
 import { getColor } from '@/src/lib/roulette';
 import { useRouletteBets } from '@/src/lib/roulette/query';
-import { ZeroAddress } from '@betfinio/hooks';
+import { ZeroAddress } from '@betfinio/abi';
 import cx from 'clsx';
 import _ from 'lodash';
 import React, { useMemo } from 'react';

@@ -2,7 +2,7 @@ import { mapBetsToAuthors } from '@/src/lib/luro';
 import { useRoundBets, useVisibleRound } from '@/src/lib/luro/query';
 import { addressToColor } from '@/src/lib/roulette';
 import { ZeroAddress } from '@betfinio/abi';
-import { truncateEthAddress, valueToNumber } from '@betfinio/hooks/dist/utils';
+import { truncateEthAddress, valueToNumber } from '@betfinio/abi';
 import Fox from '@betfinio/ui/dist/icons/Fox';
 import { BetValue } from 'betfinio_app/BetValue';
 import { useCustomUsername, useUsername } from 'betfinio_app/lib/query/username';

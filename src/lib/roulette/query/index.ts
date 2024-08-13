@@ -16,7 +16,7 @@ import {
 } from '@/src/lib/roulette/api';
 import type { FuncProps, Limit, LocalBet, RouletteBet, SpinParams, WheelState } from '@/src/lib/roulette/types.ts';
 import { RouletteContract } from '@betfinio/abi';
-import { ZeroAddress } from '@betfinio/hooks';
+import { ZeroAddress } from '@betfinio/abi';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useDebounce } from '@uidotdev/usehooks';
 import type { WriteContractReturnType } from '@wagmi/core';
