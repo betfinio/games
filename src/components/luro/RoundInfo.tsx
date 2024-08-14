@@ -52,11 +52,11 @@ export const RoundInfo = () => {
 		>
 			<div className={'flex items-center gap-10'}>
 				<div className={'text-sm leading-4 hidden sm:block'}>
-					<div className={'font-bold text-yellow-400'}>Lucky round</div>
+					<div className={'font-semibold text-yellow-400'}>Lucky round</div>
 					<div>{ENV.includes('prod') ? '1 day' : '10 min'}</div>
 				</div>
 				<div className={' flex flex-row items-center justify-start md:justify-center gap-4'}>
-					<p className={'font-bold text-lg'}>
+					<p className={'font-semibold text-lg'}>
 						Round <span className={'font-normal'}>#{currentRound}</span>
 					</p>
 				</div>

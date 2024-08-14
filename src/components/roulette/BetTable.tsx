@@ -728,13 +728,13 @@ const TableDesktopControls: FC<TableDesktopControlsProps> = ({ onHighlight }) =>
 				</TooltipTrigger>
 				<TooltipContent className={'bg-primary !bg-opacity-100 flex flex-col gap-1 p-4 text-white text-sm rounded-md'}>
 					<p>
-						Total: <span className={'font-bold text-yellow-400'}>{`${total.toLocaleString()} BET`}</span>
+						Total: <span className={'font-semibold text-yellow-400'}>{`${total.toLocaleString()} BET`}</span>
 					</p>
 					<p>
-						Potential win: <span className={'font-bold text-green-400'}>{(total * (36 / chip[0].numbers.length)).toLocaleString()} BET</span>
+						Potential win: <span className={'font-semibold text-green-400'}>{(total * (36 / chip[0].numbers.length)).toLocaleString()} BET</span>
 					</p>
 					<p>
-						Combination: <span className={'font-bold text-yellow-400'}>{getCombination(chip[0].item)}</span>{' '}
+						Combination: <span className={'font-semibold text-yellow-400'}>{getCombination(chip[0].item)}</span>{' '}
 						<span className={'text-green-400 text-xs'}>({36 / chip[0].numbers.length}x)</span>
 					</p>
 				</TooltipContent>

@@ -91,7 +91,7 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 		}
 		if (Number(amount) < 1000) {
 			toast({
-				title: 'Minimum bet amount is 1000 BET',
+				title: 'Minimal bet amount is 1000 BET',
 				description: '',
 				variant: 'destructive',
 			});
@@ -146,7 +146,7 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 				<LuckyRound className={'w-5 h-5 text-yellow-400'} />
 			</div>
 			<Tooltip>
-				<div className={cx('rounded-md bg-primaryLight border drop-shadow-[0_0_35px_rgba(87,101,242,0.75)] border-gray-800 p-4 relative w-full')}>
+				<div className={cx('rounded-xl bg-primaryLight border drop-shadow-[0_0_35px_rgba(87,101,242,0.75)] border-gray-800 p-4 relative w-full')}>
 					<h4 className={'font-medium text-center text-gray-500 text-xs '}>{t('amount')}</h4>
 					<NumericFormat
 						className={'w-full mt-2 rounded-lg text-center text-base lg:text-lg bg-primary py-3 font-semibold text-white disabled:cursor-not-allowed'}
@@ -185,7 +185,7 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 					</motion.button>
 				</div>
 
-				<div className={cx('rounded-md bg-primaryLight p-3 relative w-full lg:w-full mt-3 border border-gray-800')}>
+				<div className={cx('rounded-xl bg-primaryLight p-3 relative w-full lg:w-full mt-3 border border-gray-800')}>
 					<div className={'grid grid-cols-2 gap-2 text-xs'}>
 						<div className={'bg-primary py-2 text-center flex flex-col gap-1 rounded-[8px]'}>
 							<div className={'text-gray-500'}>Your active bets</div>

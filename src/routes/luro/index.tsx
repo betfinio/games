@@ -7,7 +7,7 @@ import RoundModal from '@/src/components/luro/RoundModal.tsx';
 import { RoundMyInfo } from '@/src/components/luro/RoundMyInfo.tsx';
 import RoundsTable from '@/src/components/luro/RoundsTable.tsx';
 import { Link, createFileRoute, useNavigate } from '@tanstack/react-router';
-import { getAppUrl, getStakingUrl } from 'betfinio_app/lib';
+import { getStakingUrl } from 'betfinio_app/lib';
 import { TooltipProvider } from 'betfinio_app/tooltip';
 import { Trans } from 'react-i18next';
 
