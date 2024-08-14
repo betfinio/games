@@ -8,11 +8,11 @@ import { BetValue } from 'betfinio_app/BetValue';
 import { DataTable } from 'betfinio_app/DataTable';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from 'betfinio_app/dialog';
 import cx from 'clsx';
+import { Search } from 'lucide-react';
 import { DateTime } from 'luxon';
 import React, { useState } from 'react';
 import { useAccount } from 'wagmi';
 import { RoundModal } from './HistoryTable';
-import { Search } from 'lucide-react';
 
 const columnHelper = createColumnHelper<RouletteBet>();
 
