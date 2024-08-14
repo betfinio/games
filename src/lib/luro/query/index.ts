@@ -9,15 +9,17 @@ import {
 	fetchRoundBets,
 	fetchRounds,
 	fetchTotalVolume,
+	fetchWinners,
 	placeBet,
 	startRound,
 } from '@/src/lib/luro/api';
-import type { LuroBet, PlaceBetParams, Round, WheelState } from '@/src/lib/luro/types.ts';
+import type { LuroBet, PlaceBetParams, Round, WheelState, WinnerInfo } from '@/src/lib/luro/types.ts';
 import { LuckyRoundContract } from '@betfinio/abi';
 import { ZeroAddress } from '@betfinio/abi';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { type WriteContractReturnType, readContract } from '@wagmi/core';
 import { getTransactionLink } from 'betfinio_app/helpers';
+import { useSupabase } from 'betfinio_app/supabase';
 import { toast } from 'betfinio_app/use-toast';
 import { useTranslation } from 'react-i18next';
 import type { Address, WriteContractErrorType } from 'viem';
@@ -188,6 +190,14 @@ export const useAvailableBonus = (address: Address) => {
 	});
 };
 
+export const useWinners = () => {
+	const config = useConfig();
+	return useQuery<WinnerInfo[]>({
+		queryKey: ['luro', 'winners'],
+		queryFn: () => fetchWinners(config),
+	});
+};
+
 export const useRound = (round: number) => {
 	const { address = ZeroAddress } = useAccount();
 	const queryClient = useQueryClient();
@@ -223,7 +233,7 @@ export const useRound = (round: number) => {
 	return useQuery<Round>({
 		queryKey: ['luro', 'round', round],
 		queryFn: () => {
-			return fetchRound(round, address, config);
+			return fetchRound(round, address, config.getClient());
 		},
 	});
 };
@@ -269,7 +279,7 @@ export const useRounds = (player: Address, onlyPlayers = false) => {
 	const config = useConfig();
 	return useQuery<Round[]>({
 		queryKey: ['luro', 'rounds', player, onlyPlayers],
-		queryFn: () => fetchRounds(player, onlyPlayers, config),
+		queryFn: () => fetchRounds(player, onlyPlayers, config.getClient()),
 	});
 };
 

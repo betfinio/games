@@ -126,8 +126,6 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 	}, [bets]);
 
 	const bank = useMemo(() => bets.reduce((acc, val) => acc + val.amount, 0n), [bets, address, round]);
-
-	console.log(bank, amount, myBetVolume);
 	const expectedWinning = (valueToNumber(bank) + Number(amount) - valueToNumber(myBetVolume)) * 0.914;
 	const coef = expectedWinning / Number(amount);
 
@@ -155,7 +153,7 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 						thousandSeparator={','}
 						min={1}
 						maxLength={15}
-						disabled={loading || allowance === 0n || balance === 0n}
+						disabled={loading}
 						placeholder={allowance === 0n ? 'Please increase allowance' : balance === 0n ? 'Please top-up balance' : 'Amount'}
 						value={amount ? amount : ''}
 						onValueChange={(values) => {

@@ -29,7 +29,7 @@ const largeProps = {
 	colors: ['#041E43', '#1471BF', '#5BB4DC', '#FC027B', '#66D805'],
 };
 
-export const RoundCircle: FC<{ round: number }> = ({ round }) => {
+export const RoundCircle: FC<{ round: number; className?: string }> = ({ round, className = '' }) => {
 	const [confettiExploding, setConfettiExploding] = useState(false);
 	const { address } = useAccount();
 	const { data: bets = [] } = useRoundBets(round);
@@ -125,6 +125,7 @@ export const RoundCircle: FC<{ round: number }> = ({ round }) => {
 			<motion.div
 				className={cx(
 					'border border-gray-800 relative p-4 flex-grow xl:p-8 rounded-md bg-primaryLight flex flex-col md:flex-row items-center justify-center gap-10 duration-300',
+					className,
 				)}
 			>
 				{currentRound === round && <EffectsLayer />}
@@ -238,7 +239,7 @@ const EffectsLayer = () => {
 	}, [observedBetAuthor.address]);
 
 	return (
-		<div ref={ref} className={'absolute top-0 right-0 left-0 bottom-0 duration-300 overflow-hidden'}>
+		<div ref={ref} className={'absolute top-0 right-0 left-0 bottom-0 duration-300 overflow-hidden aspect-square'}>
 			<AnimatePresence>
 				{particles?.map((particle, i) => (
 					<motion.div

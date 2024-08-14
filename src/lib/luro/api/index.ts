@@ -1,11 +1,11 @@
 import { BETS_MEMORY, FIRST_BLOCK, LURO, PARTNER } from '@/src/global.ts';
 import type { ICurrentRoundInfo } from '@/src/lib/luro/query';
-import type { LuroBet, PlaceBetParams, Round, RoundStatusEnum } from '@/src/lib/luro/types.ts';
+import type { LuroBet, PlaceBetParams, Round, RoundStatusEnum, WinnerInfo } from '@/src/lib/luro/types.ts';
 import { BetsMemoryContract, LuckyRoundBetContract, LuckyRoundContract, PartnerContract, defaultMulticall } from '@betfinio/abi';
 import { ZeroAddress, arrayFrom, valueToNumber } from '@betfinio/abi';
-import { multicall, readContract, writeContract } from '@wagmi/core';
-import { type Address, encodeAbiParameters, parseAbiParameters } from 'viem';
-import { getContractEvents } from 'viem/actions';
+import { writeContract } from '@wagmi/core';
+import { type Address, type Client, encodeAbiParameters, parseAbiParameters } from 'viem';
+import { getContractEvents, multicall, readContract } from 'viem/actions';
 import type { Config } from 'wagmi';
 
 export async function placeBet({ round, amount, player }: PlaceBetParams, config: Config) {
@@ -37,7 +37,7 @@ export const distributeBonus = async ({ round }: { round: number }, config: Conf
 
 export const fetchBonusDistribution = async (round: number, config: Config) => {
 	console.log('checking distribution', round);
-	return (await readContract(config, {
+	return (await readContract(config.getClient(), {
 		abi: LuckyRoundContract.abi,
 		address: LURO,
 		functionName: 'roundDistribution',
@@ -47,7 +47,7 @@ export const fetchBonusDistribution = async (round: number, config: Config) => {
 
 export const fetchAvailableBonus = async (address: Address, config: Config): Promise<bigint> => {
 	console.log('fetching bonus', address);
-	return (await readContract(config, {
+	return (await readContract(config.getClient(), {
 		abi: LuckyRoundContract.abi,
 		address: LURO,
 		functionName: 'claimableBonus',
@@ -55,38 +55,9 @@ export const fetchAvailableBonus = async (address: Address, config: Config): Pro
 	})) as bigint;
 };
 
-export const fetchRoundWinner = async (roundId: number, config: Config): Promise<Round['winner']> => {
-	const logs = await getContractEvents(config.getClient(), {
-		abi: LuckyRoundContract.abi,
-		address: LURO,
-		fromBlock: BigInt(FIRST_BLOCK),
-		toBlock: 'latest',
-		eventName: 'WinnerCalculated',
-		args: {
-			round: BigInt(roundId),
-		},
-	});
-	console.log(logs);
-	if (logs.length === 0) return undefined;
-	const betInfo = (await readContract(config, {
-		abi: LuckyRoundBetContract.abi,
-		// @ts-ignore
-		address: logs[0].args.bet as Address,
-		functionName: 'getBetInfo',
-	})) as Address[];
-	return {
-		// @ts-ignore
-		offset: logs[0].args.winnerOffset,
-		// @ts-ignore
-		bet: logs[0].args.bet,
-		player: betInfo[0],
-		tx: logs[0].transactionHash,
-	};
-};
-
 export const fetchRoundBets = async (roundId: number, config: Config) => {
 	console.trace('fetching round bets', roundId);
-	const count = (await readContract(config, {
+	const count = (await readContract(config.getClient(), {
 		abi: LuckyRoundContract.abi,
 		address: LURO,
 		functionName: 'getBetsCount',
@@ -98,7 +69,7 @@ export const fetchRoundBets = async (roundId: number, config: Config) => {
 		functionName: 'roundBets',
 		args: [roundId, i],
 	}));
-	const result = await multicall(config, {
+	const result = await multicall(config.getClient(), {
 		multicallAddress: defaultMulticall,
 		contracts: prepared,
 	});
@@ -106,7 +77,7 @@ export const fetchRoundBets = async (roundId: number, config: Config) => {
 };
 
 export const fetchLuroBet = async (address: Address, config: Config): Promise<LuroBet> => {
-	const betInfo = (await readContract(config, {
+	const betInfo = (await readContract(config.getClient(), {
 		...LuckyRoundBetContract,
 		address: address as Address,
 		functionName: 'getBetInfo',
@@ -140,20 +111,23 @@ export const getCurrentRoundInfo = (iBets: LuroBet[]): ICurrentRoundInfo => {
 	};
 };
 
-export const fetchRounds = async (player: Address, onlyPlayers: boolean, config: Config): Promise<Round[]> => {
+export const fetchRounds = async (player: Address, onlyPlayers: boolean, config?: Client): Promise<Round[]> => {
+	if (!config) return [];
 	console.log('fetching rounds', LURO);
 	// return [];
-	const activeRounds = await getContractEvents(config.getClient(), {
+	const activeRounds = await getContractEvents(config, {
 		abi: LuckyRoundContract.abi,
 		address: LURO,
 		fromBlock: 10526041n,
 		eventName: 'RoundStart',
 	});
+	console.log('rounds fetched', activeRounds.length);
 	// @ts-ignore
 	return (await Promise.all(activeRounds.reverse().map((e) => fetchRound(e.args.round, player, config)))).filter((e) => !onlyPlayers || e.player.bets > 0n);
 };
 
-export const fetchRound = async (round: number, player: Address, config: Config): Promise<Round> => {
+export const fetchRound = async (round: number, player: Address, config: Client): Promise<Round> => {
+	console.log('fetching round', round);
 	const data = await multicall(config, {
 		multicallAddress: defaultMulticall,
 		contracts: [
@@ -187,6 +161,12 @@ export const fetchRound = async (round: number, player: Address, config: Config)
 				functionName: 'roundStatus',
 				args: [round],
 			},
+			{
+				abi: LuckyRoundContract.abi,
+				address: LURO,
+				functionName: 'roundWinners',
+				args: [round],
+			},
 		],
 	});
 	const volume = data[0].result as bigint;
@@ -194,9 +174,8 @@ export const fetchRound = async (round: number, player: Address, config: Config)
 	const playerVolume = data[2].result as bigint;
 	const playerCount = data[3].result as bigint;
 	const status = data[4].result as RoundStatusEnum;
-	const winner = await fetchRoundWinner(round, config);
 	const bonus = (volume / 100n) * 5n;
-
+	const winner = BigInt(data[5].result as bigint);
 	return {
 		round,
 		total: {
@@ -212,14 +191,14 @@ export const fetchRound = async (round: number, player: Address, config: Config)
 		},
 		status,
 		address: ZeroAddress,
-		winner: winner,
+		winnerOffset: winner,
 	};
 };
 
 export const fetchBetsCount = async (config: Config): Promise<number> => {
 	console.log('fetching total bets number');
 	return Number(
-		await readContract(config, {
+		await readContract(config.getClient(), {
 			abi: BetsMemoryContract.abi,
 			address: BETS_MEMORY,
 			functionName: 'getGamesBetsCount',
@@ -230,10 +209,40 @@ export const fetchBetsCount = async (config: Config): Promise<number> => {
 
 export const fetchTotalVolume = async (config: Config): Promise<bigint> => {
 	console.log('fetching total volume of luro');
-	return (await readContract(config, {
+	return (await readContract(config.getClient(), {
 		abi: BetsMemoryContract.abi,
 		address: BETS_MEMORY,
 		functionName: 'gamesVolume',
 		args: [LURO],
 	})) as bigint;
+};
+
+export const fetchWinners = async (config: Config): Promise<WinnerInfo[]> => {
+	console.log('fetching winners', FIRST_BLOCK);
+	try {
+		const logs = await getContractEvents(config.getClient(), {
+			abi: LuckyRoundContract.abi,
+			address: LURO,
+			eventName: 'WinnerCalculated',
+			fromBlock: BigInt(FIRST_BLOCK),
+			toBlock: 'latest',
+		});
+		console.log(logs);
+		return await Promise.all(
+			logs.map(async (e) => {
+				// @ts-ignore
+				const { bet, winnerOffset, round } = e.args;
+				const player = await readContract(config.getClient(), {
+					abi: LuckyRoundBetContract.abi,
+					address: bet,
+					functionName: 'getPlayer',
+					args: [],
+				});
+				return { player, bet: bet, offset: winnerOffset, tx: e.transactionHash, round: Number(round) } as WinnerInfo;
+			}),
+		);
+	} catch (e) {
+		console.log(e);
+		return [];
+	}
 };

@@ -1,4 +1,4 @@
-import { useRounds } from '@/src/lib/luro/query';
+import { useRound, useRounds, useWinners } from '@/src/lib/luro/query';
 import type { Round } from '@/src/lib/luro/types.ts';
 import { ZeroAddress } from '@betfinio/abi';
 import { truncateEthAddress, valueToNumber } from '@betfinio/abi';
@@ -9,7 +9,7 @@ import { DataTable } from 'betfinio_app/DataTable';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from 'betfinio_app/tabs';
 import cx from 'clsx';
 import { motion } from 'framer-motion';
-import { Expand } from 'lucide-react';
+import { Expand, Loader } from 'lucide-react';
 import type { FC } from 'react';
 import { useAccount } from 'wagmi';
 
@@ -66,7 +66,7 @@ const columns = [
 	}),
 	columnHelper.accessor('winner', {
 		header: 'Winner',
-		cell: (props) => <div className={''}>{props.getValue() ? truncateEthAddress(props.getValue()?.player || ZeroAddress) : 'Waiting'}</div>,
+		cell: (props) => <WinnerInfo round={Number(props.row.original.round)} />,
 	}),
 	columnHelper.accessor('total.staking', {
 		meta: {
@@ -112,4 +112,16 @@ const PlayerRoundsTable = () => {
 			<DataTable data={rounds} columns={columns} />
 		</motion.div>
 	);
+};
+
+const WinnerInfo: FC<{ round: number }> = ({ round }) => {
+	const { data: winners = [], isLoading, isFetching } = useWinners();
+	if (isLoading || isFetching) {
+		return <Loader className={'w-3 h-3 animate-spin'} />;
+	}
+	const winner = winners.find((w) => w.round === round);
+	if (!winner) {
+		return <div>Waiting</div>;
+	}
+	return <div>{truncateEthAddress(winner.player)}</div>;
 };
