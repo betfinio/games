@@ -15,11 +15,13 @@ import { type FC, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NumericFormat } from 'react-number-format';
 import { useAccount } from 'wagmi';
+import { useIsMember } from 'betfinio_app/lib/query/pass';
 
 const PlaceBet: FC<{ game: Game }> = ({ game }) => {
 	const { t } = useTranslation('', { keyPrefix: 'games.predict.placeBet' });
 	const [amount, setAmount] = useState<string>('5000');
 	const { address = ZeroAddress } = useAccount();
+	const { data: isMember = false } = useIsMember(address);
 	const { data: allowance = 0n, isFetching: loading } = useAllowance(address);
 	const { data: balance = 0n } = useBalance(address);
 	const { data: round } = useCurrentRound(game.interval);
@@ -60,6 +62,20 @@ const PlaceBet: FC<{ game: Game }> = ({ game }) => {
 	const [s, setSide] = useState<boolean>(false);
 
 	const handleBet = async (side: boolean) => {
+		if (address === ZeroAddress) {
+			toast({
+				description: 'Please connect your wallet',
+				variant: 'destructive',
+			});
+			return;
+		}
+		if (!isMember) {
+			toast({
+				description: 'Connected wallet is not member of Betfin. Ask someone for an invitation',
+				variant: 'destructive',
+			});
+			return;
+		}
 		if (amount === '') {
 			toast({
 				title: 'Please enter amount',

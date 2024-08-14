@@ -12,16 +12,18 @@ import { Chip } from '@betfinio/ui/dist/icons';
 import CloseIcon from '@betfinio/ui/dist/icons/Close';
 import { useAllowanceModal } from 'betfinio_app/allowance';
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from 'betfinio_app/dialog';
-import { useAllowance, useIncreaseAllowance } from 'betfinio_app/lib/query/token';
+import { useAllowance } from 'betfinio_app/lib/query/token';
 import { toast } from 'betfinio_app/use-toast';
 import { Loader, Undo2 } from 'lucide-react';
 import { useAccount } from 'wagmi';
+import { useIsMember } from 'betfinio_app/lib/query/pass';
 
 const RouletteControls = () => {
 	const { state: wheelStateData } = useRouletteState();
 	const wheelState = wheelStateData.data;
 	const { address = ZeroAddress } = useAccount();
 	const { data: value = 0 } = useSelectedChip();
+	const { data: isMember = false } = useIsMember(address);
 	const { mutate: change } = useChangeChip();
 	const { mutate: undo } = useUndoPlace();
 	const { mutate: double } = useDoublePlace();
@@ -112,6 +114,21 @@ const RouletteControls = () => {
 	const { data: allowance = 0n, isFetching: loading } = useAllowance(address);
 
 	const handleSpin = () => {
+		if (address === ZeroAddress) {
+			toast({
+				description: 'Please connect your wallet',
+				variant: 'destructive',
+			});
+			return;
+		}
+		if (!isMember) {
+			toast({
+				description: 'Connected wallet is not member of Betfin. Ask someone for an invitation',
+				variant: 'destructive',
+			});
+			return;
+		}
+
 		if (wheelState.state === 'spinning') return;
 
 		if (valueToNumber(allowance) < Number(getRequiredAllowance())) {
