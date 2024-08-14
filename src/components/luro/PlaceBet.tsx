@@ -3,6 +3,7 @@ import { getCurrentRoundInfo } from '@/src/lib/luro/api';
 import { useLuroState, usePlaceBet, useRound, useRoundBank, useRoundBets, useRoundBonusShare, useStartRound, useVisibleRound } from '@/src/lib/luro/query';
 import { ZeroAddress } from '@betfinio/abi';
 import { valueToNumber } from '@betfinio/abi';
+import { LuckyRound } from '@betfinio/ui/dist/icons/LuckyRound';
 import { useQueryClient } from '@tanstack/react-query';
 import { BetValue } from 'betfinio_app/BetValue';
 import { useAllowanceModal } from 'betfinio_app/allowance';
@@ -18,7 +19,6 @@ import { type FC, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NumericFormat } from 'react-number-format';
 import { useAccount } from 'wagmi';
-import { LuckyRound } from '@betfinio/ui/dist/icons/LuckyRound';
 
 export const PlaceBet = () => {
 	const { data: round } = useVisibleRound();
