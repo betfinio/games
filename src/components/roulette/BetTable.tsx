@@ -13,6 +13,8 @@ import { motion } from 'framer-motion';
 import { Loader } from 'lucide-react';
 import { type FC, type MouseEvent, useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
+import { toast } from 'betfinio_app/use-toast';
+import { useIsMember } from 'betfinio_app/lib/query/pass';
 
 const RouletteBetTable: FC = () => {
 	return (
@@ -325,6 +327,7 @@ const TableDesktop = () => {
 	const wheelState = wheelStateData.data;
 	const { mutate: spin, data, isPending, isSuccess } = useSpin();
 	const { address = ZeroAddress } = useAccount();
+	const { data: isMember = false } = useIsMember(address);
 	const { data: allowance = 0n, isFetching: loading } = useAllowance(address);
 	const { requestAllowance, setResult, requested } = useAllowanceModal();
 	useEffect(() => {
@@ -339,6 +342,21 @@ const TableDesktop = () => {
 	}, [requested]);
 
 	const handleSpin = () => {
+		if (address === ZeroAddress) {
+			toast({
+				description: 'Please connect your wallet',
+				variant: 'destructive',
+			});
+			return;
+		}
+		if (!isMember) {
+			toast({
+				description: 'Connected wallet is not member of Betfin. Ask someone for an invitation',
+				variant: 'destructive',
+			});
+			return;
+		}
+
 		if (wheelState.state === 'spinning') return;
 
 		if (valueToNumber(allowance) < Number(getRequiredAllowance())) {
