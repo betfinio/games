@@ -1,9 +1,8 @@
 import { PARTNER, ROULETTE } from '@/src/global.ts';
 import { encodeBet } from '@/src/lib/roulette';
 import type { FuncProps, Limit, LocalBet, RouletteBet, RouletteSubBet, SpinParams } from '@/src/lib/roulette/types.ts';
-import { PartnerContract, RouletteBetContract, RouletteContract } from '@betfinio/abi';
-import arrayFrom from '@betfinio/abi/dist/utils';
-import { ZeroAddress } from '@betfinio/hooks';
+import { PartnerContract, RouletteBetContract, RouletteContract, arrayFrom } from '@betfinio/abi';
+import { ZeroAddress } from '@betfinio/abi';
 import { multicall, readContract, writeContract } from '@wagmi/core';
 import _ from 'lodash';
 import { type Address, encodeAbiParameters, parseAbiParameters } from 'viem';
@@ -277,7 +276,7 @@ export const fetchLastRouletteBets = async (config: Config): Promise<RouletteBet
 	return await Promise.all(betAddresses.map((bet) => populateRouletteBet(bet, config)));
 };
 
-export const fetchProofTx = async (request: bigint, config: Config): Promise<string> => {
+export const fetchProofTx = async (request: bigint, config: Config): Promise<Address> => {
 	const logs = await getContractEvents(config.getClient(), {
 		abi: RouletteContract.abi,
 		address: ROULETTE,

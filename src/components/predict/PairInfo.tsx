@@ -1,7 +1,7 @@
 import CoinInfo from '@/src/components/predict/CoinInfo.tsx';
 import { useBetsCount, useBetsVolume, useLatestPrice, useYesterdayPrice } from '@/src/lib/predict/query';
 import { type Game, defaultResult } from '@/src/lib/predict/types';
-import { valueToNumber } from '@betfinio/hooks/dist/utils';
+import { valueToNumber } from '@betfinio/abi';
 import { BetValue } from 'betfinio_app/BetValue';
 import cx from 'clsx';
 import { CircleHelp } from 'lucide-react';

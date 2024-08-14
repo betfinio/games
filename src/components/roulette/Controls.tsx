@@ -1,35 +1,45 @@
-import { valueToNumber } from '@betfinio/hooks/dist/utils';
-import { ArrowUturnLeftIcon } from '@heroicons/react/24/outline';
+import { valueToNumber } from '@betfinio/abi';
 import cx from 'clsx';
 import { motion } from 'framer-motion';
 import millify from 'millify';
 import Slider from 'rc-slider';
-import { type ChangeEvent, type FC, useMemo, useState } from 'react';
+import { type ChangeEvent, type FC, useEffect, useMemo, useState } from 'react';
 import 'rc-slider/assets/index.css';
-import { ETHSCAN } from '@/src/global.ts';
 import { getRequiredAllowance } from '@/src/lib/roulette/api';
 import { useChangeChip, useDoublePlace, useLimits, usePlace, useRouletteState, useSelectedChip, useSpin, useUndoPlace } from '@/src/lib/roulette/query';
-import { ZeroAddress } from '@betfinio/hooks';
+import { ZeroAddress } from '@betfinio/abi';
 import { Chip } from '@betfinio/ui/dist/icons';
 import CloseIcon from '@betfinio/ui/dist/icons/Close';
-import ActionModal from '@betfinio/ui/dist/shared/modal/ActionModal';
-import type { Action } from '@betfinio/ui/dist/shared/modal/types';
+import { useAllowanceModal } from 'betfinio_app/allowance';
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from 'betfinio_app/dialog';
-import { useAllowance, useIncreaseAllowance } from 'betfinio_app/lib/query/token';
+import { useAllowance } from 'betfinio_app/lib/query/token';
 import { toast } from 'betfinio_app/use-toast';
-import { Loader } from 'lucide-react';
+import { Loader, Undo2 } from 'lucide-react';
 import { useAccount } from 'wagmi';
+import { useIsMember } from 'betfinio_app/lib/query/pass';
 
 const RouletteControls = () => {
 	const { state: wheelStateData } = useRouletteState();
 	const wheelState = wheelStateData.data;
 	const { address = ZeroAddress } = useAccount();
 	const { data: value = 0 } = useSelectedChip();
+	const { data: isMember = false } = useIsMember(address);
 	const { mutate: change } = useChangeChip();
 	const { mutate: undo } = useUndoPlace();
 	const { mutate: double } = useDoublePlace();
 	const { mutate: place } = usePlace();
-	const { mutate: spin, data, isPending } = useSpin();
+	const { mutate: spin, data, isPending, isSuccess } = useSpin();
+	const { requestAllowance, setResult, requested } = useAllowanceModal();
+	useEffect(() => {
+		if (data && isSuccess) {
+			setResult?.(data);
+		}
+	}, [isSuccess, data]);
+	useEffect(() => {
+		if (requested) {
+			handleSpin();
+		}
+	}, [requested]);
 	const { data: limitsRaw = [], isFetched: isLimitsFetched } = useLimits();
 	const limits = useMemo(() => {
 		if (limitsRaw.length > 0) {
@@ -102,24 +112,31 @@ const RouletteControls = () => {
 	};
 
 	const { data: allowance = 0n, isFetching: loading } = useAllowance(address);
-	const { mutate: increase } = useIncreaseAllowance();
-
-	const [open, setOpen] = useState(false);
-
-	const handleAction = (action: Action) => {
-		if (action.type === 'sign_transaction') {
-			console.log(allowance);
-			handleSpin();
-		} else if (action.type === 'request_allowance') {
-			increase();
-		}
-	};
 
 	const handleSpin = () => {
+		if (address === ZeroAddress) {
+			toast({
+				description: 'Please connect your wallet',
+				variant: 'destructive',
+			});
+			return;
+		}
+		if (!isMember) {
+			toast({
+				description: 'Connected wallet is not member of Betfin. Ask someone for an invitation',
+				variant: 'destructive',
+			});
+			return;
+		}
+
 		if (wheelState.state === 'spinning') return;
 
 		if (valueToNumber(allowance) < Number(getRequiredAllowance())) {
-			setOpen(true);
+			toast({
+				description: 'Please increase your allowance',
+				variant: 'destructive',
+			});
+			requestAllowance?.('bet', BigInt(getRequiredAllowance()) * 10n ** 18n);
 			return;
 		}
 
@@ -230,7 +247,8 @@ const RouletteControls = () => {
 							}
 						>
 							<Chip
-								className={cx('duration-300', {
+								labelClassName={''}
+								className={cx('duration-300 flex items-center justify-center', {
 									'text-amber-500': valueToNumber(bigValue) > 1000000,
 									'text-red-500': valueToNumber(bigValue) > 500000 && valueToNumber(bigValue) <= 1000000,
 									'text-purple-600': valueToNumber(bigValue) > 200000 && valueToNumber(bigValue) <= 500000,
@@ -265,22 +283,22 @@ const RouletteControls = () => {
 					onClick={handleUndo}
 					className={'rounded-lg h-[40px] text-yellow-400 bg-primaryLight p-3 lg:px-6 py-2 font-semibold flex flex-row gap-2 justify-center items-center'}
 				>
-					<ArrowUturnLeftIcon className={'w-4 h-4'} />
+					<Undo2 className={'w-4 h-4'} />
 					<span className={'hidden lg:block'}>Undo</span>
 				</motion.button>
 			</Dialog>
 
-			{open && (
-				<ActionModal
-					open={open}
-					onClose={() => setOpen(false)}
-					onAction={handleAction}
-					requiredAllowance={BigInt(getRequiredAllowance()) * 10n ** 18n}
-					allowance={allowance}
-					tx={data}
-					scan={ETHSCAN}
-				/>
-			)}
+			{/*{open && (*/}
+			{/*	<ActionModal*/}
+			{/*		open={open}*/}
+			{/*		onClose={() => setOpen(false)}*/}
+			{/*		onAction={handleAction}*/}
+			{/*		requiredAllowance={BigInt(getRequiredAllowance()) * 10n ** 18n}*/}
+			{/*		allowance={allowance}*/}
+			{/*		tx={data}*/}
+			{/*		scan={ETHSCAN}*/}
+			{/*	/>*/}
+			{/*)}*/}
 		</div>
 	);
 };

@@ -5,17 +5,17 @@ import { useBonusDistribution, useDistributeBonus, useRound, useRoundBank, useRo
 import type { Round, RoundModalPlayer } from '@/src/lib/luro/types.ts';
 import { addressToColor } from '@/src/lib/roulette';
 import { ZeroAddress } from '@betfinio/abi';
-import { truncateEthAddress, valueToNumber } from '@betfinio/hooks/dist/utils';
+import { truncateEthAddress, valueToNumber } from '@betfinio/abi';
 import Bank from '@betfinio/ui/dist/icons/Bank';
 import GoldenTrophy from '@betfinio/ui/dist/icons/GoldenTrophy';
 import MoneyHand from '@betfinio/ui/dist/icons/MoneyHand';
 import People from '@betfinio/ui/dist/icons/People';
-import { XMarkIcon } from '@heroicons/react/24/outline';
 import { Link } from '@tanstack/react-router';
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { BetValue } from 'betfinio_app/BetValue';
 import { ScrollArea } from 'betfinio_app/scroll-area';
 import cx from 'clsx';
+import { ShieldCheckIcon, X } from 'lucide-react';
 import { DateTime } from 'luxon';
 import { type FC, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -43,7 +43,7 @@ export const ModalContent: FC<{
 				onClick={(e) => e.stopPropagation()}
 				className={'relative mx-auto text-white h-full w-full  min-h-[300px] rounded-lg flex flex-col p-2 md:p-3 lg:p-4 pt-5'}
 			>
-				<XMarkIcon
+				<X
 					className={
 						'absolute top-5 right-5 w-6 h-6  border-2 border-white rounded-full cursor-pointer hover:text-[#EB5757] hover:border-[#EB5757] duration-300'
 					}
@@ -157,12 +157,13 @@ const WinnerBetInfo: FC<{ round: number }> = ({ round }) => {
 	if (!data || !data.winner) return null;
 	return (
 		<div className={'py-5 border-t border-b border-[#1F222F] flex flex-col items-center text-sm font-semibold'}>
-			<p>Bet ID:</p>
+			<p>Round Contract:</p>
 			<Link target={'_blank'} to={`${ETHSCAN}/address/${data.winner.bet}`} className={'underline'}>
 				{data.winner.bet}
 			</Link>
-			<div className={'mt-5 flex gap-3'}>
+			<div className={'mt-5 flex gap-2'}>
 				<p className={'text-[#8794A1]'}>Proof of Random:</p>
+				<ShieldCheckIcon className={'text-[#38BB7F] w-5 h-5'} />
 				<Link target={'_blank'} to={`${ETHSCAN}/tx/${data.winner.tx}`} className={'underline'}>
 					{truncateEthAddress(data.winner.tx)}
 				</Link>
@@ -199,9 +200,9 @@ const BetsTable: FC<{ round: number; className?: string; volume: bigint; bonusSh
 			header: '',
 			id: 'color',
 			meta: {
-				className: '!w-[8px] hidden lg:table-cell',
+				className: '!w-[8px] !px-0 hidden lg:table-cell',
 			},
-			cell: (props) => <div className={'h-[40px]'} style={{ backgroundColor: addressToColor(props.row.getValue('player')) }} />,
+			cell: (props) => <div className={'h-[40px] w-[8px]'} style={{ backgroundColor: addressToColor(props.row.getValue('player')) }} />,
 		}),
 		columnHelper.display({
 			header: '',
@@ -211,10 +212,10 @@ const BetsTable: FC<{ round: number; className?: string; volume: bigint; bonusSh
 			},
 			cell: (props) => (
 				<div className={'w-full h-full flex items-center justify-center'}>
-					{props.row.getValue('player') === address ? (
+					{props.row.getValue('player') === address.toLowerCase() ? (
 						<div className={'text-[10px] text-[#6A6F84] font-semibold'}>YOU</div>
 					) : (
-						props.row.index < 3 && getTrophyColor(props.row.index)
+						props.row.getValue('player') === winner && <GoldenTrophy />
 					)}
 				</div>
 			),
@@ -248,7 +249,11 @@ const BetsTable: FC<{ round: number; className?: string; volume: bigint; bonusSh
 				const amount = props.getValue();
 				const isWinner = props.row.getValue('player') === winner;
 				if (winner === ZeroAddress) return <div className={'text-gray-500'}>Pending</div>;
-				return isWinner ? <BetValue value={valueToNumber(amount)} withIcon={true} /> : <div className={'text-[#EE5E5F] font-semibold'}>Lost</div>;
+				return isWinner ? (
+					<BetValue value={valueToNumber(amount)} withIcon={true} className={'text-green-600'} />
+				) : (
+					<div className={'text-[#EE5E5F] font-semibold'}>Lost</div>
+				);
 			},
 		}),
 		columnHelper.accessor('bonus', {

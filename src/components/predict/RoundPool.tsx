@@ -1,10 +1,10 @@
 import { useCurrentRound, useRoundBets } from '@/src/lib/predict/query';
 import type { Game, RoundPool } from '@/src/lib/predict/types';
-import { valueToNumber } from '@betfinio/hooks/dist/utils';
+import { valueToNumber } from '@betfinio/abi';
 import { Bet } from '@betfinio/ui/dist/icons';
-import { ArrowDownIcon, ArrowUpIcon, UserIcon } from '@heroicons/react/24/outline';
 import { BetValue } from 'betfinio_app/BetValue';
 import cx from 'clsx';
+import { ArrowDownIcon, ArrowUpIcon, UserIcon } from 'lucide-react';
 import millify from 'millify';
 import { type FC, useEffect, useState } from 'react';
 
