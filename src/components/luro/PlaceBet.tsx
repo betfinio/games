@@ -1,6 +1,6 @@
 import { jumpToCurrentRound } from '@/src/lib/luro';
 import { getCurrentRoundInfo } from '@/src/lib/luro/api';
-import { useLuroState, usePlaceBet, useRound, useRoundBank, useRoundBets, useRoundBonusShare, useVisibleRound } from '@/src/lib/luro/query';
+import { useLuroState, usePlaceBet, useRound, useRoundBank, useRoundBets, useRoundBonusShare, useStartRound, useVisibleRound } from '@/src/lib/luro/query';
 import { ZeroAddress } from '@betfinio/abi';
 import { valueToNumber } from '@betfinio/abi';
 import { useQueryClient } from '@tanstack/react-query';
@@ -14,6 +14,8 @@ import { type FC, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NumericFormat } from 'react-number-format';
 import { useAccount } from 'wagmi';
+import {TooltipTrigger, Tooltip, TooltipContent} from "betfinio_app/tooltip";
+import millify from "millify";
 
 export const PlaceBet = () => {
 	const { data: round } = useVisibleRound();
@@ -106,6 +108,7 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 			transition={{ duration: 0.3 }}
 			className={'flex flex-col grow justify-between duration-300'}
 		>
+			<Tooltip>
 			<div className={cx('rounded-md bg-primaryLight border drop-shadow-[0_0_35px_rgba(87,101,242,0.75)] border-gray-800 p-5 relative w-full')}>
 				<h2 className={'text-lg font-semibold text-center'}>{t('title')}</h2>
 				<h4 className={'font-medium text-center text-gray-500 text-xs mt-[10px]'}>{t('amount')}</h4>
@@ -157,28 +160,44 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 					<div className={'bg-primary py-2 text-center flex flex-col gap-1 rounded-[8px]'}>
 						<p className={'text-[#6A6F84]'}>Potential win</p>
 						<div className={'text-[#EB5757] font-bold flex justify-center gap-1'}>
-							<BetValue value={potentialWin} /> {myBetVolume > 0 && `(${myCoef.toFixed(2)} x)`}
+							<TooltipTrigger>
+								{millify(potentialWin)} {myBetVolume > 0 && `(${myCoef.toFixed(2)} x)`}
+
+							</TooltipTrigger>
+							<TooltipContent className={'font-semibold'}>{`${potentialWin.toLocaleString()} BET`}</TooltipContent>
 						</div>
 					</div>
 				</div>
 			</div>
+			</Tooltip>
 		</motion.div>
 	);
 };
 
 const WaitingScreen: FC<{ round: number }> = () => {
+	const { mutate: startRound, isPending } = useStartRound(19948);
+
+	const handleSpin = () => {
+		startRound();
+	};
 	return (
-		<>
-			<motion.div
-				initial={{ opacity: 0 }}
-				animate={{ opacity: 1 }}
-				exit={{ opacity: 0 }}
-				transition={{ duration: 0.3 }}
-				className={'grow flex flex-col items-center justify-center min-h-[390px]'}
+		<motion.div
+			initial={{ opacity: 0 }}
+			animate={{ opacity: 1 }}
+			exit={{ opacity: 0 }}
+			transition={{ duration: 0.3 }}
+			className={'grow flex flex-col items-center justify-center min-h-[390px]'}
+		>
+			<span>Waiting for polygon block...</span>
+			<button
+				type={'button'}
+				onClick={handleSpin}
+				disabled={isPending}
+				className={'bg-yellow-400 disabled:bg-gray-500 rounded-lg px-6 py-2 text-black font-medium'}
 			>
-				<span>Waiting for polygon block...</span>
-			</motion.div>
-		</>
+				{isPending ? 'Spinning...' : 'Spin the wheel'}
+			</button>
+		</motion.div>
 	);
 };
 
