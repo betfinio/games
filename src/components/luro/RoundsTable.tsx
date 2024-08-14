@@ -2,7 +2,7 @@ import { useRound, useRounds, useWinners } from '@/src/lib/luro/query';
 import type { Round } from '@/src/lib/luro/types.ts';
 import { ZeroAddress } from '@betfinio/abi';
 import { truncateEthAddress, valueToNumber } from '@betfinio/abi';
-import { Link } from '@tanstack/react-router';
+import { Link, useNavigate } from '@tanstack/react-router';
 import { createColumnHelper } from '@tanstack/react-table';
 import { BetValue } from 'betfinio_app/BetValue';
 import { DataTable } from 'betfinio_app/DataTable';
@@ -94,11 +94,14 @@ const columns = [
 const AllRoundsTable = () => {
 	const { address = ZeroAddress } = useAccount();
 	const { data: rounds = [] } = useRounds(address);
-
+	const navigate = useNavigate();
+	const handleClick = (row: Round) => {
+		navigate({ to: '/luro', search: { round: row.round } });
+	};
 	return (
 		<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.5 }}>
 			{/*// @ts-ignore*/}
-			<DataTable data={rounds} columns={columns} />
+			<DataTable data={rounds} columns={columns} onRowClick={handleClick} />
 		</motion.div>
 	);
 };
@@ -106,10 +109,14 @@ const AllRoundsTable = () => {
 const PlayerRoundsTable = () => {
 	const { address = ZeroAddress } = useAccount();
 	const { data: rounds = [] } = useRounds(address, true);
+	const navigate = useNavigate();
+	const handleClick = (row: Round) => {
+		navigate({ to: '/luro', search: { round: row.round } });
+	};
 	return (
 		<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.5 }}>
 			{/*// @ts-ignore*/}
-			<DataTable data={rounds} columns={columns} />
+			<DataTable data={rounds} columns={columns} onRowClick={handleClick} />
 		</motion.div>
 	);
 };

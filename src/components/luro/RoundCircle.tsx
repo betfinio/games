@@ -124,7 +124,7 @@ export const RoundCircle: FC<{ round: number; className?: string }> = ({ round, 
 		<Tooltip>
 			<motion.div
 				className={cx(
-					'border border-gray-800 relative p-4 flex-grow xl:p-8 rounded-md bg-primaryLight flex flex-col md:flex-row items-center justify-center gap-10 duration-300',
+					'border border-gray-800 relative p-4 flex-grow xl:p-8 rounded-xl bg-primaryLight flex flex-col md:flex-row items-center justify-center gap-10 duration-300',
 					className,
 				)}
 			>
@@ -239,7 +239,7 @@ const EffectsLayer = () => {
 	}, [observedBetAuthor.address]);
 
 	return (
-		<div ref={ref} className={'absolute top-0 right-0 left-0 bottom-0 duration-300 overflow-hidden aspect-square'}>
+		<div ref={ref} className={'absolute top-0 right-0 left-0 bottom-0 duration-300 overflow-hidden'}>
 			<AnimatePresence>
 				{particles?.map((particle, i) => (
 					<motion.div

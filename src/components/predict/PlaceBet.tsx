@@ -85,7 +85,7 @@ const PlaceBet: FC<{ game: Game }> = ({ game }) => {
 		}
 		if (Number(amount) < 1) {
 			toast({
-				title: 'Minimum bet amount is 1 BET',
+				title: 'Minimal bet amount is 1 BET',
 				variant: 'destructive',
 			});
 			return;

@@ -25,7 +25,7 @@ const PairInfo: FC<{ game: Game }> = ({ game }) => {
 		>
 			<div className={'flex items-center flex-grow'}>
 				<PairSwitcher {...game} />
-				<div className={cx('hidden md:block text-xl ml-8 text-[#FFC800] font-bold', { 'blur-sm animate-pulse': !isLatestFetched })}>
+				<div className={cx('hidden md:block text-xl ml-8 text-[#FFC800] font-semibold', { 'blur-sm animate-pulse': !isLatestFetched })}>
 					{valueToNumber(isLatestFetched ? latest.answer : 123456n * 10n ** 7n, 8)}$
 				</div>
 			</div>
