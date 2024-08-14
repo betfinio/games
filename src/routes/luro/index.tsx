@@ -43,7 +43,7 @@ function Luro() {
 						<BetsInfo />
 						<RoundMyInfo />
 					</div>
-					<RoundsTable className={'col-span-4 lg:col-[span_21_/_span_21] xl:col-span-4 mt-10'} />
+					<RoundsTable className={'col-span-4 lg:col-[span_21_/_span_21] xl:col-span-12 mt-10'} />
 					{search.round && <RoundModal round={search.round || 0} />}
 				</div>
 			</TooltipProvider>
