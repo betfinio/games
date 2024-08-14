@@ -10,10 +10,11 @@ import { toast } from 'betfinio_app/use-toast';
 import cx from 'clsx';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Coins, Loader } from 'lucide-react';
-import { type FC, useMemo, useState } from 'react';
+import { type FC, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NumericFormat } from 'react-number-format';
 import { useAccount } from 'wagmi';
+import { useAllowanceModal } from 'betfinio_app/allowance';
 
 export const PlaceBet = () => {
 	const { data: round } = useVisibleRound();
@@ -43,9 +44,19 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 	const { address = ZeroAddress } = useAccount();
 	const { data: allowance = 0n, isFetching: loading } = useAllowance(address);
 	const { data: balance = 0n } = useBalance(address);
-	const { mutate: placeBet, isPending } = usePlaceBet(address);
+	const { mutate: placeBet, isPending, isSuccess, data } = usePlaceBet(address);
 	const { data: bets = [] } = useRoundBets(round);
-
+	const { requestAllowance, setResult, requested } = useAllowanceModal();
+	useEffect(() => {
+		if (data && isSuccess) {
+			setResult?.(data);
+		}
+	}, [isSuccess, data]);
+	useEffect(() => {
+		if (requested) {
+			handleBet();
+		}
+	}, [requested]);
 	const handleBetChange = (value: string) => {
 		setAmount(value);
 	};
@@ -67,6 +78,7 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 			});
 			return;
 		}
+
 		try {
 			BigInt(Number(amount));
 		} catch (e) {
@@ -77,6 +89,12 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 			});
 			return;
 		}
+
+		if (allowance < BigInt(Number(amount))) {
+			requestAllowance?.('bet', BigInt(Number(amount)) * 10n ** 18n);
+			return;
+		}
+
 		placeBet({ round: round, amount: Number(amount), player: address });
 	};
 
