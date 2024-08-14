@@ -13,6 +13,7 @@ import People from '@betfinio/ui/dist/icons/People';
 import { Link } from '@tanstack/react-router';
 import { createColumnHelper } from '@tanstack/react-table';
 import { BetValue } from 'betfinio_app/BetValue';
+import { DataTable } from 'betfinio_app/DataTable';
 import { ScrollArea } from 'betfinio_app/scroll-area';
 import { ShieldCheckIcon, X } from 'lucide-react';
 import { DateTime } from 'luxon';
@@ -20,7 +21,6 @@ import { type FC, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { Address } from 'viem';
 import { useAccount } from 'wagmi';
-import { DataTable } from 'betfinio_app/DataTable';
 
 export const ModalContent: FC<{
 	onClose: () => void;
