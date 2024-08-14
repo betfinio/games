@@ -15,7 +15,7 @@ import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from '
 import { BetValue } from 'betfinio_app/BetValue';
 import { ScrollArea } from 'betfinio_app/scroll-area';
 import cx from 'clsx';
-import {ShieldCheckIcon, X} from 'lucide-react';
+import { ShieldCheckIcon, X } from 'lucide-react';
 import { DateTime } from 'luxon';
 import { type FC, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -163,7 +163,7 @@ const WinnerBetInfo: FC<{ round: number }> = ({ round }) => {
 			</Link>
 			<div className={'mt-5 flex gap-2'}>
 				<p className={'text-[#8794A1]'}>Proof of Random:</p>
-				<ShieldCheckIcon className={'text-[#38BB7F] w-5 h-5'}/>
+				<ShieldCheckIcon className={'text-[#38BB7F] w-5 h-5'} />
 				<Link target={'_blank'} to={`${ETHSCAN}/tx/${data.winner.tx}`} className={'underline'}>
 					{truncateEthAddress(data.winner.tx)}
 				</Link>

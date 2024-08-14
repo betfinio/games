@@ -8,7 +8,7 @@ import { BetValue } from 'betfinio_app/BetValue';
 import { useCustomUsername, useUsername } from 'betfinio_app/lib/query/username';
 import cx from 'clsx';
 import { AnimatePresence, motion } from 'framer-motion';
-import {type CSSProperties, type FC, useEffect, useMemo, useRef, useState} from 'react';
+import { type CSSProperties, type FC, useEffect, useMemo, useRef, useState } from 'react';
 import { FixedSizeList as List } from 'react-window';
 import type { Address } from 'viem';
 import { useAccount } from 'wagmi';
@@ -35,13 +35,13 @@ export const PlayersTab = () => {
 	};
 
 	const ref = useRef<HTMLDivElement>(null);
-	console.log(ref)
+	console.log(ref);
 
 	useEffect(() => {
 		if (ref.current) {
-			setListHeight(ref.current.offsetHeight)
+			setListHeight(ref.current.offsetHeight);
 		} else {
-			setListHeight(460)
+			setListHeight(460);
 		}
 	}, [ref.current]);
 
