@@ -15,7 +15,7 @@ import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from '
 import { BetValue } from 'betfinio_app/BetValue';
 import { ScrollArea } from 'betfinio_app/scroll-area';
 import cx from 'clsx';
-import { X } from 'lucide-react';
+import { ShieldCheckIcon, X } from 'lucide-react';
 import { DateTime } from 'luxon';
 import { type FC, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -157,12 +157,13 @@ const WinnerBetInfo: FC<{ round: number }> = ({ round }) => {
 	if (!data || !data.winner) return null;
 	return (
 		<div className={'py-5 border-t border-b border-[#1F222F] flex flex-col items-center text-sm font-semibold'}>
-			<p>Bet ID:</p>
+			<p>Round Contract:</p>
 			<Link target={'_blank'} to={`${ETHSCAN}/address/${data.winner.bet}`} className={'underline'}>
 				{data.winner.bet}
 			</Link>
-			<div className={'mt-5 flex gap-3'}>
+			<div className={'mt-5 flex gap-2'}>
 				<p className={'text-[#8794A1]'}>Proof of Random:</p>
+				<ShieldCheckIcon className={'text-[#38BB7F] w-5 h-5'} />
 				<Link target={'_blank'} to={`${ETHSCAN}/tx/${data.winner.tx}`} className={'underline'}>
 					{truncateEthAddress(data.winner.tx)}
 				</Link>
