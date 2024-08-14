@@ -161,7 +161,7 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 							<p className={'text-[#6A6F84]'}>Potential win</p>
 							<div className={'text-[#EB5757] font-bold flex justify-center gap-1'}>
 								<TooltipTrigger>
-									{millify(potentialWin)} {myBetVolume > 0 && `(${myCoef.toFixed(2)} x)`}
+									{millify(potentialWin)} {myBetVolume > 0 && `(${myCoef.toFixed(2)}x)`}
 								</TooltipTrigger>
 								<TooltipContent className={'font-semibold'}>{`${potentialWin.toLocaleString()} BET`}</TooltipContent>
 							</div>
