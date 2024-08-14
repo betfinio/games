@@ -28,8 +28,8 @@ function Luro() {
 			<TooltipProvider delayDuration={0}>
 				<RoundInfo />
 
-				<div className={'grid grid-cols-4 md:grid-cols-3 lg:grid-cols-[repeat(21,minmax(0,_1fr))] xl:grid-cols-4 gap-4 pt-4 relative'}>
-					<div className={'col-span-4 md:col-span-2 lg:col-[span_15_/_span_15] xl:col-span-3 flex flex-col justify-between'}>
+				<div className={'grid grid-cols-4 md:grid-cols-3 lg:grid-cols-[repeat(21,minmax(0,_1fr))] xl:grid-cols-12 gap-4 pt-4 relative'}>
+					<div className={'col-span-4 md:col-span-2 lg:col-[span_15_/_span_15] xl:col-span-8 flex flex-col justify-between'}>
 						<CurrentRound />
 						<div className={'text-center my-2 justify-self-end'}>
 							<Link to={getStakingUrl('conservative')} className={'text-sm text-[#6A6F84]'}>
@@ -39,7 +39,7 @@ function Luro() {
 						<BonusInfo />
 						<BonusClaimBlock />
 					</div>
-					<div className={'col-span-4 md:col-span-2 lg:col-[span_6_/_span_6] xl:col-span-1 flex flex-col gap-4'}>
+					<div className={'col-span-4 md:col-span-2 lg:col-[span_6_/_span_6] xl:col-span-4 flex flex-col gap-4'}>
 						<BetsInfo />
 						<RoundMyInfo />
 					</div>
