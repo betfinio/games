@@ -6,15 +6,15 @@ import { ZeroAddress, arrayFrom, valueToNumber } from '@betfinio/abi';
 import Additional from '@betfinio/ui/dist/icons/Additional';
 import Chip from '@betfinio/ui/dist/icons/Chip';
 import { useAllowanceModal } from 'betfinio_app/allowance';
+import { useIsMember } from 'betfinio_app/lib/query/pass';
 import { useAllowance } from 'betfinio_app/lib/query/token';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from 'betfinio_app/tooltip';
+import { toast } from 'betfinio_app/use-toast';
 import cx from 'clsx';
 import { motion } from 'framer-motion';
 import { Loader } from 'lucide-react';
 import { type FC, type MouseEvent, useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
-import { toast } from 'betfinio_app/use-toast';
-import { useIsMember } from 'betfinio_app/lib/query/pass';
 
 const RouletteBetTable: FC = () => {
 	return (
