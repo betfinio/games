@@ -370,15 +370,15 @@ const ProgressBar: FC<{ round: number; authors: CustomLuroBet[] }> = ({ round, a
 						animate={{ opacity: 1 }}
 						exit={{ opacity: 0 }}
 						transition={{ duration: 0.5 }}
-						className={'absolute flex flex-col items-center justify-center w-full h-full top-0'}
+						className={'absolute flex flex-col items-center justify-center w-full h-full -top-4 gap-4'}
 					>
 						<div className={cx('text-md duration-300', Number(remaining.toFormat('ss')) < 30 && 'text-red-500')}>
 							{end > Date.now() ? remaining.toFormat('hh:mm:ss') : 'Ended'}
 						</div>
-						<div className={'text-[28px]  xl:text-[36px]'}>
-							<div className={'flex gap-2 items-center'}>
+						<div className={'text-xl  lg:text-3xl'}>
+							<div className={'flex gap-1 lg:gap-2 items-center'}>
+								<Bet className={' w-5 h-5 lg:w-7 lg:h-7'} />
 								<Counter doMillify={true} from={from} to={to} />
-								<Bet className={'w-6 h-6'} />
 							</div>
 						</div>
 					</motion.div>

@@ -6,6 +6,7 @@ import { valueToNumber } from '@betfinio/abi';
 import { useQueryClient } from '@tanstack/react-query';
 import { BetValue } from 'betfinio_app/BetValue';
 import { useAllowanceModal } from 'betfinio_app/allowance';
+import { useIsMember } from 'betfinio_app/lib/query/pass';
 import { useAllowance, useBalance } from 'betfinio_app/lib/query/token';
 import { Tooltip, TooltipContent, TooltipTrigger } from 'betfinio_app/tooltip';
 import { toast } from 'betfinio_app/use-toast';
@@ -17,7 +18,6 @@ import { type FC, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NumericFormat } from 'react-number-format';
 import { useAccount } from 'wagmi';
-import { useIsMember } from 'betfinio_app/lib/query/pass';
 
 export const PlaceBet = () => {
 	const { data: round } = useVisibleRound();
