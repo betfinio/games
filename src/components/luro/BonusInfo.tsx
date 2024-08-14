@@ -56,12 +56,12 @@ export const BonusInfo = () => {
 							</div>
 						</TooltipContent>
 					</div>
-					<div className={'bg-primaryLight rounded-md px-[30px] py-5 border border-gray-800'}>
+					<div className={'bg-primaryLight rounded-md p-4 border border-gray-800'}>
 						<div className={'relative'}>
-							<div className={'px-[120px] relative z-10'}>
+							<div className={'lg:px-[60px] relative z-10'}>
 								<BonusChart bonuses={bonuses} />
 							</div>
-							<div className={'absolute bottom-[4px] w-full'}>
+							<div className={'absolute top-0 w-full'}>
 								<div className={'flex justify-between text-[#6A6A9F] text-xs font-bold'}>
 									<p>First bet</p>
 									<p>Last bet</p>

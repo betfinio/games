@@ -29,9 +29,7 @@ export const ModalContent: FC<{
 	round: Round | null;
 }> = ({ onClose, interval, roundId, round }) => {
 	const { t } = useTranslation('', { keyPrefix: 'games.luro.roundModal' });
-
 	const { start, end } = getTimesByRound(roundId);
-
 	const isFinished = DateTime.fromMillis(Date.now()).diff(DateTime.fromMillis(end)).milliseconds > 0;
 
 	const { data: volume = 0n } = useRoundBank(roundId);
@@ -70,7 +68,7 @@ export const ModalContent: FC<{
 
 				<RoundDetails volume={volume} usersCount={Number(round?.total.bets)} />
 				<div className={'mt-2 md:mt-3 lg:mt-4'}>
-					<RoundCircle round={roundId} />
+					<RoundCircle round={roundId} className={'aspect-square lg:aspect-auto'} />
 				</div>
 				<WinnerBetInfo round={roundId} />
 				<BetsTable round={roundId} volume={volume} bonusShare={bonusShare} winner={(round?.winner?.player || ZeroAddress).toLowerCase() as Address} />
@@ -273,7 +271,6 @@ const BetsTable: FC<{ round: number; className?: string; volume: bigint; bonusSh
 				const isWinner = props.row.getValue('player') === winner;
 				const win = props.row.getValue('win') as bigint;
 				const bonus = props.row.getValue('bonus') as bigint;
-				console.log(win, bonus, isWinner);
 				return <BetValue value={bonus + (isWinner ? win : 0n)} withIcon={true} />;
 			},
 		}),
