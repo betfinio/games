@@ -81,7 +81,7 @@ const RoundModal: FC<{
 			<motion.div
 				onClick={(e) => e.stopPropagation()}
 				className={
-					'border relative z-[10] mx-auto border-gray-800 bg-primary w-full max-w-[1000px]  max-h-[800px] min-h-[300px] rounded-lg flex flex-col p-2 md:p-8 pt-5'
+					'border relative mx-auto border-gray-800 bg-primary w-full max-w-[1000px] lg:min-w-[800px]  max-h-[800px] min-h-[300px] rounded-lg flex flex-col p-2 md:p-8 pt-5'
 				}
 			>
 				<X

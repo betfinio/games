@@ -3,9 +3,8 @@ import cx from 'clsx';
 import { motion } from 'framer-motion';
 import millify from 'millify';
 import Slider from 'rc-slider';
-import { type ChangeEvent, type FC, useMemo, useState } from 'react';
+import { type ChangeEvent, type FC, useEffect, useMemo, useState } from 'react';
 import 'rc-slider/assets/index.css';
-import { ETHSCAN } from '@/src/global.ts';
 import { getRequiredAllowance } from '@/src/lib/roulette/api';
 import { useChangeChip, useDoublePlace, useLimits, usePlace, useRouletteState, useSelectedChip, useSpin, useUndoPlace } from '@/src/lib/roulette/query';
 import { ZeroAddress } from '@betfinio/abi';
@@ -16,6 +15,7 @@ import { useAllowance, useIncreaseAllowance } from 'betfinio_app/lib/query/token
 import { toast } from 'betfinio_app/use-toast';
 import { Loader, Undo2 } from 'lucide-react';
 import { useAccount } from 'wagmi';
+import { useAllowanceModal } from 'betfinio_app/allowance';
 
 const RouletteControls = () => {
 	const { state: wheelStateData } = useRouletteState();
@@ -26,7 +26,18 @@ const RouletteControls = () => {
 	const { mutate: undo } = useUndoPlace();
 	const { mutate: double } = useDoublePlace();
 	const { mutate: place } = usePlace();
-	const { mutate: spin, data, isPending } = useSpin();
+	const { mutate: spin, data, isPending, isSuccess } = useSpin();
+	const { requestAllowance, setResult, requested } = useAllowanceModal();
+	useEffect(() => {
+		if (data && isSuccess) {
+			setResult?.(data);
+		}
+	}, [isSuccess, data]);
+	useEffect(() => {
+		if (requested) {
+			handleSpin();
+		}
+	}, [requested]);
 	const { data: limitsRaw = [], isFetched: isLimitsFetched } = useLimits();
 	const limits = useMemo(() => {
 		if (limitsRaw.length > 0) {
@@ -99,18 +110,6 @@ const RouletteControls = () => {
 	};
 
 	const { data: allowance = 0n, isFetching: loading } = useAllowance(address);
-	const { mutate: increase } = useIncreaseAllowance();
-
-	const [open, setOpen] = useState(false);
-
-	// const handleAction = (action: Action) => {
-	// 	if (action.type === 'sign_transaction') {
-	// 		console.log(allowance);
-	// 		handleSpin();
-	// 	} else if (action.type === 'request_allowance') {
-	// 		increase();
-	// 	}
-	// };
 
 	const handleSpin = () => {
 		if (wheelState.state === 'spinning') return;
@@ -120,6 +119,7 @@ const RouletteControls = () => {
 				description: 'Please increase your allowance',
 				variant: 'destructive',
 			});
+			requestAllowance?.('bet', BigInt(getRequiredAllowance()) * 10n ** 18n);
 			return;
 		}
 
@@ -230,7 +230,8 @@ const RouletteControls = () => {
 							}
 						>
 							<Chip
-								className={cx('duration-300', {
+								labelClassName={''}
+								className={cx('duration-300 flex items-center justify-center', {
 									'text-amber-500': valueToNumber(bigValue) > 1000000,
 									'text-red-500': valueToNumber(bigValue) > 500000 && valueToNumber(bigValue) <= 1000000,
 									'text-purple-600': valueToNumber(bigValue) > 200000 && valueToNumber(bigValue) <= 500000,

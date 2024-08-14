@@ -5,12 +5,13 @@ import { truncateEthAddress, valueToNumber } from '@betfinio/abi';
 import Fox from '@betfinio/ui/dist/icons/Fox';
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { BetValue } from 'betfinio_app/BetValue';
-import { Dialog, DialogContent } from 'betfinio_app/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from 'betfinio_app/dialog';
 import cx from 'clsx';
-import { motion } from 'framer-motion';
 import { DateTime } from 'luxon';
 import React, { useState } from 'react';
 import { RoundModal } from './HistoryTable';
+import { DataTable } from 'betfinio_app/DataTable';
+import { Search } from 'lucide-react';
 
 const columnHelper = createColumnHelper<RouletteBet>();
 
@@ -69,6 +70,12 @@ export const AllBetsTable = () => {
 				);
 			},
 		}),
+
+		columnHelper.display({
+			id: 'action',
+			header: '',
+			cell: (props) => <Search className={'w-5 h-5 cursor-pointer'} onClick={() => setSelected(props.row.original)} />,
+		}),
 	];
 
 	const table = useReactTable<RouletteBet>({ columns: columns, data: bets, getCoreRowModel: getCoreRowModel() });
@@ -84,57 +91,14 @@ export const AllBetsTable = () => {
 	return (
 		<div className={cx('my-4')}>
 			<Dialog open={!!selected}>
-				<DialogContent className="data-[state=open]:animate-contentShow fixed top-[50%] left-[50%] max-h-[85vh] translate-x-[-50%] translate-y-[-50%] rounded-md focus:outline-none">
+				<DialogContent className="games">
+					<DialogTitle className={'hidden'} />
+					<DialogDescription className={'hidden'} />
 					<RoundModal selectedBet={selected} onClose={() => setSelected(null)} />
 				</DialogContent>
 			</Dialog>
-			<table className={'w-full text-sm border-separate border-spacing-y-[2px]'}>
-				<thead>
-					{table.getHeaderGroups().map((headerGroup) => (
-						<tr key={headerGroup.id} className={'text-gray-400 text-left'}>
-							{headerGroup.headers.map((header) => (
-								<th
-									key={header.id}
-									className={cx(' h-[40px] px-2 md:px-6', {
-										'hidden md:table-cell': ['created'].includes(header.id),
-									})}
-								>
-									{header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-								</th>
-							))}
-						</tr>
-					))}
-				</thead>
-				<tbody className={cx({ 'blur-sm animate-pulse': !isBetsFetched })}>
-					{table.getRowModel().rows.map((row) => (
-						<motion.tr
-							key={row.id}
-							onClick={() => handleClick(bets[Number(row.id)])}
-							className={cx('h-[50px] p-0 cursor-pointer ', row.index % 2 ? 'bg-primaryLight' : 'bg-primaryLighter')}
-						>
-							{row.getVisibleCells().map((cell) => (
-								<td
-									key={cell.id}
-									className={cx('text-left px-2 md:px-6', {
-										'hidden md:table-cell': ['created'].includes(cell.getContext().column.id),
-									})}
-								>
-									{flexRender(cell.column.columnDef.cell, cell.getContext())}
-								</td>
-							))}
-						</motion.tr>
-					))}
-				</tbody>
-				<tfoot>
-					{table.getFooterGroups().map((footerGroup) => (
-						<tr key={footerGroup.id}>
-							{footerGroup.headers.map((header) => (
-								<th key={header.id}>{header.isPlaceholder ? null : flexRender(header.column.columnDef.footer, header.getContext())}</th>
-							))}
-						</tr>
-					))}
-				</tfoot>
-			</table>
+			{/*// @ts-ignore*/}
+			<DataTable columns={columns} data={bets} />
 		</div>
 	);
 };

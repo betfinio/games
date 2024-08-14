@@ -63,7 +63,7 @@ export const RoundModal: FC<{
 		<motion.div
 			onClick={(e) => e.stopPropagation()}
 			className={
-				'relative z-[100] mx-auto text-white  text-base font-semibold bg-primaryLighter w-full min-w-[90vw] sm:min-w-[500px] max-w-[600px] min-h-[300px] rounded-lg py-4 xs:px-1 sm:p-8'
+				'relative mx-auto text-white  text-base font-semibold bg-primaryLighter w-full min-w-[90vw] sm:min-w-[500px] max-w-[600px] min-h-[300px] rounded-lg py-4 xs:px-1 sm:p-8'
 			}
 		>
 			<div className={'flex items-center justify-between px-4 sm:px-0'}>
