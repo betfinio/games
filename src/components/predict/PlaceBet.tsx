@@ -1,11 +1,9 @@
 import { ETHSCAN } from '@/src/global.ts';
 import { useCurrentRound, usePlaceBet, usePlayerBets, useRoundBets } from '@/src/lib/predict/query';
 import type { Game, RoundPool } from '@/src/lib/predict/types';
-import { ZeroAddress } from '@betfinio/hooks/dist';
-import { valueToNumber } from '@betfinio/hooks/dist/utils';
+import { ZeroAddress, valueToNumber } from '@betfinio/abi';
 import { Bet } from '@betfinio/ui/dist/icons';
-import ActionModal from '@betfinio/ui/dist/shared/modal/ActionModal';
-import type { Action } from '@betfinio/ui/dist/shared/modal/types';
+import { useAllowanceModal } from 'betfinio_app/allowance';
 import { useAllowance, useBalance, useIncreaseAllowance } from 'betfinio_app/lib/query/token';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from 'betfinio_app/tooltip';
 import { toast } from 'betfinio_app/use-toast';
@@ -17,18 +15,29 @@ import { type FC, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NumericFormat } from 'react-number-format';
 import { useAccount } from 'wagmi';
+import { useIsMember } from 'betfinio_app/lib/query/pass';
 
 const PlaceBet: FC<{ game: Game }> = ({ game }) => {
 	const { t } = useTranslation('', { keyPrefix: 'games.predict.placeBet' });
 	const [amount, setAmount] = useState<string>('5000');
 	const { address = ZeroAddress } = useAccount();
+	const { data: isMember = false } = useIsMember(address);
 	const { data: allowance = 0n, isFetching: loading } = useAllowance(address);
 	const { data: balance = 0n } = useBalance(address);
 	const { data: round } = useCurrentRound(game.interval);
-	const { mutate: placeBet, data } = usePlaceBet();
-	const { mutate: increase } = useIncreaseAllowance();
+	const { requestAllowance, requested, setResult } = useAllowanceModal();
+	useEffect(() => {
+		if (requested) {
+			handleBet(s);
+		}
+	}, [requested]);
+	const { mutate: placeBet, data, isSuccess } = usePlaceBet();
+	useEffect(() => {
+		if (data && isSuccess) {
+			setResult?.(data);
+		}
+	}, [isSuccess, data]);
 	const { data: roundBets = [] } = useRoundBets(game.address, round);
-	const [open, setOpen] = useState(false);
 	const [pool, setPool] = useState<RoundPool>({
 		long: 0n,
 		short: 0n,
@@ -52,14 +61,21 @@ const PlaceBet: FC<{ game: Game }> = ({ game }) => {
 
 	const [s, setSide] = useState<boolean>(false);
 
-	const handleAction = (action: Action) => {
-		if (action.type === 'sign_transaction') {
-			handleBet(s);
-		} else if (action.type === 'request_allowance') {
-			increase();
-		}
-	};
 	const handleBet = async (side: boolean) => {
+		if (address === ZeroAddress) {
+			toast({
+				description: 'Please connect your wallet',
+				variant: 'destructive',
+			});
+			return;
+		}
+		if (!isMember) {
+			toast({
+				description: 'Connected wallet is not member of Betfin. Ask someone for an invitation',
+				variant: 'destructive',
+			});
+			return;
+		}
 		if (amount === '') {
 			toast({
 				title: 'Please enter amount',
@@ -85,7 +101,11 @@ const PlaceBet: FC<{ game: Game }> = ({ game }) => {
 		}
 		if (valueToNumber(allowance) < Number(amount)) {
 			setSide(s);
-			setOpen(true);
+			requestAllowance?.('bet', BigInt(amount) * 10n ** 18n);
+			toast({
+				title: "You don't have enough allowance",
+				variant: 'destructive',
+			});
 			return;
 		}
 		placeBet({ amount: BigInt(amount) * 10n ** 18n, side, game: game.address });
@@ -153,17 +173,17 @@ const PlaceBet: FC<{ game: Game }> = ({ game }) => {
 					<h4 className={'font-medium text-gray-500 text-center mb-2'}>Expected winnings</h4>
 					<PlayersExpectedWinnings game={game} />
 				</div>
-				{open && (
-					<ActionModal
-						open={open}
-						onClose={() => setOpen(false)}
-						onAction={handleAction}
-						requiredAllowance={BigInt(amount) * 10n ** 18n}
-						allowance={allowance}
-						tx={data}
-						scan={ETHSCAN}
-					/>
-				)}
+				{/*{open && (*/}
+				{/*	<ActionModal*/}
+				{/*		open={open}*/}
+				{/*		onClose={() => setOpen(false)}*/}
+				{/*		onAction={handleAction}*/}
+				{/*		requiredAllowance={BigInt(amount) * 10n ** 18n}*/}
+				{/*		allowance={allowance}*/}
+				{/*		tx={data}*/}
+				{/*		scan={ETHSCAN}*/}
+				{/*	/>*/}
+				{/*)}*/}
 			</div>
 		</div>
 	);

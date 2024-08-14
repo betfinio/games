@@ -3,14 +3,13 @@ import { getTimesByRound, hexToRgbA, jumpToCurrentRound, mapBetsToAuthors } from
 import { useLuroState, useObserveBet, useRound, useRoundBank, useRoundBets, useStartRound, useVisibleRound } from '@/src/lib/luro/query';
 import type { CustomLuroBet } from '@/src/lib/luro/types.ts';
 import { addressToColor } from '@/src/lib/roulette';
-import { ZeroAddress } from '@betfinio/hooks/dist';
-import { valueToNumber } from '@betfinio/hooks/dist/utils';
+import { ZeroAddress, valueToNumber } from '@betfinio/abi';
 import { Bet } from '@betfinio/ui/dist/icons';
 import { Pie, type PieTooltipProps } from '@nivo/pie';
 import { useQueryClient } from '@tanstack/react-query';
 import anime from 'animejs';
 import { BetValue } from 'betfinio_app/BetValue';
-import { Tooltip, TooltipContent, TooltipTrigger } from 'betfinio_app/tooltip';
+import { Tooltip } from 'betfinio_app/tooltip';
 import cx from 'clsx';
 import { AnimatePresence, animate, motion } from 'framer-motion';
 import { Loader, PlusIcon, TriangleIcon } from 'lucide-react';
@@ -59,7 +58,7 @@ export const RoundCircle: FC<{ round: number }> = ({ round }) => {
 			stopWheel((wheelState.winnerOffset * 360) / valueToNumber(roundData?.total.volume), wheelState.bet);
 		}
 		if (wheelState.state === 'stopped') {
-			if (roundData.winner?.player === address) {
+			if (roundData?.winner?.player === address) {
 				setConfettiExploding(true);
 			} else {
 				setConfettiExploding(false);
@@ -451,7 +450,8 @@ const RoundResult: FC<{ round: number }> = ({ round }) => {
 					<BetValue className={'text-yellow-400 text-lg font-semibold'} value={valueToNumber((roundData.total.volume * 935n) / 1000n)} withIcon />
 				</div>
 				<div className={'text-blue-500 text-sm flex flex-row items-center justify-center gap-1'}>
-					+bonus <BetValue value={20} withIcon />
+					{/*TODO: return bonus*/}
+					+bonus
 				</div>
 
 				<div className={'text-gray-400 text-xs mt-2'}>total</div>
@@ -473,7 +473,7 @@ const RoundResult: FC<{ round: number }> = ({ round }) => {
 export const Counter: FC<{ from: number; to: number; doMillify?: boolean }> = ({ from, to, doMillify = false }) => {
 	const nodeRef = useRef<HTMLParagraphElement | null>(null);
 
-	function formatNumber(value) {
+	function formatNumber(value: number) {
 		if (value === 0) return '0';
 		if (value < 1000) return value.toFixed(0);
 		const formattedValue = millify(value, {

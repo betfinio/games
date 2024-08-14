@@ -3,7 +3,7 @@ import { ETHSCAN } from '@/src/global.ts';
 import { games } from '@/src/lib/predict';
 import { useCurrentRound, useLatestPrice, usePrice } from '@/src/lib/predict/query';
 import { type Game, type PredictBet, defaultResult } from '@/src/lib/predict/types.ts';
-import { truncateEthAddress, valueToNumber } from '@betfinio/hooks/dist/utils';
+import { truncateEthAddress, valueToNumber } from '@betfinio/abi';
 import { Bank, Bet, Medal, Pig } from '@betfinio/ui/dist/icons';
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from 'betfinio_app/dialog';
 import cx from 'clsx';

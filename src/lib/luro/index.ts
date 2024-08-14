@@ -32,13 +32,12 @@ export const mapBetsToRoundTable = (bets: LuroBet[], winner: Address, volume: bi
 					player: val.player.toLowerCase() as Address,
 					count: 1,
 					volume: val.amount,
-					win: val.player.toLowerCase() === winner.toLowerCase() ? val.amount : 0n,
+					win: val.player.toLowerCase() === winner.toLowerCase() ? (volume / 1000n) * 914n : 0n,
 					bonus: bonus,
 				});
 			} else {
 				acc[author].volume += val.amount;
 				acc[author].count += 1;
-				acc[author].win += val.player.toLowerCase() === winner.toLowerCase() ? val.amount : 0n;
 				acc[author].bonus += bonus;
 			}
 			console.log(acc);
@@ -50,6 +49,13 @@ export const mapBetsToRoundTable = (bets: LuroBet[], winner: Address, volume: bi
 				return -1;
 			}
 			if (b.player === address) {
+				return 1;
+			}
+
+			if (a.player === winner) {
+				return -1;
+			}
+			if (b.player === winner) {
 				return 1;
 			}
 			if (a.volume > b.volume) {

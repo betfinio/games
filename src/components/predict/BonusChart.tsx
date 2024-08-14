@@ -1,5 +1,5 @@
 import type { PredictBet } from '@/src/lib/predict/types.ts';
-import { ZeroAddress } from '@betfinio/hooks/dist';
+import { ZeroAddress } from '@betfinio/abi';
 import { BarElement, CategoryScale, Chart as ChartJS, type ChartOptions, Legend, LinearScale, Title, Tooltip } from 'chart.js';
 import { type FC, useMemo } from 'react';
 import { Bar } from 'react-chartjs-2';

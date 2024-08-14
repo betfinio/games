@@ -1,4 +1,4 @@
-import type { BetInterface } from '@betfinio/hooks/dist/types/game';
+import type { BetInterface } from 'betfinio_app/lib/types';
 import type { Address } from 'viem';
 
 export interface PredictBet extends BetInterface {

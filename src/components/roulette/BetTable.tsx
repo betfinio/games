@@ -1,21 +1,20 @@
-import { ETHSCAN } from '@/src/global.ts';
 import { getBlack, getColor, getRed } from '@/src/lib/roulette';
 import { getRequiredAllowance } from '@/src/lib/roulette/api';
 import { useLocalBets, usePlace, useRouletteState, useSpin, useUnplace } from '@/src/lib/roulette/query';
 import type { FuncProps } from '@/src/lib/roulette/types.ts';
-import { ZeroAddress } from '@betfinio/hooks';
-import arrayFrom, { valueToNumber } from '@betfinio/hooks/dist/utils';
+import { ZeroAddress, arrayFrom, valueToNumber } from '@betfinio/abi';
 import Additional from '@betfinio/ui/dist/icons/Additional';
 import Chip from '@betfinio/ui/dist/icons/Chip';
-import ActionModal from '@betfinio/ui/dist/shared/modal/ActionModal';
-import type { Action } from '@betfinio/ui/dist/shared/modal/types';
-import { useAllowance, useIncreaseAllowance } from 'betfinio_app/lib/query/token';
+import { useAllowanceModal } from 'betfinio_app/allowance';
+import { useAllowance } from 'betfinio_app/lib/query/token';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from 'betfinio_app/tooltip';
 import cx from 'clsx';
 import { motion } from 'framer-motion';
 import { Loader } from 'lucide-react';
-import { type FC, type MouseEvent, useState } from 'react';
+import { type FC, type MouseEvent, useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
+import { toast } from 'betfinio_app/use-toast';
+import { useIsMember } from 'betfinio_app/lib/query/pass';
 
 const RouletteBetTable: FC = () => {
 	return (
@@ -326,27 +325,42 @@ const TableDesktop = () => {
 
 	const { state: wheelStateData } = useRouletteState();
 	const wheelState = wheelStateData.data;
-	const { mutate: spin, data, isPending } = useSpin();
+	const { mutate: spin, data, isPending, isSuccess } = useSpin();
 	const { address = ZeroAddress } = useAccount();
+	const { data: isMember = false } = useIsMember(address);
 	const { data: allowance = 0n, isFetching: loading } = useAllowance(address);
-	const { mutate: increase } = useIncreaseAllowance();
-
-	const [open, setOpen] = useState(false);
-
-	const handleAction = (action: Action) => {
-		if (action.type === 'sign_transaction') {
-			console.log(allowance);
-			handleSpin();
-		} else if (action.type === 'request_allowance') {
-			increase();
+	const { requestAllowance, setResult, requested } = useAllowanceModal();
+	useEffect(() => {
+		if (data && isSuccess) {
+			setResult?.(data);
 		}
-	};
+	}, [isSuccess, data]);
+	useEffect(() => {
+		if (requested) {
+			handleSpin();
+		}
+	}, [requested]);
 
 	const handleSpin = () => {
+		if (address === ZeroAddress) {
+			toast({
+				description: 'Please connect your wallet',
+				variant: 'destructive',
+			});
+			return;
+		}
+		if (!isMember) {
+			toast({
+				description: 'Connected wallet is not member of Betfin. Ask someone for an invitation',
+				variant: 'destructive',
+			});
+			return;
+		}
+
 		if (wheelState.state === 'spinning') return;
 
 		if (valueToNumber(allowance) < Number(getRequiredAllowance())) {
-			setOpen(true);
+			requestAllowance?.('bet', BigInt(getRequiredAllowance()) * 10n ** 18n);
 			return;
 		}
 		spin({ bets });
@@ -527,17 +541,17 @@ const TableDesktop = () => {
 					}}
 				/>
 
-				{open && (
-					<ActionModal
-						open={open}
-						onClose={() => setOpen(false)}
-						onAction={handleAction}
-						requiredAllowance={BigInt(getRequiredAllowance()) * 10n ** 18n}
-						allowance={allowance}
-						tx={data}
-						scan={ETHSCAN}
-					/>
-				)}
+				{/*{open && (*/}
+				{/*	<ActionModal*/}
+				{/*		open={open}*/}
+				{/*		onClose={() => setOpen(false)}*/}
+				{/*		onAction={handleAction}*/}
+				{/*		requiredAllowance={BigInt(getRequiredAllowance()) * 10n ** 18n}*/}
+				{/*		allowance={allowance}*/}
+				{/*		tx={data}*/}
+				{/*		scan={ETHSCAN}*/}
+				{/*	/>*/}
+				{/*)}*/}
 			</div>
 		</div>
 	);
@@ -691,10 +705,11 @@ const TableDesktopControls: FC<TableDesktopControlsProps> = ({ onHighlight }) =>
 					<div>
 						{chip.map((e, i) => (
 							<Chip
+								labelClassName={''}
 								key={i}
 								value={e.amount}
 								fontSize={6}
-								className={cx('CHIP w-full h-full lg:w-8 lg:h-8 absolute', {
+								className={cx('w-full h-full lg:w-8 lg:h-8 absolute flex flex-row items-center justify-center', {
 									'top-0 left-0 lg:top-0.5 lg:left-1': i === 0,
 									'top-0.5 left-0.5 lg:top-1 lg:left-1.5': i === 1,
 									'top-1 left-1 lg:top-1.5 lg:left-2': i === 2,
