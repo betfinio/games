@@ -124,11 +124,10 @@ export const RoundCircle: FC<{ round: number }> = ({ round }) => {
 		<Tooltip>
 			<motion.div
 				className={cx(
-					'border border-gray-800 relative p-4 xl:p-8 rounded-md bg-primaryLight flex flex-col md:flex-row items-center justify-center gap-10 duration-300',
+					'border border-gray-800 relative p-4 flex-grow xl:p-8 rounded-md bg-primaryLight flex flex-col md:flex-row items-center justify-center gap-10 duration-300',
 				)}
 			>
 				{currentRound === round && <EffectsLayer />}
-
 				<div className={'h-full max-h-[250px] xl:max-h-[325px]'} ref={boxRef}>
 					<div className={'relative'}>
 						<ProgressBar round={round} authors={data} />
