@@ -2,7 +2,7 @@ import { TabItem } from '@/src/components/luro/tabs/PlayersTab.tsx';
 import { useRoundBets, useVisibleRound } from '@/src/lib/luro/query';
 import { valueToNumber } from '@betfinio/abi';
 import { AnimatePresence } from 'framer-motion';
-import {type CSSProperties, useEffect, useMemo, useRef, useState} from 'react';
+import { type CSSProperties, useEffect, useMemo, useRef, useState } from 'react';
 import { FixedSizeList as List } from 'react-window';
 
 export const BetsTab = () => {
@@ -15,7 +15,7 @@ export const BetsTab = () => {
 
 	const newestBetsFirst = useMemo(() => {
 		return [...bets].reverse();
-	}, [bets])
+	}, [bets]);
 
 	const ref = useRef<HTMLDivElement>(null);
 
@@ -30,9 +30,9 @@ export const BetsTab = () => {
 
 	useEffect(() => {
 		if (ref.current) {
-			setListHeight(ref.current.offsetHeight)
+			setListHeight(ref.current.offsetHeight);
 		} else {
-			setListHeight(460)
+			setListHeight(460);
 		}
 	}, [ref.current]);
 

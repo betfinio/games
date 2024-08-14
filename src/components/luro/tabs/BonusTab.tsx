@@ -6,7 +6,7 @@ import { BetValue } from 'betfinio_app/BetValue';
 import { useUsername } from 'betfinio_app/lib/query/username';
 import cx from 'clsx';
 import { AnimatePresence } from 'framer-motion';
-import {type CSSProperties, type FC, useEffect, useMemo, useRef, useState} from 'react';
+import { type CSSProperties, type FC, useEffect, useMemo, useRef, useState } from 'react';
 import { FixedSizeList as List } from 'react-window';
 import type { Address } from 'viem';
 
@@ -41,9 +41,9 @@ export const BonusTab = () => {
 
 	useEffect(() => {
 		if (ref.current) {
-			setListHeight(ref.current.offsetHeight)
+			setListHeight(ref.current.offsetHeight);
 		} else {
-			setListHeight(460)
+			setListHeight(460);
 		}
 	}, [ref.current]);
 
