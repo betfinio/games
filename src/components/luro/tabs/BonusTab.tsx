@@ -6,7 +6,7 @@ import { BetValue } from 'betfinio_app/BetValue';
 import { useUsername } from 'betfinio_app/lib/query/username';
 import cx from 'clsx';
 import { AnimatePresence } from 'framer-motion';
-import { type CSSProperties, type FC, useMemo, useRef } from 'react';
+import { type CSSProperties, type FC, useEffect, useMemo, useRef, useState } from 'react';
 import { FixedSizeList as List } from 'react-window';
 import type { Address } from 'viem';
 
@@ -15,6 +15,7 @@ export const BonusTab = () => {
 	const { data: bets = [] } = useRoundBets(round);
 	const { data: volume = 0n } = useRoundBank(round);
 	const { data: bonusShare = 0n } = useRoundBonusShare(round);
+	const [listHeight, setListHeight] = useState(460);
 
 	const Row = ({ index, style }: { index: number; style: CSSProperties }) => {
 		const bet = bets[index];
@@ -24,6 +25,7 @@ export const BonusTab = () => {
 			</div>
 		);
 	};
+
 	const bonuses = useMemo(() => {
 		return bets.map((bet, index) => {
 			if (bonusShare === 0n) return { bet, bonus: 0 };
@@ -37,11 +39,19 @@ export const BonusTab = () => {
 	}, [bets, volume]);
 	const ref = useRef<HTMLDivElement>(null);
 
+	useEffect(() => {
+		if (ref.current) {
+			setListHeight(ref.current.offsetHeight);
+		} else {
+			setListHeight(460);
+		}
+	}, [ref.current]);
+
 	return (
 		<div className={'grow flex flex-col gap-2 h-full'} ref={ref}>
 			<AnimatePresence mode="popLayout">
 				<List
-					height={ref.current?.offsetHeight || 460} // Adjust height to fit your layout
+					height={listHeight} // Adjust height to fit your layout
 					itemCount={bets.length}
 					itemSize={74} // Adjust item size if necessary
 					width={'100%'}
@@ -60,13 +70,21 @@ export interface TabItemProps {
 
 const TabItem: FC<TabItemProps> = ({ player, bonus }) => {
 	const { data: username } = useUsername(player);
+
+	const formatPlayer = (player: string) => {
+		if (player.length > 10) {
+			return `${player.slice(0, 10)}...`;
+		}
+		return player;
+	};
+
 	return (
 		<div className={cx('rounded-lg flex bg-primary justify-between')}>
-			<div className={'py-3 px-4 flex justify-between items-center grow'}>
+			<div className={'py-3 pl-4 pr-2 flex justify-between items-center grow gap-2'}>
 				<div className={'flex items-start gap-[10px]'}>
 					<Fox className={'w-5 h-5'} />
 					<div className={'flex flex-col text-[#6A6F84] text-xs gap-2'}>
-						<p className={'font-semibold text-sm !text-gray-300'}>{username || truncateEthAddress(player)}</p>
+						<p className={'font-semibold text-sm !text-gray-300'}>{formatPlayer(username || truncateEthAddress(player))}</p>
 					</div>
 				</div>
 				<div className={'flex flex-col items-end text-xs gap-2'}>
