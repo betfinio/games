@@ -5,13 +5,13 @@ import { truncateEthAddress, valueToNumber } from '@betfinio/abi';
 import Fox from '@betfinio/ui/dist/icons/Fox';
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { BetValue } from 'betfinio_app/BetValue';
+import { DataTable } from 'betfinio_app/DataTable';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from 'betfinio_app/dialog';
 import cx from 'clsx';
+import { Search } from 'lucide-react';
 import { DateTime } from 'luxon';
 import React, { useState } from 'react';
 import { RoundModal } from './HistoryTable';
-import { DataTable } from 'betfinio_app/DataTable';
-import { Search } from 'lucide-react';
 
 const columnHelper = createColumnHelper<RouletteBet>();
 

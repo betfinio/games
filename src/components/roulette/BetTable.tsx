@@ -5,6 +5,7 @@ import type { FuncProps } from '@/src/lib/roulette/types.ts';
 import { ZeroAddress, arrayFrom, valueToNumber } from '@betfinio/abi';
 import Additional from '@betfinio/ui/dist/icons/Additional';
 import Chip from '@betfinio/ui/dist/icons/Chip';
+import { useAllowanceModal } from 'betfinio_app/allowance';
 import { useAllowance } from 'betfinio_app/lib/query/token';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from 'betfinio_app/tooltip';
 import cx from 'clsx';
@@ -12,7 +13,6 @@ import { motion } from 'framer-motion';
 import { Loader } from 'lucide-react';
 import { type FC, type MouseEvent, useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
-import { useAllowanceModal } from 'betfinio_app/allowance';
 
 const RouletteBetTable: FC = () => {
 	return (
