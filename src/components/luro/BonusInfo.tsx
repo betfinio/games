@@ -51,20 +51,26 @@ export const BonusInfo = () => {
 									<span className={'text-[#FFC800]'}>({valueToNumber(volume).toLocaleString()} BET)</span> that are split among players according to{' '}
 									<span className={'text-[#FFC800]'}>order</span> and <span className={'text-[#FFC800]'}>size</span> of bets.
 								</div>
-								<div className={'text-center font-bold text-[#FFC800]'}>The sooner and more you bet the bigger bonus you get.</div>
-								<div className={'text-center font-bold'}>Bonus is paid to every player!</div>
+								<div className={'text-center font-semibold text-[#FFC800]'}>The sooner and more you bet the bigger bonus you get.</div>
+								<div className={'text-center font-semibold'}>Bonus is paid to every player!</div>
 							</div>
 						</TooltipContent>
 					</div>
-					<div className={'bg-primaryLight rounded-md px-[30px] py-5 border border-gray-800'}>
+					<div className={'bg-primaryLight rounded-xl p-4 border border-gray-800'}>
 						<div className={'relative'}>
-							<div className={'px-[120px] relative z-10'}>
+							<div className={'lg:px-[65px] relative z-10'}>
 								<BonusChart bonuses={bonuses} />
 							</div>
-							<div className={'absolute bottom-[4px] w-full'}>
-								<div className={'flex justify-between text-[#6A6A9F] text-xs font-bold'}>
-									<p>First bet</p>
-									<p>Last bet</p>
+							<div className={'hidden lg:block absolute bottom-0 w-full'}>
+								<div className={'flex justify-between text-[#6A6A9F] text-xs font-semibold'}>
+									<div className={'flex flex-col'}>
+										<span>First bet</span>
+										<span className={'text-[10px] text-gray-500'}>Coefficient x{bets.length}</span>
+									</div>
+									<div className={'flex flex-col'}>
+										<span>Last bet</span>
+										<span className={'text-[10px] text-gray-500'}>Coefficient x1</span>
+									</div>
 								</div>
 								<div className={'flex justify-between text-[#959DAD] text-xs font-semibold'} />
 							</div>

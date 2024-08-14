@@ -41,7 +41,7 @@ const Header: FC = () => {
 							<TooltipContent id="dynamic" className={cx('z-[50] border-2 border-[#FFC800] text-white')}>
 								<div className={'px-8 py-5 text-xs bg-black bg-opacity-75'}>
 									<p>
-										<b className={'font-bold text-[#FFC800]'}>Dynamic</b> game
+										<b className={'font-semibold text-[#FFC800]'}>Dynamic</b> game
 									</p>
 								</div>
 							</TooltipContent>
@@ -66,7 +66,7 @@ const Header: FC = () => {
 							<TooltipContent className={'bg-primaryLighter border border-gray-800 rounded-lg text-white'}>
 								<div className={' text-xs'}>
 									<p>
-										<b className={'font-bold text-[#FFC800]'}>5%</b> of Winning Pool
+										<b className={'font-semibold text-[#FFC800]'}>5%</b> of Winning Pool
 									</p>
 								</div>
 							</TooltipContent>
