@@ -6,15 +6,15 @@ import { ZeroAddress, arrayFrom, valueToNumber } from '@betfinio/abi';
 import Additional from '@betfinio/ui/dist/icons/Additional';
 import Chip from '@betfinio/ui/dist/icons/Chip';
 import { useAllowanceModal } from 'betfinio_app/allowance';
+import { useIsMember } from 'betfinio_app/lib/query/pass';
 import { useAllowance } from 'betfinio_app/lib/query/token';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from 'betfinio_app/tooltip';
+import { toast } from 'betfinio_app/use-toast';
 import cx from 'clsx';
 import { motion } from 'framer-motion';
 import { Loader } from 'lucide-react';
 import { type FC, type MouseEvent, useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
-import { toast } from 'betfinio_app/use-toast';
-import { useIsMember } from 'betfinio_app/lib/query/pass';
 
 const RouletteBetTable: FC = () => {
 	return (
@@ -728,13 +728,13 @@ const TableDesktopControls: FC<TableDesktopControlsProps> = ({ onHighlight }) =>
 				</TooltipTrigger>
 				<TooltipContent className={'bg-primary !bg-opacity-100 flex flex-col gap-1 p-4 text-white text-sm rounded-md'}>
 					<p>
-						Total: <span className={'font-bold text-yellow-400'}>{`${total.toLocaleString()} BET`}</span>
+						Total: <span className={'font-semibold text-yellow-400'}>{`${total.toLocaleString()} BET`}</span>
 					</p>
 					<p>
-						Potential win: <span className={'font-bold text-green-400'}>{(total * (36 / chip[0].numbers.length)).toLocaleString()} BET</span>
+						Potential win: <span className={'font-semibold text-green-400'}>{(total * (36 / chip[0].numbers.length)).toLocaleString()} BET</span>
 					</p>
 					<p>
-						Combination: <span className={'font-bold text-yellow-400'}>{getCombination(chip[0].item)}</span>{' '}
+						Combination: <span className={'font-semibold text-yellow-400'}>{getCombination(chip[0].item)}</span>{' '}
 						<span className={'text-green-400 text-xs'}>({36 / chip[0].numbers.length}x)</span>
 					</p>
 				</TooltipContent>

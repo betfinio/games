@@ -47,13 +47,17 @@ export interface Round {
 		bonus: bigint;
 	};
 	status: RoundStatusEnum;
-	winner?: {
-		bet: Address;
-		offset: number;
-		player: Address;
-		tx: Address;
-	};
+	winner?: WinnerInfo;
+	winnerOffset?: bigint;
 	address: Address;
+}
+
+export interface WinnerInfo {
+	bet: Address;
+	offset: number;
+	player: Address;
+	tx: Address;
+	round: number;
 }
 
 export interface RoundModalPlayer {

@@ -110,13 +110,13 @@ const BetModal: FC<PredictBet> = (bet) => {
 			case 1n:
 				return <span className={'text-4xl uppercase font-semibold text-yellow-500'}>{t('pending')}</span>;
 			case 2n:
-				return <span className={'text-4xl uppercase font-bold text-green-500'}>{t('win')}</span>;
+				return <span className={'text-4xl uppercase font-semibold text-green-500'}>{t('win')}</span>;
 			case 3n:
-				return <span className={'text-4xl uppercase font-bold text-red-500'}>{t('lost')}</span>;
+				return <span className={'text-4xl uppercase font-semibold text-red-500'}>{t('lost')}</span>;
 			case 4n:
-				return <span className={'text-4xl uppercase font-bold text-sky-500'}>{t('draw')}</span>;
+				return <span className={'text-4xl uppercase font-semibold text-sky-500'}>{t('draw')}</span>;
 			case 5n:
-				return <span className={'text-4xl uppercase font-bold text-yellow-400'}>{t('refund')}</span>;
+				return <span className={'text-4xl uppercase font-semibold text-yellow-400'}>{t('refund')}</span>;
 		}
 	};
 	const { data: round = Math.round(Date.now() / 1000 / game.interval) } = useCurrentRound(game.interval);
@@ -171,10 +171,10 @@ const BetModal: FC<PredictBet> = (bet) => {
 
 				<div className={'text-gray-600 pt-2 text-sm'}>
 					{t('text', {
-						amount: <span className={'text-white font-bold'}> {valueToNumber(bet.amount)} BET</span>,
+						amount: <span className={'text-white font-semibold'}> {valueToNumber(bet.amount)} BET</span>,
 						time: <span className={'text-[#FFC800]'}>{DateTime.fromMillis((Number(bet.round) + game.duration) * game.interval * 1000).toFormat('HH:mm')}</span>,
 						side: (
-							<span className={cx('font-bold p-1 px-2 text-base rounded-lg', bet.side ? 'bg-green-900 text-green-500' : 'bg-red-900 text-red-500')}>
+							<span className={cx('font-semibold p-1 px-2 text-base rounded-lg', bet.side ? 'bg-green-900 text-green-500' : 'bg-red-900 text-red-500')}>
 								{bet.side ? 'LONG' : 'SHORT'}
 							</span>
 						),

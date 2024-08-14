@@ -12,11 +12,11 @@ import { Chip } from '@betfinio/ui/dist/icons';
 import CloseIcon from '@betfinio/ui/dist/icons/Close';
 import { useAllowanceModal } from 'betfinio_app/allowance';
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from 'betfinio_app/dialog';
+import { useIsMember } from 'betfinio_app/lib/query/pass';
 import { useAllowance } from 'betfinio_app/lib/query/token';
 import { toast } from 'betfinio_app/use-toast';
 import { Loader, Undo2 } from 'lucide-react';
 import { useAccount } from 'wagmi';
-import { useIsMember } from 'betfinio_app/lib/query/pass';
 
 const RouletteControls = () => {
 	const { state: wheelStateData } = useRouletteState();
