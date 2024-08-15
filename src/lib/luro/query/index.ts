@@ -10,6 +10,7 @@ import {
 	fetchRounds,
 	fetchTotalVolume,
 	fetchWinners,
+	getRoundWinnerByOffset,
 	placeBet,
 	startRound,
 } from '@/src/lib/luro/api';
@@ -196,6 +197,14 @@ export const useWinners = () => {
 		queryKey: ['luro', 'winners'],
 		queryFn: () => fetchWinners(config),
 	});
+};
+
+export const useRoundWinner = (round: number) => {
+	const { data: bets } = useRoundBets(round);
+	const { data: roundData } = useRound(round);
+
+	const offset = roundData?.winnerOffset;
+	return getRoundWinnerByOffset(bets ?? [], offset);
 };
 
 export const useRound = (round: number) => {

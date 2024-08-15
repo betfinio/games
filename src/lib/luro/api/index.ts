@@ -126,6 +126,16 @@ export const fetchRounds = async (player: Address, onlyPlayers: boolean, config?
 	return (await Promise.all(activeRounds.reverse().map((e) => fetchRound(e.args.round, player, config)))).filter((e) => !onlyPlayers || e.player.bets > 0n);
 };
 
+export const getRoundWinnerByOffset = (bets: LuroBet[], offset: bigint) => {
+	if (!offset) return null;
+
+	let tmp = 0;
+	for (const bet of bets) {
+		if (tmp + valueToNumber(bet.amount) > offset) return { ...bet, offset };
+		tmp += valueToNumber(bet.amount);
+	}
+};
+
 export const fetchRound = async (round: number, player: Address, config: Client): Promise<Round> => {
 	console.log('fetching round', round);
 	const data = await multicall(config, {
@@ -175,7 +185,8 @@ export const fetchRound = async (round: number, player: Address, config: Client)
 	const playerCount = data[3].result as bigint;
 	const status = data[4].result as RoundStatusEnum;
 	const bonus = (volume / 100n) * 5n;
-	const winner = BigInt(data[5].result as bigint);
+	const winnerOffset = BigInt(data[5].result as bigint);
+
 	return {
 		round,
 		total: {
@@ -191,7 +202,7 @@ export const fetchRound = async (round: number, player: Address, config: Client)
 		},
 		status,
 		address: ZeroAddress,
-		winnerOffset: winner,
+		winnerOffset,
 	};
 };
 

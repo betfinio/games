@@ -1,6 +1,16 @@
 import { jumpToCurrentRound } from '@/src/lib/luro';
 import { getCurrentRoundInfo } from '@/src/lib/luro/api';
-import { useLuroState, usePlaceBet, useRound, useRoundBank, useRoundBets, useRoundBonusShare, useStartRound, useVisibleRound } from '@/src/lib/luro/query';
+import {
+	useLuroState,
+	usePlaceBet,
+	useRound,
+	useRoundBank,
+	useRoundBets,
+	useRoundBonusShare,
+	useRoundWinner,
+	useStartRound,
+	useVisibleRound,
+} from '@/src/lib/luro/query';
 import { ZeroAddress } from '@betfinio/abi';
 import { valueToNumber } from '@betfinio/abi';
 import { LuckyRound } from '@betfinio/ui/dist/icons/LuckyRound';
@@ -261,6 +271,8 @@ const RoundResult: FC<{ round: number }> = ({ round }) => {
 	const { data: volume = 0n } = useRoundBank(round);
 	const { data: bonusShare = 0n } = useRoundBonusShare(round);
 
+	const winner = useRoundWinner(round);
+
 	const bonus = useMemo(() => {
 		const bonuses = bets.map((bet, index) => {
 			if (bonusShare === 0n) return { bet, bonus: 0 };
@@ -271,7 +283,7 @@ const RoundResult: FC<{ round: number }> = ({ round }) => {
 				bonus: valueToNumber((bonusPool * weight) / bonusShare),
 			};
 		});
-		return bonuses.find((bonus) => bonus?.bet?.address === roundData?.winner?.bet);
+		return bonuses.find((bonus) => bonus?.bet?.address === winner?.address);
 	}, [bets, volume, address]);
 
 	if (roundData.player.bets === 0n) {
@@ -307,7 +319,7 @@ const RoundResult: FC<{ round: number }> = ({ round }) => {
 		);
 	}
 
-	if (roundData.winner?.player === address) {
+	if (winner?.player === address) {
 		return (
 			<motion.div
 				initial={{ opacity: 0 }}
