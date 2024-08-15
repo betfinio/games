@@ -29,7 +29,7 @@ const largeProps = {
 	colors: ['#041E43', '#1471BF', '#5BB4DC', '#FC027B', '#66D805'],
 };
 
-export const RoundCircle: FC<{ round: number }> = ({ round }) => {
+export const RoundCircle: FC<{ round: number; className?: string }> = ({ round, className = '' }) => {
 	const [confettiExploding, setConfettiExploding] = useState(false);
 	const { address } = useAccount();
 	const { data: bets = [] } = useRoundBets(round);
@@ -137,12 +137,11 @@ export const RoundCircle: FC<{ round: number }> = ({ round }) => {
 		<Tooltip>
 			<motion.div
 				className={cx(
-					'border border-gray-800 relative p-4 xl:p-8 rounded-md bg-primaryLight flex flex-col md:flex-row items-center justify-center gap-10 duration-300',
-					currentRound !== round && 'p-6',
+					'border border-gray-800 relative p-4 flex-grow xl:p-8 rounded-xl bg-primaryLight flex flex-col md:flex-row items-center justify-center gap-10 duration-300',
+					className,
 				)}
 			>
 				{currentRound === round && <EffectsLayer />}
-
 				<div className={cx('h-full max-h-[250px] xl:max-h-[325px]', currentRound !== round && '!max-h-[325px]')} ref={boxRef}>
 					<div className={'relative'}>
 						<ProgressBar round={round} authors={data} />
@@ -418,15 +417,15 @@ const ProgressBar: FC<{ round: number; authors: CustomLuroBet[] }> = ({ round, a
 						animate={{ opacity: 1 }}
 						exit={{ opacity: 0 }}
 						transition={{ duration: 0.5 }}
-						className={'absolute flex flex-col items-center justify-center w-full h-full top-0'}
+						className={'absolute flex flex-col items-center justify-center w-full h-full -top-4 gap-4'}
 					>
 						<div className={cx('text-md duration-300', Number(remaining.toFormat('ss')) < 30 && 'text-red-500')}>
 							{end > Date.now() ? remaining.toFormat('hh:mm:ss') : 'Ended'}
 						</div>
-						<div className={'text-[28px]  xl:text-[36px]'}>
-							<div className={'flex gap-2 items-center'}>
+						<div className={'text-xl  lg:text-3xl'}>
+							<div className={'flex gap-1 lg:gap-2 items-center'}>
+								<Bet className={' w-5 h-5 lg:w-7 lg:h-7'} />
 								<Counter doMillify={true} from={from} to={to} />
-								<Bet className={'w-6 h-6'} />
 							</div>
 						</div>
 					</motion.div>

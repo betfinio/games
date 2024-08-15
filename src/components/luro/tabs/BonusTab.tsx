@@ -21,7 +21,7 @@ export const BonusTab = () => {
 	const Row = ({ index, style }: { index: number; style: CSSProperties }) => {
 		const bet = bets[index];
 		return (
-			<div className={'px-2'} style={style}>
+			<div className={'px-2 h-[74px]'} style={style}>
 				<TabItem player={bet.player} bonus={bonuses[index].bonus} />
 			</div>
 		);
@@ -80,7 +80,7 @@ const TabItem: FC<TabItemProps> = ({ player, bonus }) => {
 	};
 
 	return (
-		<div className={cx('rounded-lg flex bg-primary justify-between')}>
+		<div className={cx('rounded-lg flex bg-primary justify-between h-[68px]')}>
 			<div className={'py-3 pl-4 pr-2 flex justify-between items-center grow gap-2'}>
 				<div className={'flex items-start gap-[10px]'}>
 					<Fox className={'w-5 h-5'} />

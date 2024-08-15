@@ -1,4 +1,3 @@
-import { ETHSCAN } from '@/src/global.ts';
 import { getBlack, getColor, getRed } from '@/src/lib/roulette';
 import { getRequiredAllowance } from '@/src/lib/roulette/api';
 import { useLocalBets, usePlace, useRouletteState, useSpin, useUnplace } from '@/src/lib/roulette/query';
@@ -6,13 +5,15 @@ import type { FuncProps } from '@/src/lib/roulette/types.ts';
 import { ZeroAddress, arrayFrom, valueToNumber } from '@betfinio/abi';
 import Additional from '@betfinio/ui/dist/icons/Additional';
 import Chip from '@betfinio/ui/dist/icons/Chip';
-import { useAllowance, useIncreaseAllowance } from 'betfinio_app/lib/query/token';
+import { useAllowanceModal } from 'betfinio_app/allowance';
+import { useIsMember } from 'betfinio_app/lib/query/pass';
+import { useAllowance } from 'betfinio_app/lib/query/token';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from 'betfinio_app/tooltip';
 import { toast } from 'betfinio_app/use-toast';
 import cx from 'clsx';
 import { motion } from 'framer-motion';
 import { Loader } from 'lucide-react';
-import { type FC, type MouseEvent, useState } from 'react';
+import { type FC, type MouseEvent, useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 
 const RouletteBetTable: FC = () => {
@@ -324,30 +325,42 @@ const TableDesktop = () => {
 
 	const { state: wheelStateData } = useRouletteState();
 	const wheelState = wheelStateData.data;
-	const { mutate: spin, data, isPending } = useSpin();
+	const { mutate: spin, data, isPending, isSuccess } = useSpin();
 	const { address = ZeroAddress } = useAccount();
+	const { data: isMember = false } = useIsMember(address);
 	const { data: allowance = 0n, isFetching: loading } = useAllowance(address);
-	const { mutate: increase } = useIncreaseAllowance();
-
-	const [open, setOpen] = useState(false);
-
-	// const handleAction = (action: Action) => {
-	// 	if (action.type === 'sign_transaction') {
-	// 		console.log(allowance);
-	// 		handleSpin();
-	// 	} else if (action.type === 'request_allowance') {
-	// 		increase();
-	// 	}
-	// };
+	const { requestAllowance, setResult, requested } = useAllowanceModal();
+	useEffect(() => {
+		if (data && isSuccess) {
+			setResult?.(data);
+		}
+	}, [isSuccess, data]);
+	useEffect(() => {
+		if (requested) {
+			handleSpin();
+		}
+	}, [requested]);
 
 	const handleSpin = () => {
+		if (address === ZeroAddress) {
+			toast({
+				description: 'Please connect your wallet',
+				variant: 'destructive',
+			});
+			return;
+		}
+		if (!isMember) {
+			toast({
+				description: 'Connected wallet is not member of Betfin. Ask someone for an invitation',
+				variant: 'destructive',
+			});
+			return;
+		}
+
 		if (wheelState.state === 'spinning') return;
 
 		if (valueToNumber(allowance) < Number(getRequiredAllowance())) {
-			toast({
-				title: 'Insufficient allowance',
-				variant: 'destructive',
-			});
+			requestAllowance?.('bet', BigInt(getRequiredAllowance()) * 10n ** 18n);
 			return;
 		}
 		spin({ bets });
@@ -692,10 +705,11 @@ const TableDesktopControls: FC<TableDesktopControlsProps> = ({ onHighlight }) =>
 					<div>
 						{chip.map((e, i) => (
 							<Chip
+								labelClassName={''}
 								key={i}
 								value={e.amount}
 								fontSize={6}
-								className={cx('CHIP w-full h-full lg:w-8 lg:h-8 absolute', {
+								className={cx('w-full h-full lg:w-8 lg:h-8 absolute flex flex-row items-center justify-center', {
 									'top-0 left-0 lg:top-0.5 lg:left-1': i === 0,
 									'top-0.5 left-0.5 lg:top-1 lg:left-1.5': i === 1,
 									'top-1 left-1 lg:top-1.5 lg:left-2': i === 2,
@@ -714,13 +728,13 @@ const TableDesktopControls: FC<TableDesktopControlsProps> = ({ onHighlight }) =>
 				</TooltipTrigger>
 				<TooltipContent className={'bg-primary !bg-opacity-100 flex flex-col gap-1 p-4 text-white text-sm rounded-md'}>
 					<p>
-						Total: <span className={'font-bold text-yellow-400'}>{`${total.toLocaleString()} BET`}</span>
+						Total: <span className={'font-semibold text-yellow-400'}>{`${total.toLocaleString()} BET`}</span>
 					</p>
 					<p>
-						Potential win: <span className={'font-bold text-green-400'}>{(total * (36 / chip[0].numbers.length)).toLocaleString()} BET</span>
+						Potential win: <span className={'font-semibold text-green-400'}>{(total * (36 / chip[0].numbers.length)).toLocaleString()} BET</span>
 					</p>
 					<p>
-						Combination: <span className={'font-bold text-yellow-400'}>{getCombination(chip[0].item)}</span>{' '}
+						Combination: <span className={'font-semibold text-yellow-400'}>{getCombination(chip[0].item)}</span>{' '}
 						<span className={'text-green-400 text-xs'}>({36 / chip[0].numbers.length}x)</span>
 					</p>
 				</TooltipContent>

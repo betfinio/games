@@ -96,7 +96,7 @@ const BonusInfo: FC<{ game: Game }> = ({ game }) => {
 	if (!pool) return null;
 	return (
 		<div className={'h-full'}>
-			<h1 className={'flex gap-1 text-xl font-bold pl-2'}>
+			<h1 className={'flex gap-1 text-xl font-semibold pl-2'}>
 				Your potential bonus:{' '}
 				<span className={'text-[#FFC800]'}>
 					<BetValue value={myBonus} precision={2} withIcon={true} />
@@ -114,7 +114,7 @@ const BonusInfo: FC<{ game: Game }> = ({ game }) => {
 						<span className={'text-[#FFC800]'}>{valueToNumber(pool?.long + pool?.short).toLocaleString()}</span> that are split among winners according to{' '}
 						<span className={'text-[#FFC800]'}>order</span> and <span className={'text-[#FFC800]'}>size</span> of bets.
 					</div>
-					<p className={'text-center font-bold'}>The sooner and more you bet the bigger bonus you get.</p>
+					<p className={'text-center font-semibold'}>The sooner and more you bet the bigger bonus you get.</p>
 				</div>
 			</div>
 		</div>

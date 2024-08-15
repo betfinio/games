@@ -6,10 +6,11 @@ import { truncateEthAddress, valueToNumber } from '@betfinio/abi';
 import { createColumnHelper } from '@tanstack/react-table';
 import { BetValue } from 'betfinio_app/BetValue';
 import { DataTable } from 'betfinio_app/DataTable';
-import { Dialog, DialogContent } from 'betfinio_app/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from 'betfinio_app/dialog';
 import cx from 'clsx';
+import { Search } from 'lucide-react';
 import { DateTime } from 'luxon';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useAccount } from 'wagmi';
 import { RoundModal } from './HistoryTable';
 
@@ -62,6 +63,12 @@ export const MyBetsTable = () => {
 				);
 			},
 		}),
+
+		columnHelper.display({
+			id: 'action',
+			header: '',
+			cell: (props) => <Search className={'w-5 h-5 cursor-pointer'} onClick={() => setSelected(props.row.original)} />,
+		}),
 	];
 
 	if (bets.length === 0) {
@@ -71,7 +78,9 @@ export const MyBetsTable = () => {
 	return (
 		<div className={cx('my-4')}>
 			<Dialog open={!!selected}>
-				<DialogContent className="games w-auto">
+				<DialogContent className="games">
+					<DialogTitle className={'hidden'} />
+					<DialogDescription className={'hidden'} />
 					<RoundModal selectedBet={selected} onClose={() => setSelected(null)} />
 				</DialogContent>
 			</Dialog>
