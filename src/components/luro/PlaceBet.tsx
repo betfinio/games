@@ -206,10 +206,10 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 						<div className={'bg-primary py-2 text-center flex flex-col gap-1 rounded-[8px]'}>
 							<p className={'text-gray-500'}>Potential win</p>
 							<div className={'text-green-500 font-semibold flex justify-center gap-1'}>
-								<TooltipTrigger>
-									{millify(potentialWin)} {myBetVolume > 0 && `(${myCoef.toFixed(2)}x)`}
-								</TooltipTrigger>
-								<TooltipContent className={'font-semibold'}>{`${potentialWin.toLocaleString()} BET`}</TooltipContent>
+								<TooltipTrigger>{millify(potentialWin)}</TooltipTrigger>
+								<TooltipContent className={'font-semibold'}>
+									{`${potentialWin.toLocaleString()} BET`} <span className={'text-green-500'}>{myBetVolume > 0 && `(${myCoef.toFixed(2)}x)`}</span>
+								</TooltipContent>
 							</div>
 						</div>
 					</div>

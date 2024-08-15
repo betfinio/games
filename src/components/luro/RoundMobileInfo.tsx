@@ -29,7 +29,7 @@ const SwitchModal: FC<{ bets: number; volume: bigint; staking: bigint }> = ({ be
 	const { t } = useTranslation('', { keyPrefix: 'games.luro.statsModal' });
 
 	return (
-		<motion.div className={'rounded-lg border border-gray-800 bg-primary p-5 w-[300px] flex flex-col gap-5 text-white'}>
+		<motion.div className={'rounded-lg border border-gray-800 bg-primary p-5 w-[350px] flex flex-col gap-5 text-white'}>
 			<div className={'flex justify-between'}>
 				<span className={'text-sm'}>{t('bets')}</span>
 				<span className={'font-semibold'}>{bets}</span>
@@ -37,11 +37,11 @@ const SwitchModal: FC<{ bets: number; volume: bigint; staking: bigint }> = ({ be
 
 			<div className={'flex justify-between'}>
 				<span className={'text-sm'}>{t('volume')}</span>
-				<span className={'font-semibold'}>{valueToNumber(volume)} BET</span>
+				<span className={'font-semibold'}>{Math.floor(valueToNumber(volume)).toLocaleString()} BET</span>
 			</div>
 			<div className={'flex justify-between'}>
 				<span className={'text-sm'}>{t('staking')}</span>
-				<span className={'font-semibold'}>{valueToNumber(staking)} BET</span>
+				<span className={'font-semibold'}>{Math.floor(valueToNumber(staking)).toLocaleString()} BET</span>
 			</div>
 		</motion.div>
 	);

@@ -54,7 +54,7 @@ export const BonusTab = () => {
 				<List
 					height={listHeight} // Adjust height to fit your layout
 					itemCount={bets.length}
-					itemSize={50} // Adjust item size if necessary
+					itemSize={74} // Adjust item size if necessary
 					width={'100%'}
 				>
 					{Row}

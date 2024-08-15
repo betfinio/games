@@ -133,7 +133,18 @@ export const RoundCircle: FC<{ round: number; className?: string }> = ({ round, 
 		}));
 	}, [bets]);
 
+	const [chartHeight, setChartHeight] = useState(250);
 	const boxRef = useRef<HTMLDivElement | null>(null);
+
+	useEffect(() => {
+		if (boxRef.current) {
+			setChartHeight(boxRef.current?.offsetHeight);
+		} else {
+			setChartHeight(460);
+		}
+	}, [boxRef.current]);
+
+	console.log(boxRef.current);
 	return (
 		<Tooltip>
 			<motion.div
@@ -143,7 +154,7 @@ export const RoundCircle: FC<{ round: number; className?: string }> = ({ round, 
 				)}
 			>
 				{currentRound === round && <EffectsLayer />}
-				<div className={cx('h-full max-h-[250px] xl:max-h-[325px]', currentRound !== round && '!max-h-[325px]')} ref={boxRef}>
+				<div className={cx('h-full h-[250px] xl:h-[325px]', currentRound !== round && '!h-[325px]')} ref={boxRef}>
 					<div className={'relative'}>
 						<ProgressBar round={round} authors={data} />
 
@@ -168,8 +179,8 @@ export const RoundCircle: FC<{ round: number; className?: string }> = ({ round, 
 										innerRadius={0.7}
 										enableArcLabels={false}
 										enableArcLinkLabels={false}
-										width={boxRef.current?.clientHeight || 300}
-										height={boxRef.current?.clientHeight || 300}
+										width={chartHeight}
+										height={chartHeight}
 										isInteractive={wheelState.state === 'standby' || wheelState.state === 'waiting'}
 										tooltip={CustomTooltip(roundData?.total.volume || 0n)}
 									/>
@@ -184,8 +195,8 @@ export const RoundCircle: FC<{ round: number; className?: string }> = ({ round, 
 										endAngle={360 - wheelAngle}
 										enableArcLabels={false}
 										enableArcLinkLabels={false}
-										width={boxRef.current?.clientHeight || 300}
-										height={boxRef.current?.clientHeight || 300}
+										width={chartHeight}
+										height={chartHeight}
 										isInteractive={wheelState.state === 'standby' || wheelState.state === 'waiting'}
 										tooltip={CustomTooltip(roundData?.total.volume || 0n)}
 									/>
@@ -198,20 +209,20 @@ export const RoundCircle: FC<{ round: number; className?: string }> = ({ round, 
 								innerRadius={0.7}
 								enableArcLabels={false}
 								enableArcLinkLabels={false}
-								width={boxRef.current?.clientHeight || 300}
-								height={boxRef.current?.clientHeight || 300}
+								width={chartHeight}
+								height={chartHeight}
 								tooltip={() => null}
 							/>
 						)}
 					</div>
 				</div>
 				{currentRound !== round && (roundData?.total.volume || 0n) > 0n && (
-					<div className={cx('w-full h-full flex gap-4 flex-row items-center justify-evenly')}>
+					<div className={cx('w-full flex gap-4 flex-row items-center justify-evenly')}>
 						{roundData?.status === 0 && 'Waiting for transaction. Any second now...'}
 
 						{roundData?.status === 2 && (
 							<>
-								<div>
+								<div className={'shrink-0'}>
 									<img alt={'duck'} src={'/luro/duck.png'} className={'max-h-[200px] md:h-[300px]'} />
 								</div>
 								<div className={'flex flex-col min-w-[220px] gap-4'}>
@@ -468,7 +479,9 @@ const BetCircleWinner: FC<{ player: Address; amount: number; percent: number; co
 			className={cx('absolute flex flex-col items-center justify-center w-full h-full top-0 gap-2 duration-300', loading && 'blur-sm')}
 		>
 			<img alt={'crown'} src={'/luro/crown.svg'} />
-			<TabItem player={player} amount={amount} percent={percent} />
+			<div className={'z-10'}>
+				<TabItem player={player} amount={amount} percent={percent} />
+			</div>
 			<div>
 				<span className={'text-yellow-400'}>{coef}x</span> WIN
 			</div>
