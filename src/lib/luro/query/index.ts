@@ -127,7 +127,7 @@ export const useRoundBets = (round: number) => {
 export const useRoundBank = (round: number) => {
 	const config = useConfig();
 	return useQuery<bigint>({
-		queryKey: ['luro', 'bank', 'round', round],
+		queryKey: ['luro', 'round', 'bank', round],
 		queryFn: async () =>
 			(await readContract(config, {
 				abi: LuckyRoundContract.abi,
@@ -142,7 +142,7 @@ export const useRoundBonusShare = (round: number) => {
 	const config = useConfig();
 
 	return useQuery<bigint>({
-		queryKey: ['luro', 'bonus', 'round', round],
+		queryKey: ['luro', 'round', 'bonus', round],
 		queryFn: async () => {
 			return (await readContract(config, {
 				abi: LuckyRoundContract.abi,

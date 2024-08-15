@@ -42,8 +42,6 @@ export const RoundCircle: FC<{ round: number; className?: string }> = ({ round, 
 		updateState: updateWheelState,
 	} = useLuroState();
 
-	const { mutate: startRound, isPending } = useStartRound(round);
-
 	const singleRotationDuration = 5000;
 
 	useEffect(() => {
@@ -73,11 +71,11 @@ export const RoundCircle: FC<{ round: number; className?: string }> = ({ round, 
 
 	const wheelAngle = useMemo(() => {
 		if (currentRound !== round) {
-			if (roundData.status === 2) {
+			if (roundData?.status === 2) {
 				return Number((winner?.offset ?? 0n) * 360n) / valueToNumber(roundData?.total.volume);
 			}
 		}
-		return null;
+		return 0;
 	}, [winner, roundData?.total.volume]);
 
 	function spinWheel() {
@@ -313,11 +311,11 @@ const CustomTooltip =
 		value: number;
 		color: string;
 	}>) => <TabItem key={id} amount={value} className={'min-w-[250px]'} player={label as Address} percent={(value * 100) / valueToNumber(bank)} />;
-const ProgressBar: FC<{ round: number; authors: CustomLuroBet[] }> = ({ round, authors }) => {
-	const { data: roundData, isLoading } = useRound(round);
+const ProgressBar: FC<{ round: number; authors: CustomLuroBet[] }> = ({ round }) => {
+	const { data: roundData } = useRound(round);
 	const { data: bank = 0n, isLoading: isBankLoading } = useRoundBank(round);
+	console.log(bank, 'bank');
 	const { data: currentRound } = useVisibleRound();
-
 	const winner = useRoundWinner(round);
 	const queryClient = useQueryClient();
 	const {
@@ -386,7 +384,7 @@ const ProgressBar: FC<{ round: number; authors: CustomLuroBet[] }> = ({ round, a
 
 	const renderInside = () => {
 		if (currentRound !== round) {
-			if (roundData.status === 2) {
+			if (roundData?.status === 2) {
 				const authorVolume = valueToNumber(winner?.amount ?? 0n);
 				const volume = valueToNumber(roundData?.total.volume ?? 1n);
 
