@@ -20,15 +20,15 @@ export const RoundMyInfo = () => {
 	return (
 		<div className={'bg-primaryLight max-h-[120px] border border-gray-800 py-[10px] px-[10px] rounded-xl sticky top-5 text-sm grow flex flex-col gap-2'}>
 			<div className={'bg-primary rounded-lg p-[10px] flex justify-between gap-1 items-center text-white font-semibold'}>
-				<div className={'flex flex-row items-center gap-1'}>
-					<LuckyRound className={'h-4 w-4 text-yellow-400'} />
+				<div className={'flex flex-row items-center gap-1 text-yellow-400'}>
+					<LuckyRound className={'h-4 w-4 '} />
 					<div className={cx('flex flex-row gap-1 items-center', { 'blur-sm animate-pulse': !isFetched })}>
 						<BetValue value={roundInfo.volume} precision={2} />
 						<Bet color={'yellow'} className={'w-4 h-4'} />
 					</div>
 				</div>
-				<div className={'flex flex-row items-center gap-1'}>
-					<div className={cx('flex flex-row gap-1 items-center text-green-500', { 'blur-sm animate-pulse': !isFetched })}>{roundInfo.usersCount}</div>
+				<div className={'flex flex-row items-center gap-1 text-yellow-400'}>
+					<div className={cx('flex flex-row gap-1 items-center', { 'blur-sm animate-pulse': !isFetched })}>{roundInfo.usersCount}</div>
 					<UserIcon className={'h-4 w-4'} />
 				</div>
 			</div>
