@@ -179,7 +179,6 @@ export const GameDetails: FC<{ bet: RouletteBet | null }> = ({ bet }) => {
 		});
 		await iconControls.start({ rotate: open ? 180 : 0 });
 	};
-	console.log(bet);
 
 	return null;
 	// <Disclosure>

@@ -238,7 +238,6 @@ export const fetchWinners = async (config: Config): Promise<WinnerInfo[]> => {
 			fromBlock: BigInt(FIRST_BLOCK),
 			toBlock: 'latest',
 		});
-		console.log(logs);
 		return await Promise.all(
 			logs.map(async (e) => {
 				// @ts-ignore
