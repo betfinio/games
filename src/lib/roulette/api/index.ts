@@ -187,7 +187,6 @@ export const place = async (params: FuncProps, chip: number) => {
 
 export const spin = async (params: SpinParams, config: Config) => {
 	const bets = params.bets;
-	console.log(bets.length);
 	const uniquesBets: Record<string, LocalBet> = {};
 	for (const bet of bets) {
 		const key = bet.item.toString();

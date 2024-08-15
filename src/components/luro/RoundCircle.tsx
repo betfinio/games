@@ -314,7 +314,6 @@ const CustomTooltip =
 const ProgressBar: FC<{ round: number; authors: CustomLuroBet[] }> = ({ round }) => {
 	const { data: roundData } = useRound(round);
 	const { data: bank = 0n, isLoading: isBankLoading } = useRoundBank(round);
-	console.log(bank, 'bank');
 	const { data: currentRound } = useVisibleRound();
 	const winner = useRoundWinner(round);
 	const queryClient = useQueryClient();
