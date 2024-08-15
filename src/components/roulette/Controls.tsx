@@ -53,7 +53,6 @@ const RouletteControls = () => {
 		change({ amount: val as number });
 	};
 	const handlePlus = () => {
-		console.log(limits.max - limits.max / 100);
 		if (value > limits.max - limits.max / 100) return;
 		change({ amount: value + limits.max / 100 });
 	};
