@@ -20,7 +20,6 @@ import { ZeroAddress } from '@betfinio/abi';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { type WriteContractReturnType, readContract } from '@wagmi/core';
 import { getTransactionLink } from 'betfinio_app/helpers';
-import { useSupabase } from 'betfinio_app/supabase';
 import { toast } from 'betfinio_app/use-toast';
 import { useTranslation } from 'react-i18next';
 import type { Address, WriteContractErrorType } from 'viem';
@@ -40,7 +39,7 @@ export const useObserveBet = () => {
 	return { query, resetObservedBet };
 };
 
-export const usePlaceBet = (address: Address) => {
+export const usePlaceBet = () => {
 	const { t } = useTranslation('', { keyPrefix: 'shared.errors' });
 	const queryClient = useQueryClient();
 	const config = useConfig();
@@ -48,8 +47,13 @@ export const usePlaceBet = (address: Address) => {
 		mutationKey: ['luro', 'bets', 'place'],
 		mutationFn: (params) => placeBet(params, config),
 		onError: (e) => {
-			// @ts-ignore
-			console.log(e.cause, t(e.cause?.reason));
+			toast({
+				// @ts-ignore
+				title: t(e.cause?.reason),
+				variant: 'destructive',
+				// @ts-ignore
+				description: t(e.cause?.message),
+			});
 		},
 		onMutate: () => console.log('placeBet'),
 		onSuccess: async (data) => {
@@ -128,7 +132,7 @@ export const useRoundBets = (round: number) => {
 export const useRoundBank = (round: number) => {
 	const config = useConfig();
 	return useQuery<bigint>({
-		queryKey: ['luro', 'bank', 'round', round],
+		queryKey: ['luro', 'round', 'bank', round],
 		queryFn: async () =>
 			(await readContract(config, {
 				abi: LuckyRoundContract.abi,
@@ -143,7 +147,7 @@ export const useRoundBonusShare = (round: number) => {
 	const config = useConfig();
 
 	return useQuery<bigint>({
-		queryKey: ['luro', 'bonus', 'round', round],
+		queryKey: ['luro', 'round', 'bonus', round],
 		queryFn: async () => {
 			return (await readContract(config, {
 				abi: LuckyRoundContract.abi,
@@ -204,7 +208,7 @@ export const useRoundWinner = (round: number) => {
 	const { data: roundData } = useRound(round);
 
 	const offset = roundData?.winnerOffset;
-	return getRoundWinnerByOffset(bets ?? [], offset);
+	return getRoundWinnerByOffset(bets ?? [], offset || 0n);
 };
 
 export const useRound = (round: number) => {
