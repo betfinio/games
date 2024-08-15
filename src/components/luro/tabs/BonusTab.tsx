@@ -1,3 +1,4 @@
+import { ETHSCAN } from '@/src/global.ts';
 import { useRoundBank, useRoundBets, useRoundBonusShare, useVisibleRound } from '@/src/lib/luro/query';
 import { addressToColor } from '@/src/lib/roulette';
 import { truncateEthAddress, valueToNumber } from '@betfinio/abi';
@@ -53,7 +54,7 @@ export const BonusTab = () => {
 				<List
 					height={listHeight} // Adjust height to fit your layout
 					itemCount={bets.length}
-					itemSize={74} // Adjust item size if necessary
+					itemSize={50} // Adjust item size if necessary
 					width={'100%'}
 				>
 					{Row}
@@ -84,7 +85,9 @@ const TabItem: FC<TabItemProps> = ({ player, bonus }) => {
 				<div className={'flex items-start gap-[10px]'}>
 					<Fox className={'w-5 h-5'} />
 					<div className={'flex flex-col text-[#6A6F84] text-xs gap-2'}>
-						<p className={'font-semibold text-sm !text-gray-300'}>{formatPlayer(username || truncateEthAddress(player))}</p>
+						<a href={`${ETHSCAN}/address/${player}`} target={'_blank'} className={'font-semibold text-sm !text-gray-300 hover:underline'} rel="noreferrer">
+							{formatPlayer(username || truncateEthAddress(player))}
+						</a>
 					</div>
 				</div>
 				<div className={'flex flex-col items-end text-xs gap-2'}>

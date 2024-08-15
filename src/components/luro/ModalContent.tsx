@@ -225,7 +225,11 @@ const BetsTable: FC<{ round: number; className?: string; volume: bigint; bonusSh
 			cell: (props) => {
 				const address = props.getValue();
 
-				return <p>{truncateEthAddress(address)}</p>;
+				return (
+					<a href={`${ETHSCAN}/address/${address}`} className={'hover:underline'} target={'_blank'} rel="noreferrer">
+						{truncateEthAddress(address)}
+					</a>
+				);
 			},
 		}),
 		columnHelper.accessor('count', {

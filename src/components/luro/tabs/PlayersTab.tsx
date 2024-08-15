@@ -1,3 +1,4 @@
+import { ETHSCAN } from '@/src/global.ts';
 import { mapBetsToAuthors } from '@/src/lib/luro';
 import { useRoundBets, useVisibleRound } from '@/src/lib/luro/query';
 import { addressToColor } from '@/src/lib/roulette';
@@ -90,19 +91,21 @@ export const TabItem: FC<TabItemProps> = ({ player, amount, percent, className }
 			transition={{ duration: 0.5, type: 'spring' }}
 			className={cx('rounded-lg flex bg-primary justify-between', className as string)}
 		>
-			<div className={'py-3 px-2 flex justify-between items-center grow'}>
+			<div className={'py-3 px-2 flex justify-between items-center grow gap-2'}>
 				<div className={'flex items-start gap-[10px]'}>
 					<Fox className={'w-5 h-5'} />
 					<div className={'flex flex-col text-[#6A6F84] text-xs gap-2'}>
-						<p className={'font-semibold text-sm !text-gray-300'}>{formatPlayer(customUsername || username || truncateEthAddress(player))}</p>
-						<p className={cx('opacity-0')}>{truncateEthAddress(player)}</p>
+						<a href={`${ETHSCAN}/address/${player}`} target={'_blank'} className={'font-semibold text-sm !text-gray-300 hover:underline'} rel="noreferrer">
+							{formatPlayer(customUsername || username || truncateEthAddress(player))}
+						</a>
+						<span className={cx('opacity-0')}>{truncateEthAddress(player)}</span>
 					</div>
 				</div>
 				<div className={'flex flex-col items-end text-xs gap-2'}>
-					<p className={'font-semibold text-sm'}>{percent.toFixed(2)}%</p>
-					<p>
+					<span className={'font-semibold text-sm'}>{percent.toFixed(2)}%</span>
+					<span>
 						<BetValue precision={2} value={amount} withIcon={true} />
-					</p>
+					</span>
 				</div>
 			</div>
 			<div className={'w-[10px] rounded-r-[10px]'} style={{ backgroundColor: addressToColor(player) }} />

@@ -174,11 +174,11 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 };
 
 const WaitingScreen: FC<{ round: number }> = () => {
-	const { mutate: startRound, isPending } = useStartRound(19948);
-
-	const handleSpin = () => {
-		startRound();
-	};
+	// const { mutate: startRound, isPending } = useStartRound(round);
+	//
+	// const handleSpin = () => {
+	// 	startRound();
+	// };
 	return (
 		<motion.div
 			initial={{ opacity: 0 }}
@@ -188,14 +188,14 @@ const WaitingScreen: FC<{ round: number }> = () => {
 			className={'grow flex flex-col items-center justify-center min-h-[390px]'}
 		>
 			<span>Waiting for polygon block...</span>
-			<button
-				type={'button'}
-				onClick={handleSpin}
-				disabled={isPending}
-				className={'bg-yellow-400 disabled:bg-gray-500 rounded-lg px-6 py-2 text-black font-medium'}
-			>
-				{isPending ? 'Spinning...' : 'Spin the wheel'}
-			</button>
+			{/*<button*/}
+			{/*	type={'button'}*/}
+			{/*	onClick={handleSpin}*/}
+			{/*	disabled={isPending}*/}
+			{/*	className={'bg-yellow-400 disabled:bg-gray-500 rounded-lg px-6 py-2 text-black font-medium'}*/}
+			{/*>*/}
+			{/*	{isPending ? 'Spinning...' : 'Spin the wheel'}*/}
+			{/*</button>*/}
 		</motion.div>
 	);
 };

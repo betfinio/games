@@ -46,6 +46,9 @@ export const RoundCircle: FC<{ round: number }> = ({ round }) => {
 	const singleRotationDuration = 5000;
 
 	useEffect(() => {
+		if (round !== currentRound) {
+			return;
+		}
 		if (wheelState.state === 'standby') {
 			anime.set(['.LOTTERY'], {
 				rotate: () => 0,
@@ -65,6 +68,16 @@ export const RoundCircle: FC<{ round: number }> = ({ round }) => {
 			}
 		}
 	}, [wheelState]);
+	const wheelRef = useRef(null);
+
+	const wheelAngle = useMemo(() => {
+		if (currentRound !== round) {
+			if (roundData.status === 2) {
+				return Number((roundData?.winner?.offset ?? 0n) * 360n) / valueToNumber(roundData?.total.volume);
+			}
+		}
+		return null;
+	}, [roundData?.winner]);
 
 	function spinWheel() {
 		if (wheelState.state !== 'spinning') return;
@@ -125,11 +138,12 @@ export const RoundCircle: FC<{ round: number }> = ({ round }) => {
 			<motion.div
 				className={cx(
 					'border border-gray-800 relative p-4 xl:p-8 rounded-md bg-primaryLight flex flex-col md:flex-row items-center justify-center gap-10 duration-300',
+					currentRound !== round && 'p-6',
 				)}
 			>
 				{currentRound === round && <EffectsLayer />}
 
-				<div className={'h-full max-h-[250px] xl:max-h-[325px]'} ref={boxRef}>
+				<div className={cx('h-full max-h-[250px] xl:max-h-[325px]', currentRound !== round && '!max-h-[325px]')} ref={boxRef}>
 					<div className={'relative'}>
 						<ProgressBar round={round} authors={data} />
 
@@ -146,19 +160,39 @@ export const RoundCircle: FC<{ round: number }> = ({ round }) => {
 						)}
 
 						{data.length > 0 ? (
-							<div className={'LOTTERY'}>
-								<Pie
-									data={data}
-									colors={{ datum: 'data.color' }}
-									innerRadius={0.7}
-									enableArcLabels={false}
-									enableArcLinkLabels={false}
-									width={boxRef.current?.clientHeight || 300}
-									height={boxRef.current?.clientHeight || 300}
-									isInteractive={wheelState.state === 'standby' || wheelState.state === 'waiting'}
-									tooltip={CustomTooltip(roundData?.total.volume || 0n)}
-								/>
-							</div>
+							round === currentRound ? (
+								<div className={'LOTTERY'} ref={wheelRef}>
+									<div style={{ rotate: wheelAngle ? `${-wheelAngle}deg` : '0deg' }}>
+										<Pie
+											data={data}
+											colors={{ datum: 'data.color' }}
+											innerRadius={0.7}
+											enableArcLabels={false}
+											enableArcLinkLabels={false}
+											width={boxRef.current?.clientHeight || 300}
+											height={boxRef.current?.clientHeight || 300}
+											isInteractive={wheelState.state === 'standby' || wheelState.state === 'waiting'}
+											tooltip={CustomTooltip(roundData?.total.volume || 0n)}
+										/>
+									</div>
+								</div>
+							) : (
+								<div>
+									<Pie
+										data={data}
+										colors={{ datum: 'data.color' }}
+										innerRadius={0.7}
+										startAngle={-wheelAngle}
+										endAngle={360 - wheelAngle}
+										enableArcLabels={false}
+										enableArcLinkLabels={false}
+										width={boxRef.current?.clientHeight || 300}
+										height={boxRef.current?.clientHeight || 300}
+										isInteractive={wheelState.state === 'standby' || wheelState.state === 'waiting'}
+										tooltip={CustomTooltip(roundData?.total.volume || 0n)}
+									/>
+								</div>
+							)
 						) : (
 							<Pie
 								data={[{ id: 'none', value: 100, color: '#777' }]}
@@ -284,6 +318,7 @@ const CustomTooltip =
 const ProgressBar: FC<{ round: number; authors: CustomLuroBet[] }> = ({ round, authors }) => {
 	const { data: roundData, isLoading } = useRound(round);
 	const { data: bank = 0n, isLoading: isBankLoading } = useRoundBank(round);
+	const { data: currentRound } = useVisibleRound();
 
 	const queryClient = useQueryClient();
 	const {
@@ -351,6 +386,19 @@ const ProgressBar: FC<{ round: number; authors: CustomLuroBet[] }> = ({ round, a
 	const { state: wheelState } = useLuroState();
 
 	const renderInside = () => {
+		if (currentRound !== round) {
+			if (roundData.status === 2) {
+				const bet = authors.find((author) => author.id === roundData?.winner?.bet);
+
+				const authorVolume = bet?.value ?? 0;
+				const volume = valueToNumber(roundData?.total.volume ?? 1n);
+
+				const percent = (authorVolume / volume) * 100;
+				const coef = (volume / authorVolume).toFixed(2);
+
+				return <BetCircleWinner player={bet?.label ?? '0x123'} amount={bet?.value ?? 20} percent={percent} coef={coef} />;
+			}
+		}
 		switch (wheelState.data.state) {
 			case 'stopped': {
 				const bet = authors.find((author) => author.id === roundData?.winner?.bet);

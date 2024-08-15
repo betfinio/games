@@ -6,6 +6,7 @@ import { RoundInfo } from '@/src/components/luro/RoundInfo.tsx';
 import RoundModal from '@/src/components/luro/RoundModal.tsx';
 import { RoundMyInfo } from '@/src/components/luro/RoundMyInfo.tsx';
 import RoundsTable from '@/src/components/luro/RoundsTable.tsx';
+import { useVisibleRound } from '@/src/lib/luro/query';
 import { Link, createFileRoute, useNavigate } from '@tanstack/react-router';
 import { getAppUrl, getStakingUrl } from 'betfinio_app/lib';
 import { TooltipProvider } from 'betfinio_app/tooltip';
@@ -22,13 +23,17 @@ export const Route = createFileRoute('/luro/')({
 function Luro() {
 	const navigate = useNavigate();
 	const search = Route.useSearch();
+	const { data: currentRound } = useVisibleRound();
 
 	return (
 		<div className={'col-span-4 p-2 md:p-3 lg:p-4  lg:col-start-2'}>
 			<TooltipProvider delayDuration={0}>
 				<RoundInfo />
-
 				<div className={'grid grid-cols-4 md:grid-cols-3 lg:grid-cols-[repeat(21,minmax(0,_1fr))] xl:grid-cols-4 gap-4 pt-4 relative'}>
+					<div className={'sm:hidden col-span-4 font-bold text-lg text-center'}>
+						Round <span className={'font-normal'}>#{currentRound}</span>
+					</div>
+
 					<div className={'col-span-4 md:col-span-2 lg:col-[span_15_/_span_15] xl:col-span-3 flex flex-col justify-between'}>
 						<CurrentRound />
 						<div className={'text-center my-2 justify-self-end'}>
