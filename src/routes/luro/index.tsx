@@ -8,7 +8,7 @@ import { RoundMyInfo } from '@/src/components/luro/RoundMyInfo.tsx';
 import RoundsTable from '@/src/components/luro/RoundsTable.tsx';
 import { useVisibleRound } from '@/src/lib/luro/query';
 import { Link, createFileRoute, useNavigate } from '@tanstack/react-router';
-import { getAppUrl, getStakingUrl } from 'betfinio_app/lib';
+import { getStakingUrl } from 'betfinio_app/lib';
 import { TooltipProvider } from 'betfinio_app/tooltip';
 import { Trans } from 'react-i18next';
 
@@ -29,12 +29,12 @@ function Luro() {
 		<div className={'col-span-4 p-2 md:p-3 lg:p-4  lg:col-start-2'}>
 			<TooltipProvider delayDuration={0}>
 				<RoundInfo />
-				<div className={'grid grid-cols-4 md:grid-cols-3 lg:grid-cols-[repeat(21,minmax(0,_1fr))] xl:grid-cols-4 gap-4 pt-4 relative'}>
+				<div className={'grid grid-cols-4 md:grid-cols-3 lg:grid-cols-[repeat(21,minmax(0,_1fr))] xl:grid-cols-12 gap-4 pt-4 relative'}>
 					<div className={'sm:hidden col-span-4 font-bold text-lg text-center'}>
 						Round <span className={'font-normal'}>#{currentRound}</span>
 					</div>
 
-					<div className={'col-span-4 md:col-span-2 lg:col-[span_15_/_span_15] xl:col-span-3 flex flex-col justify-between'}>
+					<div className={'col-span-4 md:col-span-2 lg:col-[span_15_/_span_15] xl:col-span-8 flex flex-col justify-between'}>
 						<CurrentRound />
 						<div className={'text-center my-2 justify-self-end'}>
 							<Link to={getStakingUrl('conservative')} className={'text-sm text-[#6A6F84]'}>
@@ -44,11 +44,11 @@ function Luro() {
 						<BonusInfo />
 						<BonusClaimBlock />
 					</div>
-					<div className={'col-span-4 md:col-span-2 lg:col-[span_6_/_span_6] xl:col-span-1 flex flex-col gap-4'}>
+					<div className={'col-span-4 md:col-span-2 lg:col-[span_6_/_span_6] xl:col-span-4 flex flex-col gap-4'}>
 						<BetsInfo />
 						<RoundMyInfo />
 					</div>
-					<RoundsTable className={'col-span-4 lg:col-[span_21_/_span_21] xl:col-span-4 mt-10'} />
+					<RoundsTable className={'col-span-4 lg:col-[span_21_/_span_21] xl:col-span-12 mt-10'} />
 					{search.round && <RoundModal round={search.round || 0} />}
 				</div>
 			</TooltipProvider>

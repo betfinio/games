@@ -1,7 +1,7 @@
 import { RoundCircle } from '@/src/components/luro/RoundCircle.tsx';
 import { ETHSCAN } from '@/src/global.ts';
 import { getTimesByRound, mapBetsToRoundTable } from '@/src/lib/luro';
-import { useBonusDistribution, useDistributeBonus, useRound, useRoundBank, useRoundBets, useRoundBonusShare } from '@/src/lib/luro/query';
+import { useBonusDistribution, useDistributeBonus, useRound, useRoundBank, useRoundBets, useRoundBonusShare, useWinners } from '@/src/lib/luro/query';
 import type { Round, RoundModalPlayer } from '@/src/lib/luro/types.ts';
 import { addressToColor } from '@/src/lib/roulette';
 import { ZeroAddress } from '@betfinio/abi';
@@ -11,10 +11,10 @@ import GoldenTrophy from '@betfinio/ui/dist/icons/GoldenTrophy';
 import MoneyHand from '@betfinio/ui/dist/icons/MoneyHand';
 import People from '@betfinio/ui/dist/icons/People';
 import { Link } from '@tanstack/react-router';
-import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
+import { createColumnHelper } from '@tanstack/react-table';
 import { BetValue } from 'betfinio_app/BetValue';
+import { DataTable } from 'betfinio_app/DataTable';
 import { ScrollArea } from 'betfinio_app/scroll-area';
-import cx from 'clsx';
 import { ShieldCheckIcon, X } from 'lucide-react';
 import { DateTime } from 'luxon';
 import { type FC, useMemo } from 'react';
@@ -29,19 +29,18 @@ export const ModalContent: FC<{
 	round: Round | null;
 }> = ({ onClose, interval, roundId, round }) => {
 	const { t } = useTranslation('', { keyPrefix: 'games.luro.roundModal' });
-
 	const { start, end } = getTimesByRound(roundId);
-
 	const isFinished = DateTime.fromMillis(Date.now()).diff(DateTime.fromMillis(end)).milliseconds > 0;
 
 	const { data: volume = 0n } = useRoundBank(roundId);
 	const { data: bonusShare = 0n } = useRoundBonusShare(roundId);
-
+	const { data: winners = [] } = useWinners();
+	const winner = winners.find((w) => w.round === roundId)?.player || ZeroAddress;
 	return (
 		<ScrollArea className={'h-[98vh] SCROLLBAR max-h-[98vh] w-[98vw] md:h-auto md:max-w-[1200px] lg:w-[1000px]'}>
 			<div
 				onClick={(e) => e.stopPropagation()}
-				className={'relative mx-auto text-white h-full w-full  min-h-[300px] rounded-lg flex flex-col p-2 md:p-3 lg:p-4 pt-5'}
+				className={'relative mx-auto text-white h-full w-full  min-h-[300px] rounded-xl flex flex-col p-2 md:p-3 lg:p-4 pt-5'}
 			>
 				<X
 					className={
@@ -70,10 +69,10 @@ export const ModalContent: FC<{
 
 				<RoundDetails volume={volume} usersCount={Number(round?.total.bets)} />
 				<div className={'mt-2 md:mt-3 lg:mt-4'}>
-					<RoundCircle round={roundId} />
+					<RoundCircle round={roundId} className={'aspect-square lg:aspect-auto'} />
 				</div>
 				<WinnerBetInfo round={roundId} />
-				<BetsTable round={roundId} volume={volume} bonusShare={bonusShare} winner={(round?.winner?.player || ZeroAddress).toLowerCase() as Address} />
+				<BetsTable round={roundId} volume={volume} bonusShare={bonusShare} winner={(winner || ZeroAddress).toLowerCase() as Address} />
 				<BonusDistribution round={roundId} />
 			</div>
 		</ScrollArea>
@@ -103,7 +102,7 @@ const BonusDistribution: FC<{ round: number }> = ({ round }) => {
 	}
 	return (
 		<div className={'flex flex-row gap-2 items-center justify-end py-2'}>
-			<button type={'submit'} onClick={handleDistribute} className={'bg-yellow-400 px-4 py-2 rounded-lg text-black '}>
+			<button type={'submit'} onClick={handleDistribute} className={'bg-yellow-400 px-4 py-2 rounded-xl text-black '}>
 				Distribute bonuses
 			</button>
 		</div>
@@ -115,7 +114,7 @@ const RoundDetails: FC<RoundDetailsProps> = ({ volume, usersCount }) => {
 	const bonus = (volume / 100n) * 5n;
 	return (
 		<div className={'mt-10 grid lg:grid-cols-3 gap-2 md:gap-3 lg:gap-4'}>
-			<div className={'border rounded-lg  border-gray-800 bg-primaryLighter min-h-[100px] flex flex-row justify-center items-center gap-2'}>
+			<div className={'border rounded-xl  border-gray-800 bg-primaryLighter min-h-[100px] flex flex-row justify-center items-center gap-2'}>
 				<People className={'w-20 h-20'} />
 				<div className={'flex flex-col'}>
 					<div className={'text-xl font-semibold'}>
@@ -128,7 +127,7 @@ const RoundDetails: FC<RoundDetailsProps> = ({ volume, usersCount }) => {
 					<div className={'mt-1 text-xs text-[#6A6F84]'}>Total bets</div>
 				</div>
 			</div>
-			<div className={'border rounded-lg border-gray-800 bg-primaryLighter min-h-[100px] flex flex-row justify-center items-center gap-2'}>
+			<div className={'border rounded-xl border-gray-800 bg-primaryLighter min-h-[100px] flex flex-row justify-center items-center gap-2'}>
 				<MoneyHand className={'w-16 h-16 text-yellow-400'} />
 				<div>
 					<div className={'mt-3 text-xl font-semibold'}>
@@ -137,7 +136,7 @@ const RoundDetails: FC<RoundDetailsProps> = ({ volume, usersCount }) => {
 					<div className={'mt-1 text-xs text-[#6A6F84]'}>Total bonus</div>
 				</div>
 			</div>
-			<div className={'border rounded-lg  border-gray-800 bg-primaryLighter min-h-[100px] flex flex-row justify-center items-center gap-2'}>
+			<div className={'border rounded-xl  border-gray-800 bg-primaryLighter min-h-[100px] flex flex-row justify-center items-center gap-2'}>
 				<Bank className={'w-20 h-20 text-yellow-400'} />
 				<div>
 					<div className={'mt-3 text-xl font-semibold'}>
@@ -181,18 +180,12 @@ const BetsTable: FC<{ round: number; className?: string; volume: bigint; bonusSh
 }) => {
 	const { data: bets = [], isFetched: isRoundsFetched } = useRoundBets(round);
 	const { address = ZeroAddress } = useAccount();
-
-	const getTrophyColor = (index: number) => {
-		switch (index) {
-			case 0:
-				return <GoldenTrophy />;
-			default:
-				return <div />;
-		}
-	};
+	const { data: roundData } = useRound(round);
 
 	const players = useMemo(() => {
-		return mapBetsToRoundTable(bets, winner, volume, bonusShare, address.toLowerCase() as Address);
+		return mapBetsToRoundTable(bets, winner, volume, bonusShare, address.toLowerCase() as Address).sort((a, b) =>
+			a.player === winner ? -1 : a.volume > b.volume ? -1 : 1,
+		);
 	}, [bets, winner, address]);
 
 	const columns = [
@@ -200,9 +193,9 @@ const BetsTable: FC<{ round: number; className?: string; volume: bigint; bonusSh
 			header: '',
 			id: 'color',
 			meta: {
-				className: '!w-[8px] !px-0 hidden lg:table-cell',
+				className: '!w-[8px] !p-0 hidden lg:table-cell',
 			},
-			cell: (props) => <div className={'h-[40px] w-[8px]'} style={{ backgroundColor: addressToColor(props.row.getValue('player')) }} />,
+			cell: (props) => <div className={'h-[40px] w-[8px] rounded-l'} style={{ backgroundColor: addressToColor(props.row.getValue('player')) }} />,
 		}),
 		columnHelper.display({
 			header: '',
@@ -277,54 +270,11 @@ const BetsTable: FC<{ round: number; className?: string; volume: bigint; bonusSh
 				const isWinner = props.row.getValue('player') === winner;
 				const win = props.row.getValue('win') as bigint;
 				const bonus = props.row.getValue('bonus') as bigint;
-				console.log(win, bonus, isWinner);
 				return <BetValue value={bonus + (isWinner ? win : 0n)} withIcon={true} />;
 			},
 		}),
 	];
 
-	const table = useReactTable<RoundModalPlayer>({
-		columns: columns,
-		data: players,
-		getCoreRowModel: getCoreRowModel(),
-	});
-	return (
-		<div className={cx(className, 'min-h-[200px]')}>
-			<table className={'w-full text-sm table border-separate border-spacing-y-[2px]'}>
-				<thead>
-					{table.getHeaderGroups().map((headerGroup) => (
-						<tr key={headerGroup.id} className={'text-gray-400 text-left'}>
-							{headerGroup.headers.map((header) => (
-								<th key={header.id} className={cx('h-[40px] pl-2', header.column.columnDef.meta?.className)}>
-									{header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-								</th>
-							))}
-						</tr>
-					))}
-				</thead>
-				<tbody className={cx({ 'blur-sm animate-pulse': !isRoundsFetched })}>
-					{table.getRowModel().rows.map((row) => (
-						<tr key={row.id} className={cx('h-[40px] p-0 cursor-pointer ', row.index % 2 ? 'bg-primaryLight' : 'bg-primaryLighter')}>
-							{row.getVisibleCells().map((cell) => {
-								return (
-									<td key={cell.id} className={cx('text-left px-2', cell.column.columnDef.meta?.className, { 'px-0': cell.column.id === 'color' })}>
-										{flexRender(cell.column.columnDef.cell, cell.getContext())}
-									</td>
-								);
-							})}
-						</tr>
-					))}
-				</tbody>
-				<tfoot>
-					{table.getFooterGroups().map((footerGroup) => (
-						<tr key={footerGroup.id}>
-							{footerGroup.headers.map((header) => (
-								<th key={header.id}>{header.isPlaceholder ? null : flexRender(header.column.columnDef.footer, header.getContext())}</th>
-							))}
-						</tr>
-					))}
-				</tfoot>
-			</table>
-		</div>
-	);
+	// @ts-ignore
+	return <DataTable columns={columns} data={players} state={{ columnVisibility: { totalWin: (roundData?.winnerOffset || 0n) > 0n } }} />;
 };

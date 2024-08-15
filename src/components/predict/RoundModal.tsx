@@ -81,7 +81,7 @@ const RoundModal: FC<{
 			<motion.div
 				onClick={(e) => e.stopPropagation()}
 				className={
-					'border relative z-[10] mx-auto border-gray-800 bg-primary w-full max-w-[1000px]  max-h-[800px] min-h-[300px] rounded-lg flex flex-col p-2 md:p-8 pt-5'
+					'border relative mx-auto border-gray-800 bg-primary w-full max-w-[1000px] lg:min-w-[800px]  max-h-[800px] min-h-[300px] rounded-lg flex flex-col p-2 md:p-8 pt-5'
 				}
 			>
 				<X
@@ -98,11 +98,11 @@ const RoundModal: FC<{
 							</span>
 							{isFinished &&
 								(isLong ? (
-									<div className={'text-2xl font-bold text-green-500 flex items-center gap-1'}>
+									<div className={'text-2xl font-semibold text-green-500 flex items-center gap-1'}>
 										Long ({coef === Number.POSITIVE_INFINITY ? 1 : coef.toFixed(2)}x)
 									</div>
 								) : (
-									<div className={'text-2xl font-bold text-red-500 flex items-center gap-1'}>
+									<div className={'text-2xl font-semibold text-red-500 flex items-center gap-1'}>
 										Short ({coef === Number.POSITIVE_INFINITY ? 1 : coef.toFixed(2)}x)
 									</div>
 								))}
@@ -156,21 +156,21 @@ const RoundModal: FC<{
 				<div className={'grid grid-cols-3 gap-4 my-4'}>
 					<div className={' bg-primaryLight md:col-span-1 col-span-3 rounded-lg p-4 flex flex-row md:flex-col items-center  justify-between gap-2 py-4'}>
 						<People className={'w-8 h-8 md:w-14 md:h-14'} />
-						<h2 className={'font-bold text-xl md:text-2xl'}>
+						<h2 className={'font-semibold text-xl md:text-2xl'}>
 							{t('users', { players })} / {t('bets', { bets: bets.length })}
 						</h2>
 						<span className={'text-gray-500 hidden md:block'}>{t('activity')}</span>
 					</div>
 					<div className={' bg-primaryLight md:col-span-1 col-span-3 rounded-lg p-4 flex flex-row md:flex-col items-center justify-between gap-2 py-4'}>
 						<MoneyHand className={'w-8 h-8 md:w-14 md:h-14 text-yellow-400'} />
-						<h2 className={'font-bold text-xl md:text-2xl'}>
+						<h2 className={'font-semibold text-xl md:text-2xl'}>
 							<BetValue precision={2} value={valueToNumber(volume)} withIcon={true} />
 						</h2>
 						<span className={'text-gray-500 hidden md:block '}>{t('volume')}</span>
 					</div>
 					<div className={' bg-primaryLight md:col-span-1 col-span-3 rounded-lg p-4 flex flex-row md:flex-col items-center  justify-between gap-2 py-4'}>
 						<Bank className={'w-8 h-8 md:w-14 md:h-14 text-yellow-400'} />
-						<h2 className={'font-bold text-xl md:text-2xl'}>
+						<h2 className={'font-semibold text-xl md:text-2xl'}>
 							<BetValue value={valueToNumber(staking)} withIcon={true} precision={2} />
 						</h2>
 						<span className={'text-gray-500 hidden md:block'}>{t('staking')}</span>

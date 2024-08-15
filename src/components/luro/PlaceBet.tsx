@@ -3,8 +3,11 @@ import { getCurrentRoundInfo } from '@/src/lib/luro/api';
 import { useLuroState, usePlaceBet, useRound, useRoundBank, useRoundBets, useRoundBonusShare, useStartRound, useVisibleRound } from '@/src/lib/luro/query';
 import { ZeroAddress } from '@betfinio/abi';
 import { valueToNumber } from '@betfinio/abi';
+import { LuckyRound } from '@betfinio/ui/dist/icons/LuckyRound';
 import { useQueryClient } from '@tanstack/react-query';
 import { BetValue } from 'betfinio_app/BetValue';
+import { useAllowanceModal } from 'betfinio_app/allowance';
+import { useIsMember } from 'betfinio_app/lib/query/pass';
 import { useAllowance, useBalance } from 'betfinio_app/lib/query/token';
 import { Tooltip, TooltipContent, TooltipTrigger } from 'betfinio_app/tooltip';
 import { toast } from 'betfinio_app/use-toast';
@@ -12,7 +15,7 @@ import cx from 'clsx';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Coins, Loader } from 'lucide-react';
 import millify from 'millify';
-import { type FC, useMemo, useState } from 'react';
+import { type FC, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NumericFormat } from 'react-number-format';
 import { useAccount } from 'wagmi';
@@ -45,14 +48,39 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 	const { address = ZeroAddress } = useAccount();
 	const { data: allowance = 0n, isFetching: loading } = useAllowance(address);
 	const { data: balance = 0n } = useBalance(address);
-	const { mutate: placeBet, isPending } = usePlaceBet(address);
+	const { data: isMember = false } = useIsMember(address);
+	const { mutate: placeBet, isPending, isSuccess, data } = usePlaceBet(address);
 	const { data: bets = [] } = useRoundBets(round);
-
+	const { requestAllowance, setResult, requested } = useAllowanceModal();
+	useEffect(() => {
+		if (data && isSuccess) {
+			setResult?.(data);
+		}
+	}, [isSuccess, data]);
+	useEffect(() => {
+		if (requested) {
+			handleBet();
+		}
+	}, [requested]);
 	const handleBetChange = (value: string) => {
 		setAmount(value);
 	};
 
 	const handleBet = () => {
+		if (address === ZeroAddress) {
+			toast({
+				description: 'Please connect your wallet',
+				variant: 'destructive',
+			});
+			return;
+		}
+		if (!isMember) {
+			toast({
+				description: 'Connected wallet is not member of Betfin. Ask someone for an invitation',
+				variant: 'destructive',
+			});
+			return;
+		}
 		if (amount === '') {
 			toast({
 				title: 'Please enter amount',
@@ -63,12 +91,13 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 		}
 		if (Number(amount) < 1000) {
 			toast({
-				title: 'Minimum bet amount is 1000 BET',
+				title: 'Minimal bet amount is 1000 BET',
 				description: '',
 				variant: 'destructive',
 			});
 			return;
 		}
+
 		try {
 			BigInt(Number(amount));
 		} catch (e) {
@@ -79,6 +108,12 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 			});
 			return;
 		}
+
+		if (allowance < BigInt(Number(amount))) {
+			requestAllowance?.('bet', BigInt(Number(amount)) * 10n ** 18n);
+			return;
+		}
+
 		placeBet({ round: round, amount: Number(amount), player: address });
 	};
 
@@ -91,8 +126,6 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 	}, [bets]);
 
 	const bank = useMemo(() => bets.reduce((acc, val) => acc + val.amount, 0n), [bets, address, round]);
-
-	console.log(bank, amount, myBetVolume);
 	const expectedWinning = (valueToNumber(bank) + Number(amount) - valueToNumber(myBetVolume)) * 0.914;
 	const coef = expectedWinning / Number(amount);
 
@@ -106,18 +139,21 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 			animate={{ opacity: 1 }}
 			exit={{ opacity: 0 }}
 			transition={{ duration: 0.3 }}
-			className={'flex flex-col grow justify-between duration-300'}
+			className={'flex flex-col grow justify-between duration-300 lg:max-w-[300px]'}
 		>
+			<div className={'uppercase text-xl flex items-center justify-center w-full font-semibold gap-2 z-10 my-2'}>
+				{t('title')}
+				<LuckyRound className={'w-5 h-5 text-yellow-400'} />
+			</div>
 			<Tooltip>
-				<div className={cx('rounded-md bg-primaryLight border drop-shadow-[0_0_35px_rgba(87,101,242,0.75)] border-gray-800 p-5 relative w-full')}>
-					<h2 className={'text-lg font-semibold text-center'}>{t('title')}</h2>
-					<h4 className={'font-medium text-center text-gray-500 text-xs mt-[10px]'}>{t('amount')}</h4>
+				<div className={cx('rounded-xl bg-primaryLight border drop-shadow-[0_0_35px_rgba(87,101,242,0.75)] border-gray-800 p-4 relative w-full')}>
+					<h4 className={'font-medium text-center text-gray-500 text-xs '}>{t('amount')}</h4>
 					<NumericFormat
-						className={'w-full mt-[5px] rounded-lg text-center text-sm bg-primary py-3 font-bold text-white disabled:cursor-not-allowed'}
+						className={'w-full mt-2 rounded-lg text-center text-base lg:text-lg bg-primary py-3 font-semibold text-white disabled:cursor-not-allowed'}
 						thousandSeparator={','}
 						min={1}
 						maxLength={15}
-						disabled={loading || allowance === 0n || balance === 0n}
+						disabled={loading}
 						placeholder={allowance === 0n ? 'Please increase allowance' : balance === 0n ? 'Please top-up balance' : 'Amount'}
 						value={amount ? amount : ''}
 						onValueChange={(values) => {
@@ -126,10 +162,10 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 						}}
 					/>
 					<h4 className={'font-medium text-gray-500 text-xs text-center mt-[10px]'}>{t('expected')}</h4>
-					<p className={'mt-[20px] text-center font-bold text-[#27AE60]'}>
-						{expectedWinning.toLocaleString()} ({(coef === Number.POSITIVE_INFINITY ? 0 : coef).toFixed(3)}x)
+					<p className={'mt-[20px] text-center font-semibold text-[#27AE60]'}>
+						{expectedWinning.toLocaleString()} <span className={'text-blue-500'}>(+bonus)</span>
 					</p>
-					<div className={'text-center text-yellow-400 font-thin text-xs'}>+ bonus</div>
+					<div className={'text-center text-yellow-400 font-thin text-xs'}>{(coef === Number.POSITIVE_INFINITY ? 0 : coef).toFixed(3)}x</div>
 					<motion.button
 						whileTap={{ scale: 0.95 }}
 						onClick={handleBet}
@@ -149,17 +185,17 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 					</motion.button>
 				</div>
 
-				<div className={cx('rounded-md bg-primaryLight p-3 relative w-full lg:w-full mt-3 border border-gray-800')}>
+				<div className={cx('rounded-xl bg-primaryLight p-3 relative w-full lg:w-full mt-3 border border-gray-800')}>
 					<div className={'grid grid-cols-2 gap-2 text-xs'}>
 						<div className={'bg-primary py-2 text-center flex flex-col gap-1 rounded-[8px]'}>
-							<div className={'text-[#6A6F84]'}>Your BET</div>
-							<div className={'text-[#27AE60] font-bold flex justify-center gap-1'}>
+							<div className={'text-gray-500'}>Your active bets</div>
+							<div className={'text-yellow-400 font-semibold flex justify-center gap-1'}>
 								<BetValue value={valueToNumber(myBetVolume)} /> ({myPercent}%)
 							</div>
 						</div>
 						<div className={'bg-primary py-2 text-center flex flex-col gap-1 rounded-[8px]'}>
-							<p className={'text-[#6A6F84]'}>Potential win</p>
-							<div className={'text-[#EB5757] font-bold flex justify-center gap-1'}>
+							<p className={'text-gray-500'}>Potential win</p>
+							<div className={'text-green-500 font-semibold flex justify-center gap-1'}>
 								<TooltipTrigger>
 									{millify(potentialWin)} {myBetVolume > 0 && `(${myCoef.toFixed(2)}x)`}
 								</TooltipTrigger>

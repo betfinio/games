@@ -36,7 +36,6 @@ export const PlayersTab = () => {
 	};
 
 	const ref = useRef<HTMLDivElement>(null);
-	console.log(ref);
 
 	useEffect(() => {
 		if (ref.current) {
