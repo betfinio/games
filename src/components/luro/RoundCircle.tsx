@@ -446,8 +446,8 @@ const ProgressBar: FC<{ round: number; authors: CustomLuroBet[] }> = ({ round })
 					<TriangleIcon
 						fill={'#FFC800'}
 						className={cx(
-							'text-yellow-400 w-4 h-4  opacity-0 duration-300 delay-300 ',
-							wheelState.data.state !== 'standby' || (currentRound !== round && 'opacity-100'),
+							'text-yellow-400 w-4 h-4  opacity-0 duration-300 delay-300',
+							(wheelState.data.state !== 'standby' || currentRound !== round) && 'opacity-100',
 						)}
 					/>
 				</div>
