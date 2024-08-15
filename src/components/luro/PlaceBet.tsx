@@ -1,6 +1,16 @@
 import { jumpToCurrentRound } from '@/src/lib/luro';
 import { getCurrentRoundInfo } from '@/src/lib/luro/api';
-import { useLuroState, usePlaceBet, useRound, useRoundBank, useRoundBets, useRoundBonusShare, useStartRound, useVisibleRound } from '@/src/lib/luro/query';
+import {
+	useLuroState,
+	usePlaceBet,
+	useRound,
+	useRoundBank,
+	useRoundBets,
+	useRoundBonusShare,
+	useRoundWinner,
+	useStartRound,
+	useVisibleRound,
+} from '@/src/lib/luro/query';
 import { ZeroAddress } from '@betfinio/abi';
 import { valueToNumber } from '@betfinio/abi';
 import { LuckyRound } from '@betfinio/ui/dist/icons/LuckyRound';
@@ -49,7 +59,7 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 	const { data: allowance = 0n, isFetching: loading } = useAllowance(address);
 	const { data: balance = 0n } = useBalance(address);
 	const { data: isMember = false } = useIsMember(address);
-	const { mutate: placeBet, isPending, isSuccess, data } = usePlaceBet(address);
+	const { mutate: placeBet, isPending, isSuccess, data } = usePlaceBet();
 	const { data: bets = [] } = useRoundBets(round);
 	const { requestAllowance, setResult, requested } = useAllowanceModal();
 	useEffect(() => {
@@ -196,10 +206,10 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 						<div className={'bg-primary py-2 text-center flex flex-col gap-1 rounded-[8px]'}>
 							<p className={'text-gray-500'}>Potential win</p>
 							<div className={'text-green-500 font-semibold flex justify-center gap-1'}>
-								<TooltipTrigger>
-									{millify(potentialWin)} {myBetVolume > 0 && `(${myCoef.toFixed(2)}x)`}
-								</TooltipTrigger>
-								<TooltipContent className={'font-semibold'}>{`${potentialWin.toLocaleString()} BET`}</TooltipContent>
+								<TooltipTrigger>{millify(potentialWin)}</TooltipTrigger>
+								<TooltipContent className={'font-semibold'}>
+									{`${potentialWin.toLocaleString()} BET`} <span className={'text-green-500'}>{myBetVolume > 0 && `(${myCoef.toFixed(2)}x)`}</span>
+								</TooltipContent>
 							</div>
 						</div>
 					</div>
@@ -210,11 +220,11 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 };
 
 const WaitingScreen: FC<{ round: number }> = () => {
-	const { mutate: startRound, isPending } = useStartRound(19948);
-
-	const handleSpin = () => {
-		startRound();
-	};
+	// const { mutate: startRound, isPending } = useStartRound(round);
+	//
+	// const handleSpin = () => {
+	// 	startRound();
+	// };
 	return (
 		<motion.div
 			initial={{ opacity: 0 }}
@@ -224,14 +234,14 @@ const WaitingScreen: FC<{ round: number }> = () => {
 			className={'grow flex flex-col items-center justify-center min-h-[390px]'}
 		>
 			<span>Waiting for polygon block...</span>
-			<button
-				type={'button'}
-				onClick={handleSpin}
-				disabled={isPending}
-				className={'bg-yellow-400 disabled:bg-gray-500 rounded-lg px-6 py-2 text-black font-medium'}
-			>
-				{isPending ? 'Spinning...' : 'Spin the wheel'}
-			</button>
+			{/*<button*/}
+			{/*	type={'button'}*/}
+			{/*	onClick={handleSpin}*/}
+			{/*	disabled={isPending}*/}
+			{/*	className={'bg-yellow-400 disabled:bg-gray-500 rounded-lg px-6 py-2 text-black font-medium'}*/}
+			{/*>*/}
+			{/*	{isPending ? 'Spinning...' : 'Spin the wheel'}*/}
+			{/*</button>*/}
 		</motion.div>
 	);
 };
@@ -261,6 +271,8 @@ const RoundResult: FC<{ round: number }> = ({ round }) => {
 	const { data: volume = 0n } = useRoundBank(round);
 	const { data: bonusShare = 0n } = useRoundBonusShare(round);
 
+	const winner = useRoundWinner(round);
+
 	const bonus = useMemo(() => {
 		const bonuses = bets.map((bet, index) => {
 			if (bonusShare === 0n) return { bet, bonus: 0 };
@@ -271,7 +283,7 @@ const RoundResult: FC<{ round: number }> = ({ round }) => {
 				bonus: valueToNumber((bonusPool * weight) / bonusShare),
 			};
 		});
-		return bonuses.find((bonus) => bonus?.bet?.address === roundData?.winner?.bet);
+		return bonuses.find((bonus) => bonus?.bet?.address === winner?.address);
 	}, [bets, volume, address]);
 
 	if (roundData.player.bets === 0n) {
@@ -307,7 +319,7 @@ const RoundResult: FC<{ round: number }> = ({ round }) => {
 		);
 	}
 
-	if (roundData.winner?.player === address) {
+	if (winner?.player === address) {
 		return (
 			<motion.div
 				initial={{ opacity: 0 }}

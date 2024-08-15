@@ -1,6 +1,6 @@
 import { TabItem } from '@/src/components/luro/tabs/PlayersTab.tsx';
 import { getTimesByRound, hexToRgbA, jumpToCurrentRound, mapBetsToAuthors } from '@/src/lib/luro';
-import { useLuroState, useObserveBet, useRound, useRoundBank, useRoundBets, useStartRound, useVisibleRound } from '@/src/lib/luro/query';
+import { useLuroState, useObserveBet, useRound, useRoundBank, useRoundBets, useRoundWinner, useStartRound, useVisibleRound } from '@/src/lib/luro/query';
 import type { CustomLuroBet } from '@/src/lib/luro/types.ts';
 import { addressToColor } from '@/src/lib/roulette';
 import { ZeroAddress, valueToNumber } from '@betfinio/abi';
@@ -35,17 +35,19 @@ export const RoundCircle: FC<{ round: number; className?: string }> = ({ round, 
 	const { data: bets = [] } = useRoundBets(round);
 	const { data: currentRound } = useVisibleRound();
 	const { data: roundData } = useRound(round);
+	const winner = useRoundWinner(round);
 
 	const {
 		state: { data: wheelState },
 		updateState: updateWheelState,
 	} = useLuroState();
 
-	const { mutate: startRound, isPending } = useStartRound(round);
-
 	const singleRotationDuration = 5000;
 
 	useEffect(() => {
+		if (round !== currentRound) {
+			return;
+		}
 		if (wheelState.state === 'standby') {
 			anime.set(['.LOTTERY'], {
 				rotate: () => 0,
@@ -58,13 +60,23 @@ export const RoundCircle: FC<{ round: number; className?: string }> = ({ round, 
 			stopWheel((wheelState.winnerOffset * 360) / valueToNumber(roundData?.total.volume), wheelState.bet);
 		}
 		if (wheelState.state === 'stopped') {
-			if (roundData?.winner?.player === address) {
+			if (winner?.player === address) {
 				setConfettiExploding(true);
 			} else {
 				setConfettiExploding(false);
 			}
 		}
 	}, [wheelState]);
+	const wheelRef = useRef(null);
+
+	const wheelAngle = useMemo(() => {
+		if (currentRound !== round) {
+			if (roundData?.status === 2) {
+				return Number((winner?.offset ?? 0n) * 360n) / valueToNumber(roundData?.total.volume);
+			}
+		}
+		return 0;
+	}, [winner, roundData?.total.volume]);
 
 	function spinWheel() {
 		if (wheelState.state !== 'spinning') return;
@@ -119,7 +131,18 @@ export const RoundCircle: FC<{ round: number; className?: string }> = ({ round, 
 		}));
 	}, [bets]);
 
+	const [chartHeight, setChartHeight] = useState(250);
 	const boxRef = useRef<HTMLDivElement | null>(null);
+
+	useEffect(() => {
+		if (boxRef.current) {
+			setChartHeight(boxRef.current?.offsetHeight);
+		} else {
+			setChartHeight(460);
+		}
+	}, [boxRef.current]);
+
+	console.log(boxRef.current);
 	return (
 		<Tooltip>
 			<motion.div
@@ -129,7 +152,7 @@ export const RoundCircle: FC<{ round: number; className?: string }> = ({ round, 
 				)}
 			>
 				{currentRound === round && <EffectsLayer />}
-				<div className={'h-full max-h-[250px] xl:max-h-[325px]'} ref={boxRef}>
+				<div className={cx('h-full h-[250px] xl:h-[325px]', currentRound !== round && '!h-[325px]')} ref={boxRef}>
 					<div className={'relative'}>
 						<ProgressBar round={round} authors={data} />
 
@@ -146,19 +169,37 @@ export const RoundCircle: FC<{ round: number; className?: string }> = ({ round, 
 						)}
 
 						{data.length > 0 ? (
-							<div className={'LOTTERY'}>
-								<Pie
-									data={data}
-									colors={{ datum: 'data.color' }}
-									innerRadius={0.7}
-									enableArcLabels={false}
-									enableArcLinkLabels={false}
-									width={boxRef.current?.clientHeight || 300}
-									height={boxRef.current?.clientHeight || 300}
-									isInteractive={wheelState.state === 'standby' || wheelState.state === 'waiting'}
-									tooltip={CustomTooltip(roundData?.total.volume || 0n)}
-								/>
-							</div>
+							round === currentRound ? (
+								<div className={'LOTTERY'} ref={wheelRef}>
+									<Pie
+										data={data}
+										colors={{ datum: 'data.color' }}
+										innerRadius={0.7}
+										enableArcLabels={false}
+										enableArcLinkLabels={false}
+										width={chartHeight}
+										height={chartHeight}
+										isInteractive={wheelState.state === 'standby' || wheelState.state === 'waiting'}
+										tooltip={CustomTooltip(roundData?.total.volume || 0n)}
+									/>
+								</div>
+							) : (
+								<div>
+									<Pie
+										data={data}
+										colors={{ datum: 'data.color' }}
+										innerRadius={0.7}
+										startAngle={-wheelAngle}
+										endAngle={360 - wheelAngle}
+										enableArcLabels={false}
+										enableArcLinkLabels={false}
+										width={chartHeight}
+										height={chartHeight}
+										isInteractive={wheelState.state === 'standby' || wheelState.state === 'waiting'}
+										tooltip={CustomTooltip(roundData?.total.volume || 0n)}
+									/>
+								</div>
+							)
 						) : (
 							<Pie
 								data={[{ id: 'none', value: 100, color: '#777' }]}
@@ -166,20 +207,20 @@ export const RoundCircle: FC<{ round: number; className?: string }> = ({ round, 
 								innerRadius={0.7}
 								enableArcLabels={false}
 								enableArcLinkLabels={false}
-								width={boxRef.current?.clientHeight || 300}
-								height={boxRef.current?.clientHeight || 300}
+								width={chartHeight}
+								height={chartHeight}
 								tooltip={() => null}
 							/>
 						)}
 					</div>
 				</div>
 				{currentRound !== round && (roundData?.total.volume || 0n) > 0n && (
-					<div className={cx('w-full h-full flex gap-4 flex-row items-center justify-evenly')}>
+					<div className={cx('w-full flex gap-4 flex-row items-center justify-evenly')}>
 						{roundData?.status === 0 && 'Waiting for transaction. Any second now...'}
 
 						{roundData?.status === 2 && (
 							<>
-								<div>
+								<div className={'shrink-0'}>
 									<img alt={'duck'} src={'/luro/duck.png'} className={'max-h-[200px] md:h-[300px]'} />
 								</div>
 								<div className={'flex flex-col min-w-[220px] gap-4'}>
@@ -281,10 +322,11 @@ const CustomTooltip =
 		value: number;
 		color: string;
 	}>) => <TabItem key={id} amount={value} className={'min-w-[250px]'} player={label as Address} percent={(value * 100) / valueToNumber(bank)} />;
-const ProgressBar: FC<{ round: number; authors: CustomLuroBet[] }> = ({ round, authors }) => {
-	const { data: roundData, isLoading } = useRound(round);
+const ProgressBar: FC<{ round: number; authors: CustomLuroBet[] }> = ({ round }) => {
+	const { data: roundData } = useRound(round);
 	const { data: bank = 0n, isLoading: isBankLoading } = useRoundBank(round);
-
+	const { data: currentRound } = useVisibleRound();
+	const winner = useRoundWinner(round);
 	const queryClient = useQueryClient();
 	const {
 		state: { data: luroState, isLoading: isLotteryStateLoading, isPending: isLotteryStatePending },
@@ -351,16 +393,26 @@ const ProgressBar: FC<{ round: number; authors: CustomLuroBet[] }> = ({ round, a
 	const { state: wheelState } = useLuroState();
 
 	const renderInside = () => {
-		switch (wheelState.data.state) {
-			case 'stopped': {
-				const bet = authors.find((author) => author.id === roundData?.winner?.bet);
-
-				const authorVolume = bet?.value ?? 0;
+		if (currentRound !== round) {
+			if (roundData?.status === 2) {
+				const authorVolume = valueToNumber(winner?.amount ?? 0n);
 				const volume = valueToNumber(roundData?.total.volume ?? 1n);
 
 				const percent = (authorVolume / volume) * 100;
 				const coef = (volume / authorVolume).toFixed(2);
-				return <BetCircleWinner player={bet?.label ?? '0x123'} amount={bet?.value ?? 20} percent={percent} coef={coef} />;
+
+				return <BetCircleWinner player={winner?.player ?? '0x123'} amount={authorVolume} percent={percent} coef={coef} loading={!winner} />;
+			}
+		}
+		switch (wheelState.data.state) {
+			case 'stopped': {
+				const authorVolume = valueToNumber(winner?.amount ?? 0n);
+				const volume = valueToNumber(roundData?.total.volume ?? 1n);
+
+				const percent = (authorVolume / volume) * 100;
+				const coef = (volume / authorVolume).toFixed(2);
+
+				return <BetCircleWinner player={winner?.player ?? '0x123'} amount={authorVolume} percent={percent} coef={coef} loading={!winner} />;
 			}
 			default: {
 				const remaining = DateTime.fromMillis(end).diffNow();
@@ -393,7 +445,10 @@ const ProgressBar: FC<{ round: number; authors: CustomLuroBet[] }> = ({ round, a
 				<div className={'rotate-180 absolute z-10 top-3 left-1/2 -translate-x-1/2'}>
 					<TriangleIcon
 						fill={'#FFC800'}
-						className={cx('text-yellow-400 w-4 h-4  opacity-0 duration-300 delay-300 ', wheelState.data.state !== 'standby' && 'opacity-100')}
+						className={cx(
+							'text-yellow-400 w-4 h-4  opacity-0 duration-300 delay-300 ',
+							wheelState.data.state !== 'standby' || (currentRound !== round && 'opacity-100'),
+						)}
 					/>
 				</div>
 
@@ -405,17 +460,25 @@ const ProgressBar: FC<{ round: number; authors: CustomLuroBet[] }> = ({ round, a
 	);
 };
 
-const BetCircleWinner: FC<{ player: Address; amount: number; percent: number; coef: string }> = ({ player, amount, percent, coef }) => {
+const BetCircleWinner: FC<{ player: Address; amount: number; percent: number; coef: string; loading?: boolean }> = ({
+	player,
+	amount,
+	percent,
+	coef,
+	loading,
+}) => {
 	return (
 		<motion.div
 			initial={{ opacity: 0 }}
 			animate={{ opacity: 1 }}
 			exit={{ opacity: 0 }}
 			transition={{ duration: 0.5 }}
-			className={'absolute flex flex-col items-center justify-center w-full h-full top-0 gap-2'}
+			className={cx('absolute flex flex-col items-center justify-center w-full h-full top-0 gap-2 duration-300', loading && 'blur-sm')}
 		>
 			<img alt={'crown'} src={'/luro/crown.svg'} />
-			<TabItem player={player} amount={amount} percent={percent} />
+			<div className={'z-10'}>
+				<TabItem player={player} amount={amount} percent={percent} />
+			</div>
 			<div>
 				<span className={'text-yellow-400'}>{coef}x</span> WIN
 			</div>
@@ -425,6 +488,8 @@ const BetCircleWinner: FC<{ player: Address; amount: number; percent: number; co
 
 const RoundResult: FC<{ round: number }> = ({ round }) => {
 	const { data: roundData, isLoading, isFetching } = useRound(round);
+
+	const winner = useRoundWinner(round);
 
 	const { address = ZeroAddress } = useAccount();
 	if (isLoading || isFetching) return <Loader size={40} className={'animate-spin'} color={'white'} />;
@@ -442,7 +507,7 @@ const RoundResult: FC<{ round: number }> = ({ round }) => {
 		);
 	}
 
-	if (roundData.winner?.player === address) {
+	if (winner?.player === address) {
 		return (
 			<>
 				<div className={'text-xl font-semibold mb-4'}>You WIN!</div>
