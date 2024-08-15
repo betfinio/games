@@ -128,6 +128,11 @@
 			"users": "{players} users",
 			"bets": "{bets} bets"
 		},
+		"statsModal": {
+			"bets": "Bets count",
+			"volume": "Total Volume",
+			"staking": "Staking Contribution"
+		},
 		"table": {
 			"round": "Round ID",
 			"bets": "Total bets",

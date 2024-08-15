@@ -11,6 +11,7 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as SoonImport } from './routes/soon'
 import { Route as IndexImport } from './routes/index'
 import { Route as RouletteIndexImport } from './routes/roulette/index'
 import { Route as PredictIndexImport } from './routes/predict/index'
@@ -19,6 +20,11 @@ import { Route as PredictPairImport } from './routes/predict/$pair'
 import { Route as LuroSoonImport } from './routes/luro/soon'
 
 // Create/Update Routes
+
+const SoonRoute = SoonImport.update({
+  path: '/soon',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const IndexRoute = IndexImport.update({
   path: '/',
@@ -59,6 +65,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/soon': {
+      id: '/soon'
+      path: '/soon'
+      fullPath: '/soon'
+      preLoaderRoute: typeof SoonImport
       parentRoute: typeof rootRoute
     }
     '/luro/soon': {
@@ -103,6 +116,7 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren({
   IndexRoute,
+  SoonRoute,
   LuroSoonRoute,
   PredictPairRoute,
   LuroIndexRoute,
@@ -119,6 +133,7 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/soon",
         "/luro/soon",
         "/predict/$pair",
         "/luro/",
@@ -128,6 +143,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/soon": {
+      "filePath": "soon.tsx"
     },
     "/luro/soon": {
       "filePath": "luro/soon.tsx"
