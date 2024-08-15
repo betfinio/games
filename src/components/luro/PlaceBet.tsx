@@ -59,7 +59,7 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 	const { data: allowance = 0n, isFetching: loading } = useAllowance(address);
 	const { data: balance = 0n } = useBalance(address);
 	const { data: isMember = false } = useIsMember(address);
-	const { mutate: placeBet, isPending, isSuccess, data } = usePlaceBet(address);
+	const { mutate: placeBet, isPending, isSuccess, data } = usePlaceBet();
 	const { data: bets = [] } = useRoundBets(round);
 	const { requestAllowance, setResult, requested } = useAllowanceModal();
 	useEffect(() => {
