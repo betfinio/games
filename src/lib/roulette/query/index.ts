@@ -125,8 +125,6 @@ export const useSpin = () => {
 	const config = useConfig();
 	const queryClient = useQueryClient();
 
-
-
 	return useMutation<WriteContractReturnType, WriteContractErrorType, SpinParams>({
 		mutationKey: ['roulette', 'spin'],
 		mutationFn: (params) => spin(params, config),
