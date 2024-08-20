@@ -60,6 +60,7 @@ export const useRouletteBets = (address: Address) => {
 };
 
 export const useRouletteState = () => {
+	const { address = ZeroAddress } = useAccount();
 	const queryClient = useQueryClient();
 	const state = useQuery<WheelState>({
 		queryKey: ['roulette', 'state'],
@@ -69,6 +70,31 @@ export const useRouletteState = () => {
 	const updateState = (st: WheelState) => {
 		queryClient.setQueryData(['roulette', 'state'], st);
 	};
+
+	useWatchContractEvent({
+		abi: RouletteContract.abi,
+		address: ROULETTE,
+		eventName: 'Rolled',
+		onLogs: (rolledLogs) => {
+			// @ts-ignore
+			if (rolledLogs[0].args.roller.toString().toLowerCase() === address.toLowerCase()) {
+				updateState({ state: 'spinning' });
+			}
+		},
+	});
+
+	useWatchContractEvent({
+		abi: RouletteContract.abi,
+		address: ROULETTE,
+		eventName: 'Landed',
+		onLogs: (landedLogs) => {
+			// @ts-ignore
+			if (landedLogs[0].args.roller.toString().toLowerCase() === address.toLowerCase()) {
+				// @ts-ignore
+				updateState({ state: 'landed', result: Number(landedLogs[0].args.result), bet: landedLogs[0].args.bet });
+			}
+		},
+	});
 
 	return { state, updateState };
 };
@@ -97,34 +123,9 @@ export const usePlace = () => {
 export const useSpin = () => {
 	const { t: errors } = useTranslation('', { keyPrefix: 'shared.errors' });
 	const config = useConfig();
-	const { updateState } = useRouletteState();
-	const { address = ZeroAddress } = useAccount();
 	const queryClient = useQueryClient();
 
-	useWatchContractEvent({
-		abi: RouletteContract.abi,
-		address: ROULETTE,
-		eventName: 'Rolled',
-		onLogs: (rolledLogs) => {
-			// @ts-ignore
-			if (rolledLogs[0].args.roller.toString().toLowerCase() === address.toLowerCase()) {
-				updateState({ state: 'spinning' });
-			}
-		},
-	});
 
-	useWatchContractEvent({
-		abi: RouletteContract.abi,
-		address: ROULETTE,
-		eventName: 'Landed',
-		onLogs: (landedLogs) => {
-			// @ts-ignore
-			if (landedLogs[0].args.roller.toString().toLowerCase() === address.toLowerCase()) {
-				// @ts-ignore
-				updateState({ state: 'landed', result: Number(landedLogs[0].args.result), bet: landedLogs[0].args.bet });
-			}
-		},
-	});
 
 	return useMutation<WriteContractReturnType, WriteContractErrorType, SpinParams>({
 		mutationKey: ['roulette', 'spin'],
