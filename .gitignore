@@ -15,3 +15,7 @@ dist/
 bun.lockb
 
 .npmrc
+
+#types
+
+@mf-types/

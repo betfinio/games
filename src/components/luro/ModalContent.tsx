@@ -1,7 +1,16 @@
 import { RoundCircle } from '@/src/components/luro/RoundCircle.tsx';
 import { ETHSCAN } from '@/src/global.ts';
 import { getTimesByRound, mapBetsToRoundTable } from '@/src/lib/luro';
-import { useBonusDistribution, useDistributeBonus, useRound, useRoundBank, useRoundBets, useRoundBonusShare, useWinners } from '@/src/lib/luro/query';
+import {
+	useBonusDistribution,
+	useDistributeBonus,
+	useRound,
+	useRoundBank,
+	useRoundBets,
+	useRoundBonusShare,
+	useVisibleRound,
+	useWinners,
+} from '@/src/lib/luro/query';
 import type { Round, RoundModalPlayer } from '@/src/lib/luro/types.ts';
 import { addressToColor } from '@/src/lib/roulette';
 import { ZeroAddress } from '@betfinio/abi';
@@ -15,7 +24,7 @@ import { createColumnHelper } from '@tanstack/react-table';
 import { BetValue } from 'betfinio_app/BetValue';
 import { DataTable } from 'betfinio_app/DataTable';
 import { ScrollArea } from 'betfinio_app/scroll-area';
-import { ShieldCheckIcon, X } from 'lucide-react';
+import { Loader, ShieldCheckIcon, X } from 'lucide-react';
 import { DateTime } from 'luxon';
 import { type FC, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -69,7 +78,7 @@ export const ModalContent: FC<{
 
 				<RoundDetails volume={volume} usersCount={Number(round?.total.bets)} />
 				<div className={'mt-2 md:mt-3 lg:mt-4'}>
-					<RoundCircle round={roundId} className={'aspect-square lg:aspect-auto'} />
+					<RoundCircle round={roundId} className={'aspect-auto py-10 px-2 md:px-10 '} />
 				</div>
 				<WinnerBetInfo round={roundId} />
 				<BetsTable round={roundId} volume={volume} bonusShare={bonusShare} winner={(winner || ZeroAddress).toLowerCase() as Address} />
@@ -152,20 +161,37 @@ const RoundDetails: FC<RoundDetailsProps> = ({ volume, usersCount }) => {
 const columnHelper = createColumnHelper<RoundModalPlayer>();
 
 const WinnerBetInfo: FC<{ round: number }> = ({ round }) => {
-	const { data = null } = useRound(round);
-	if (!data || !data.winner) return null;
+	const { data: winners = [], isLoading, isFetching } = useWinners();
+	const { data: currentRound } = useVisibleRound();
+
+	const winner = winners.find((w) => w.round === round);
+
+	if (round === currentRound) {
+		return null;
+	}
 	return (
 		<div className={'py-5 border-t border-b border-[#1F222F] flex flex-col items-center text-sm font-semibold'}>
-			<p>Round Contract:</p>
-			<Link target={'_blank'} to={`${ETHSCAN}/address/${data.winner.bet}`} className={'underline'}>
-				{data.winner.bet}
-			</Link>
+			<p>Winning Bet:</p>
+			{isLoading || isFetching ? (
+				<Loader className={'w-3 h-3 animate-spin'} />
+			) : (
+				<Link target={'_blank'} to={`${ETHSCAN}/address/${winner.bet}`} className={'underline'}>
+					{winner.bet}
+				</Link>
+			)}
+
 			<div className={'mt-5 flex gap-2'}>
 				<p className={'text-[#8794A1]'}>Proof of Random:</p>
-				<ShieldCheckIcon className={'text-[#38BB7F] w-5 h-5'} />
-				<Link target={'_blank'} to={`${ETHSCAN}/tx/${data.winner.tx}`} className={'underline'}>
-					{truncateEthAddress(data.winner.tx)}
-				</Link>
+				{isLoading || isFetching ? (
+					<Loader className={'w-3 h-3 animate-spin'} />
+				) : (
+					<>
+						<ShieldCheckIcon className={'text-[#38BB7F] w-5 h-5'} />
+						<Link target={'_blank'} to={`${ETHSCAN}/tx/${winner.tx}`} className={'underline'}>
+							{truncateEthAddress(winner.tx)}
+						</Link>
+					</>
+				)}
 			</div>
 		</div>
 	);

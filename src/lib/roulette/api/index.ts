@@ -82,7 +82,7 @@ export const fetchRouletteBets = async (address: Address, config: Config): Promi
 				args: [r],
 			})),
 	});
-	return await Promise.all(betAddresses.map((e) => e.result as Address).map((bet) => populateRouletteBet(bet, config)));
+	return (await Promise.all(betAddresses.map((e) => e.result as Address).map((bet) => populateRouletteBet(bet, config)))).filter((bet) => bet.status !== 1n);
 };
 
 export async function populateRouletteBet(bet: Address, config: Config): Promise<RouletteBet> {
