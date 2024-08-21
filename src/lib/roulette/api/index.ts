@@ -1,4 +1,4 @@
-import { PARTNER, ROULETTE } from '@/src/global.ts';
+import { FIRST_BLOCK, PARTNER, ROULETTE } from '@/src/global.ts';
 import { encodeBet } from '@/src/lib/roulette';
 import type { FuncProps, Limit, LocalBet, RouletteBet, RouletteSubBet, SpinParams } from '@/src/lib/roulette/types.ts';
 import { PartnerContract, RouletteBetContract, RouletteContract, arrayFrom } from '@betfinio/abi';
@@ -280,7 +280,7 @@ export const fetchProofTx = async (request: bigint, config: Config): Promise<Add
 		abi: RouletteContract.abi,
 		address: ROULETTE,
 		eventName: 'Landed',
-		fromBlock: 0n,
+		fromBlock: BigInt(FIRST_BLOCK),
 		toBlock: 'latest',
 		args: {
 			requestId: request,
