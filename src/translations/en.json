@@ -1,107 +1,160 @@
 {
-  "predict": {
-    "feeStaking": "All bets are subject of <b>3,6% fee</b> which is distributed into <b>Conservative staking.</b>",
-    "bonus": {
-      "title": "Your potential Bonus:",
-      "description": "test",
-      "info": "The bonus represents <b>4%</b> of all bets <b>({count} BET)</b> that are split among winners according to <b>order</b> and <b>size</b> of bets. <br/>The sooner and more you bet the bigger bonus you get."
-    },
-    "tile": {
-      "24change": "24h change %",
-      "bets": "Total bets",
-      "volume": "Total volume",
-      "staking": "Total staking"
-    },
-    "pairs": {
-      "btcusdt": "BTC/USDT",
-      "ethusdt": "ETH/USDT",
-      "maticusdt": "MATIC/USDT"
-    },
-    "table": {
-      "player": "Player",
-      "game": "Game",
-      "noData": "There is no data to display",
-      "profit": "Profit",
-      "price": "Price",
-      "bets": "All bets",
-      "amounts": "Amount of all bets",
-      "total": "Total",
-      "result": "Result",
-      "amount": "Amount",
-      "bonus": "Bonus",
-      "address": "Address",
-      "side": "Side",
-      "win": "Win",
-      "status": "Status",
-      "round": "Round",
-      "filter": {
-        "all": "All bets",
-        "my": "My bets"
-      },
-      "statuses": {
-        "0": "Pending",
-        "1": "Registered",
-        "2": "Won",
-        "3": "Lost",
-        "4": "Draw",
-        "5": "Refunded"
-      },
-      "roundStatuses": {
-        "ended": "Ended",
-        "waiting": "Waiting",
-        "calculated": "Calculated",
-        "accepting": "Betting"
-      }
-    },
-    "roundConditions": {
-      "title": "Round",
-      "round": "Current round",
-      "price": "Price at <b>{time}</b>",
-      "time": "Remaining time to place bets:",
-      "currentPrice": "Current price"
-    },
-    "placeBet": {
-      "title": "Place a bet",
-      "amount": "Enter the amount of your bet:",
-      "bonus": "First one gets a ",
-      "pool": "Current pool:",
-      "myBets": "Your bets:",
-      "long": "LONG",
-      "short": "SHORT",
-      "allowance": "Increase allowance",
-      "unlock": "Unlock",
-      "unlockTitle": "Increase BET token allowance to make a bet",
-      "connectTitle": "Connect your wallet to place a bet",
-      "topUpTitle": "Top up your wallet to place a bet"
-    },
-    "modal": {
-      "start": "Start price:",
-      "startFinalPrice": "Start / Final price:",
-      "startCurrentPrice": "Start / Current price:",
-      "betUser": "Bet user:",
-      "current": "Current price:",
-      "end": "End price:",
-      "player": "Player:",
-      "text": "Player bets {amount} that price will go {side} till {time}",
-      "stakingContribution": "Staking contribution:",
-      "pending": "Pending",
-      "win": "Win",
-      "lost": "Lost",
-      "draw": "Draw",
-      "refund": "Refunded",
-      "status": "Status:",
-      "winnings": "Winnings:",
-      "bonus": "Bonus:",
-      "total": "Total:"
-    },
-    "roundModal": {
-      "title": "Round",
-      "titleFinished": "Result for round",
-      "activity": "Betting Activity",
-      "volume": "Total round volume",
-      "staking": "Staking contribution",
-      "users": "{players} users",
-      "bets": "{bets} bets"
-    }
-  }
+	"predict": {
+		"feeStaking": "All bets are subject of <b>3,6% fee</b> which is distributed into <b>Conservative staking.</b>",
+		"bonus": {
+			"title": "Your potential Bonus:",
+			"description": "test",
+			"info": "The bonus represents <b>4%</b> of all bets <b>({count} BET)</b> that are split among winners according to <b>order</b> and <b>size</b> of bets. <br/>The sooner and more you bet the bigger bonus you get."
+		},
+		"tile": {
+			"24change": "24h change %",
+			"bets": "Total bets",
+			"volume": "Total volume",
+			"staking": "Total staking"
+		},
+		"pairs": {
+			"btcusdt": "BTC/USDT",
+			"ethusdt": "ETH/USDT",
+			"maticusdt": "MATIC/USDT"
+		},
+		"table": {
+			"player": "Player",
+			"game": "Game",
+			"noData": "There is no data to display",
+			"profit": "Profit",
+			"price": "Price",
+			"bets": "All bets",
+			"amounts": "Amount of all bets",
+			"total": "Total",
+			"result": "Result",
+			"amount": "Amount",
+			"bonus": "Bonus",
+			"address": "Address",
+			"side": "Side",
+			"win": "Win",
+			"status": "Status",
+			"round": "Round",
+			"filter": {
+				"all": "All bets",
+				"my": "My bets"
+			},
+			"statuses": {
+				"0": "Pending",
+				"1": "Registered",
+				"2": "Won",
+				"3": "Lost",
+				"4": "Draw",
+				"5": "Refunded"
+			},
+			"roundStatuses": {
+				"ended": "Ended",
+				"waiting": "Waiting",
+				"calculated": "Calculated",
+				"accepting": "Betting"
+			}
+		},
+		"roundConditions": {
+			"title": "Round",
+			"round": "Current round",
+			"price": "Price at <b>{time}</b>",
+			"time": "Remaining time to place bets:",
+			"currentPrice": "Current price"
+		},
+		"placeBet": {
+			"title": "Place a bet",
+			"amount": "Enter the amount of your bet:",
+			"bonus": "First one gets a ",
+			"pool": "Current pool:",
+			"myBets": "Your bets:",
+			"long": "LONG",
+			"short": "SHORT",
+			"allowance": "Increase allowance",
+			"unlock": "Unlock",
+			"unlockTitle": "Increase BET token allowance to make a bet",
+			"connectTitle": "Connect your wallet to place a bet",
+			"topUpTitle": "Top up your wallet to place a bet"
+		},
+		"modal": {
+			"start": "Start price:",
+			"startFinalPrice": "Start / Final price:",
+			"startCurrentPrice": "Start / Current price:",
+			"betUser": "Bet user:",
+			"current": "Current price:",
+			"end": "End price:",
+			"player": "Player:",
+			"text": "Player bets {amount} that price will go {side} till {time}",
+			"stakingContribution": "Staking contribution:",
+			"pending": "Pending",
+			"win": "Win",
+			"lost": "Lost",
+			"draw": "Draw",
+			"refund": "Refunded",
+			"status": "Status:",
+			"winnings": "Winnings:",
+			"bonus": "Bonus:",
+			"total": "Total:"
+		},
+		"roundModal": {
+			"title": "Round",
+			"titleFinished": "Result for round",
+			"activity": "Betting Activity",
+			"volume": "Total round volume",
+			"staking": "Staking contribution",
+			"users": "{players} users",
+			"bets": "{bets} bets"
+		}
+	},
+	"luro": {
+		"feeStaking": "All bets are subject of <b>3,6% fee</b> which is distributed into <b>Conservative staking.</b>",
+		"placeBet": {
+			"title": "Place a bet",
+			"amount": "Enter the amount of your bet:",
+			"bonus": "First one gets a ",
+			"myBets": "Your bets:",
+			"allowance": "Increase allowance",
+			"unlock": "Unlock",
+			"unlockTitle": "Increase BET token allowance to make a bet",
+			"connectTitle": "Connect your wallet to place a bet",
+			"topUpTitle": "Top up your wallet to place a bet",
+			"expected": "Expected winnings from this bet",
+			"bet": "Bet"
+		},
+		"roundModal": {
+			"title": "Round",
+			"titleFinished": "Result for round",
+			"activity": "Betting Activity",
+			"volume": "Total round volume",
+			"staking": "Staking contribution",
+			"users": "{players} users",
+			"bets": "{bets} bets"
+		},
+		"statsModal": {
+			"bets": "Bets count",
+			"volume": "Total Volume",
+			"staking": "Staking Contribution"
+		},
+		"table": {
+			"round": "Round ID",
+			"bets": "Total bets",
+			"bonus": "Total bonus",
+			"playerBet": "Your bet",
+			"playerWin": "Total win (win+bonus)",
+			"player": "Player",
+			"game": "Game",
+			"noData": "There is no data to display",
+			"profit": "Profit",
+			"price": "Price movement($)",
+			"total": "Total",
+			"result": "Result",
+			"amount": "Amount",
+			"address": "Address",
+			"win": "Win",
+			"winner": "Winner Address",
+			"status": "Status",
+			"filter": {
+				"all": "All bets",
+				"my": "My bets"
+			}
+		}
+	}
 }
