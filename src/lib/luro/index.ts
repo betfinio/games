@@ -1,17 +1,18 @@
-import type { LuroBet, RoundModalPlayer } from '@/src/lib/luro/types.ts';
+import type { LuroAuthor, LuroBet, RoundModalPlayer } from '@/src/lib/luro/types.ts';
 import type { QueryClient } from '@tanstack/react-query';
 import { toast } from 'betfinio_app/use-toast';
 import type { TFunction } from 'i18next';
 import type { Address } from 'viem';
 
-export const mapBetsToAuthors = (bets: LuroBet[]): LuroBet[] => {
-	return [...bets].reduce((acc: LuroBet[], val) => {
+export const mapBetsToAuthors = (bets: LuroBet[]): LuroAuthor[] => {
+	return [...bets].reduce((acc: LuroAuthor[], val) => {
 		const author = acc.findIndex((bet) => bet.player === val.player);
 		if (author === -1) {
 			// biome-ignore lint/performance/noAccumulatingSpread: <explanation>
-			return [...acc, { ...val }];
+			return [...acc, { ...val, betsNumber: 1 }];
 		}
 		acc[author].amount += val.amount;
+		acc[author].betsNumber += 1;
 		return acc;
 	}, []);
 };

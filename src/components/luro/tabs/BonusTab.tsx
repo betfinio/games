@@ -10,6 +10,7 @@ import { AnimatePresence } from 'framer-motion';
 import { type CSSProperties, type FC, useEffect, useMemo, useRef, useState } from 'react';
 import { FixedSizeList as List } from 'react-window';
 import type { Address } from 'viem';
+import { useAccount } from 'wagmi';
 
 export const BonusTab = () => {
 	const { data: round } = useVisibleRound();
@@ -71,6 +72,7 @@ export interface TabItemProps {
 
 const TabItem: FC<TabItemProps> = ({ player, bonus }) => {
 	const { data: username } = useUsername(player);
+	const { address } = useAccount();
 
 	const formatPlayer = (player: string) => {
 		if (player.length > 10) {
@@ -85,7 +87,12 @@ const TabItem: FC<TabItemProps> = ({ player, bonus }) => {
 				<div className={'flex items-start gap-[10px]'}>
 					<Fox className={'w-5 h-5'} />
 					<div className={'flex flex-col text-[#6A6F84] text-xs gap-2'}>
-						<a href={`${ETHSCAN}/address/${player}`} target={'_blank'} className={'font-semibold text-sm !text-gray-300 hover:underline'} rel="noreferrer">
+						<a
+							href={`${ETHSCAN}/address/${player}`}
+							target={'_blank'}
+							className={cx('font-semibold text-sm !text-gray-300 hover:underline', player === address && '!text-yellow-400')}
+							rel="noreferrer"
+						>
 							{formatPlayer(username || truncateEthAddress(player))}
 						</a>
 					</div>
