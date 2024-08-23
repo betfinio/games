@@ -1,4 +1,4 @@
-import { PARTNER, ROULETTE } from '@/src/global.ts';
+import { FIRST_BLOCK, PARTNER, ROULETTE } from '@/src/global.ts';
 import { encodeBet } from '@/src/lib/roulette';
 import type { FuncProps, Limit, LocalBet, RouletteBet, RouletteSubBet, SpinParams } from '@/src/lib/roulette/types.ts';
 import { PartnerContract, RouletteBetContract, RouletteContract, arrayFrom } from '@betfinio/abi';
@@ -82,7 +82,7 @@ export const fetchRouletteBets = async (address: Address, config: Config): Promi
 				args: [r],
 			})),
 	});
-	return await Promise.all(betAddresses.map((e) => e.result as Address).map((bet) => populateRouletteBet(bet, config)));
+	return (await Promise.all(betAddresses.map((e) => e.result as Address).map((bet) => populateRouletteBet(bet, config)))).filter((bet) => bet.status !== 1n);
 };
 
 export async function populateRouletteBet(bet: Address, config: Config): Promise<RouletteBet> {
@@ -280,7 +280,7 @@ export const fetchProofTx = async (request: bigint, config: Config): Promise<Add
 		abi: RouletteContract.abi,
 		address: ROULETTE,
 		eventName: 'Landed',
-		fromBlock: 0n,
+		fromBlock: BigInt(FIRST_BLOCK),
 		toBlock: 'latest',
 		args: {
 			requestId: request,
