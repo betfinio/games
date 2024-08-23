@@ -75,6 +75,8 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 	}, [requested]);
 	const handleBetChange = (value: string) => {
 		setAmount(value);
+		const percentage = Math.floor((value / valueToNumber(balance)) * 100);
+		setBetPercentage(percentage > 100 ? 100 : percentage);
 	};
 
 	const handleBet = () => {
@@ -120,7 +122,8 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 			return;
 		}
 
-		if (allowance < BigInt(Number(amount))) {
+		console.log(allowance, BigInt(Number(amount)) * 10n ** 18n);
+		if (allowance < BigInt(Number(amount)) * 10n ** 18n) {
 			requestAllowance?.('bet', BigInt(Number(amount)) * 10n ** 18n);
 			return;
 		}
@@ -156,10 +159,12 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 	const [betPercentage, setBetPercentage] = useState(30);
 
 	const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const percentage = Number(e.target.value);
-		setBetPercentage(percentage);
-		handleBetChange(((valueToNumber(balance) / 100) * percentage).toFixed(0));
+		const value = Number(e.target.value);
+		console.log(value);
+		setBetPercentage(Math.floor((value / valueToNumber(balance)) * 100));
+		setAmount(value.toFixed(0));
 	};
+	console.log(amount);
 
 	return (
 		<motion.div
@@ -186,27 +191,34 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 				>
 					<h4 className={'font-medium text-center text-gray-500 text-xs '}>{t('amount')}</h4>
 					<NumericFormat
-						className={'w-full mt-2 rounded-lg text-center text-base lg:text-lg bg-primary py-3 font-semibold text-white disabled:cursor-not-allowed'}
+						className={cx(
+							'w-full mt-2 rounded-lg text-center text-base lg:text-lg bg-primary py-3 font-semibold text-white disabled:cursor-not-allowed duration-300',
+							valueToNumber(balance) < amount && 'text-red-400',
+						)}
 						thousandSeparator={','}
 						min={1}
+						allowNegative={false}
 						maxLength={15}
 						disabled={loading}
-						placeholder={valueToNumber(allowance) < amount ? 'Please increase allowance' : valueToNumber(balance) < amount ? 'Please top-up balance' : 'Amount'}
-						value={valueToNumber(allowance) < amount ? 'Please increase allowance' : valueToNumber(balance) < amount ? 'Please top-up balance' : amount}
+						placeholder={valueToNumber(balance) < amount ? 'Please top-up balance' : 'Amount'}
+						value={amount}
 						onValueChange={(values) => {
 							const { value } = values;
 							handleBetChange(value);
 						}}
 					/>
 
-					<div className={cx('relative mt-2 h-[24px] group', (allowance === 0n || balance === 0n) && 'grayscale pointer-events-none')}>
+					<div className={cx('relative mt-2 h-[24px]', balance === 0n && 'grayscale pointer-events-none')}>
 						<div className="w-full bg-gray-700 h-[2px] rounded-full mt-1 relative">
-							<div className="absolute bg-yellow-500 h-[2px] rounded-full" style={{ width: `${betPercentage}%` }} />
-							<motion.div className="absolute bg-yellow-500 w-[10px] h-[10px] top-[-4px] rounded-full" style={{ left: `calc(${betPercentage}% - 5px)` }} />
+							<div className="absolute bg-yellow-500 h-[2px] rounded-full hover:bg-red" style={{ width: `${betPercentage}%` }} />
+							<motion.div
+								className="absolute bg-yellow-500 w-[10px] h-[10px] top-[-4px] rounded-full hover:bg-red"
+								style={{ left: `calc(${betPercentage}% - 5px)` }}
+							/>
 							<input
 								type="range"
-								min="0"
-								max="100"
+								min={1000}
+								max={valueToNumber(balance)}
 								value={betPercentage}
 								onChange={handleSliderChange}
 								className="absolute w-full h-[2px] opacity-0 cursor-pointer"
@@ -223,12 +235,14 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 					<p className={'mt-[20px] text-center font-semibold text-[#27AE60]'}>
 						{expectedWinning.toLocaleString()} <span className={'text-blue-500'}>(+bonus)</span>
 					</p>
-					<div className={'text-center text-yellow-400 font-thin text-xs'}>{(coef === Number.POSITIVE_INFINITY ? 0 : coef).toFixed(3)}x</div>
+					<div className={'text-center text-yellow-400 font-thin text-xs'}>
+						{(coef === Number.POSITIVE_INFINITY || Number.isNaN(coef) ? 0 : coef).toFixed(3)}x
+					</div>
 					<motion.button
 						whileTap={{ scale: 0.95 }}
 						onClick={handleBet}
 						whileHover={{ scale: 1.03 }}
-						disabled={Number(amount) === 0 || isPending || valueToNumber(allowance) < amount || valueToNumber(balance) < amount}
+						disabled={Number(amount) === 0 || isPending || valueToNumber(balance) < amount}
 						className={
 							'text-xs font-semibold flex flex-col items-center justify-center h-[40px] text-center w-full mt-[30px] bg-[#FFC800] rounded-lg min-w-[210px] text-primary disabled:grayscale disabled:pointer-events-none duration-300'
 						}
