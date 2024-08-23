@@ -309,8 +309,7 @@ const ChangeBetModal: FC<{ initialValue: number; max: number; min: number }> = (
 	const { mutate: change } = useChangeChip();
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const inputValue = e.target.value;
-
-		if ((inputValue === '' || Number.isInteger(inputValue)) && Number(inputValue) >= 0) {
+		if ((inputValue === '' || Number.isInteger(+inputValue)) && Number(+inputValue) >= 0) {
 			setValue(Number(inputValue));
 		}
 	};
