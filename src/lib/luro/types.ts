@@ -6,6 +6,10 @@ export type LuroBet = {
 	amount: bigint;
 };
 
+export type LuroAuthor = LuroBet & {
+	betsNumber: number;
+};
+
 export interface WheelStandBy {
 	state: 'standby';
 }
@@ -84,4 +88,5 @@ export interface CustomLuroBet {
 	label: Address;
 	value: number;
 	color: string;
+	betsNumber?: number;
 }
