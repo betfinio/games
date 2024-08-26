@@ -208,7 +208,7 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 						}}
 					/>
 
-					<div className={cx('relative mt-2 h-[24px]', balance === 0n && 'grayscale pointer-events-none')}>
+					<div className={cx('relative mt-4 h-[24px]', balance === 0n && 'grayscale pointer-events-none')}>
 						<div className="w-full bg-gray-700 h-[2px] rounded-full mt-1 relative">
 							<div className="absolute bg-yellow-500 h-[2px] rounded-full hover:bg-red" style={{ width: `${betPercentage}%` }} />
 							<motion.div
@@ -244,7 +244,7 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 						whileHover={{ scale: 1.03 }}
 						disabled={Number(amount) === 0 || isPending || valueToNumber(balance) < Number(amount)}
 						className={
-							'text-xs font-semibold animate-pulse flex flex-col items-center justify-center h-[40px] text-center w-full mt-[30px] bg-[#FFC800] rounded-lg min-w-[210px] text-primary disabled:grayscale disabled:pointer-events-none duration-300'
+							'text-xs font-semibold flex flex-col hover:scale-110 items-center justify-center h-[40px] text-center w-full mt-[30px] bg-[#FFC800] rounded-lg min-w-[210px] text-primary disabled:grayscale disabled:pointer-events-none duration-300'
 						}
 					>
 						{isPending ? (
