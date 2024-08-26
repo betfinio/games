@@ -159,7 +159,9 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 				<div className={cx('rounded-xl bg-primaryLight border drop-shadow-[0_0_35px_rgba(87,101,242,0.75)] border-gray-800 p-4 relative w-full')}>
 					<h4 className={'font-medium text-center text-gray-500 text-xs '}>{t('amount')}</h4>
 					<NumericFormat
-						className={'w-full mt-2 rounded-lg border border-yellow-400 text-center text-base lg:text-lg bg-primary py-3 font-semibold text-white disabled:cursor-not-allowed'}
+						className={
+							'w-full mt-2 rounded-lg border border-yellow-400 text-center text-base lg:text-lg bg-primary py-3 font-semibold text-white disabled:cursor-not-allowed'
+						}
 						thousandSeparator={','}
 						min={1}
 						maxLength={15}
