@@ -30,7 +30,13 @@ export const PlayersTab = () => {
 		const player = players[index];
 		return (
 			<div className={'px-2'} style={style}>
-				<TabItem key={index} player={player.player} amount={valueToNumber(player.amount)} percent={(Number(player.amount) / Number(totalVolume)) * 100} />
+				<TabItem
+					key={index}
+					betsNumber={player.betsNumber}
+					player={player.player}
+					amount={valueToNumber(player.amount)}
+					percent={(Number(player.amount) / Number(totalVolume)) * 100}
+				/>
 			</div>
 		);
 	};
@@ -66,9 +72,10 @@ export interface TabItemProps {
 	amount: number;
 	percent: number;
 	className?: string;
+	betsNumber?: number;
 }
 
-export const TabItem: FC<TabItemProps> = ({ player, amount, percent, className }) => {
+export const TabItem: FC<TabItemProps> = ({ player, amount, percent, betsNumber, className }) => {
 	const { data: username } = useUsername(player);
 	const { address = ZeroAddress } = useAccount();
 	const { data: customUsername } = useCustomUsername(address, player);
@@ -94,10 +101,15 @@ export const TabItem: FC<TabItemProps> = ({ player, amount, percent, className }
 				<div className={'flex items-start gap-[10px]'}>
 					<Fox className={'w-5 h-5'} />
 					<div className={'flex flex-col text-[#6A6F84] text-xs gap-2'}>
-						<a href={`${ETHSCAN}/address/${player}`} target={'_blank'} className={'font-semibold text-sm !text-gray-300 hover:underline'} rel="noreferrer">
+						<a
+							href={`${ETHSCAN}/address/${player}`}
+							target={'_blank'}
+							className={cx('font-semibold text-sm !text-gray-300 hover:underline', player === address && '!text-yellow-400')}
+							rel="noreferrer"
+						>
 							{formatPlayer(customUsername || username || truncateEthAddress(player))}
 						</a>
-						<span className={cx('opacity-0')}>{truncateEthAddress(player)}</span>
+						<span className={cx('opacity-0', betsNumber > 0 && 'opacity-100')}>{betsNumber} bets</span>
 					</div>
 				</div>
 				<div className={'flex flex-col items-end text-xs gap-2'}>

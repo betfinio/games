@@ -56,7 +56,7 @@ export const fetchAvailableBonus = async (address: Address, config: Config): Pro
 };
 
 export const fetchRoundBets = async (roundId: number, config: Config) => {
-	console.trace('fetching round bets', roundId);
+	console.log('fetching round bets', roundId);
 	const count = (await readContract(config.getClient(), {
 		abi: LuckyRoundContract.abi,
 		address: LURO,

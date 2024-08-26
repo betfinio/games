@@ -1,4 +1,4 @@
-import { jumpToCurrentRound } from '@/src/lib/luro';
+import { hexToRgbA, jumpToCurrentRound } from '@/src/lib/luro';
 import { getCurrentRoundInfo } from '@/src/lib/luro/api';
 import {
 	useLuroState,
@@ -11,6 +11,7 @@ import {
 	useStartRound,
 	useVisibleRound,
 } from '@/src/lib/luro/query';
+import { addressToColor } from '@/src/lib/roulette';
 import { ZeroAddress } from '@betfinio/abi';
 import { valueToNumber } from '@betfinio/abi';
 import { LuckyRound } from '@betfinio/ui/dist/icons/LuckyRound';
@@ -74,6 +75,8 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 	}, [requested]);
 	const handleBetChange = (value: string) => {
 		setAmount(value);
+		const percentage = Math.floor((Number(value) / valueToNumber(balance)) * 100);
+		setBetPercentage(percentage > 100 ? 100 : percentage);
 	};
 
 	const handleBet = () => {
@@ -119,7 +122,8 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 			return;
 		}
 
-		if (allowance < BigInt(Number(amount))) {
+		console.log(allowance, BigInt(Number(amount)) * 10n ** 18n);
+		if (allowance < BigInt(Number(amount)) * 10n ** 18n) {
 			requestAllowance?.('bet', BigInt(Number(amount)) * 10n ** 18n);
 			return;
 		}
@@ -143,6 +147,25 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 	const potentialWin = roundInfo.volume * 0.914;
 	const myCoef = myBetVolume === 0n ? 0 : potentialWin / valueToNumber(myBetVolume);
 
+	const [hovering, setHovering] = useState(false);
+
+	const compiledShadow = useMemo(() => {
+		const color = addressToColor(address);
+		const rgba = hexToRgbA(color);
+		if (!rgba) return '';
+		return `drop-shadow(0 0px ${hovering ? 45 : 25}px ${rgba}`;
+	}, [address, hovering]);
+
+	const [betPercentage, setBetPercentage] = useState(30);
+
+	const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const value = Number(e.target.value);
+		console.log(value);
+		setBetPercentage(Math.floor((value / valueToNumber(balance)) * 100));
+		setAmount(value.toFixed(0));
+	};
+	console.log(amount);
+
 	return (
 		<motion.div
 			initial={{ opacity: 0 }}
@@ -156,34 +179,72 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 				<LuckyRound className={'w-5 h-5 text-yellow-400'} />
 			</div>
 			<Tooltip>
-				<div className={cx('rounded-xl bg-primaryLight border drop-shadow-[0_0_35px_rgba(87,101,242,0.75)] border-gray-800 p-4 relative w-full')}>
+				<div
+					onMouseEnter={() => {
+						setHovering(true);
+					}}
+					onMouseLeave={() => {
+						setHovering(false);
+					}}
+					style={{ filter: compiledShadow }}
+					className={cx('rounded-xl bg-primaryLight border border-gray-800 p-4 relative w-full duration-300 drop-shadow-[0_35px_35px_rgba(255,0,0,1)] ')}
+				>
 					<h4 className={'font-medium text-center text-gray-500 text-xs '}>{t('amount')}</h4>
 					<NumericFormat
-						className={
-							'w-full mt-2 rounded-lg border border-yellow-400 text-center text-base lg:text-lg bg-primary py-3 font-semibold text-white disabled:cursor-not-allowed'
-						}
+						className={cx(
+							'w-full mt-2 rounded-lg border border-yellow-400 text-center text-base lg:text-lg bg-primary py-3 font-semibold text-white disabled:cursor-not-allowedduration-300',
+							valueToNumber(balance) < Number(amount) && 'text-red-400',
+						)}
 						thousandSeparator={','}
 						min={1}
+						allowNegative={false}
 						maxLength={15}
 						disabled={loading}
-						placeholder={allowance === 0n ? 'Please increase allowance' : balance === 0n ? 'Please top-up balance' : 'Amount'}
-						value={amount ? amount : ''}
+						placeholder={valueToNumber(balance) < Number(amount) ? 'Please top-up balance' : 'Amount'}
+						value={amount}
 						onValueChange={(values) => {
 							const { value } = values;
 							handleBetChange(value);
 						}}
 					/>
+
+					<div className={cx('relative mt-2 h-[24px]', balance === 0n && 'grayscale pointer-events-none')}>
+						<div className="w-full bg-gray-700 h-[2px] rounded-full mt-1 relative">
+							<div className="absolute bg-yellow-500 h-[2px] rounded-full hover:bg-red" style={{ width: `${betPercentage}%` }} />
+							<motion.div
+								className="absolute bg-yellow-500 w-[10px] h-[10px] top-[-4px] rounded-full hover:bg-red"
+								style={{ left: `calc(${betPercentage}% - 5px)` }}
+							/>
+							<input
+								type="range"
+								min={1000}
+								max={valueToNumber(balance)}
+								value={betPercentage}
+								onChange={handleSliderChange}
+								className="absolute w-full h-[2px] opacity-0 cursor-pointer"
+							/>
+						</div>
+						<div className="flex justify-between text-gray-500 text-[11px] mt-2">
+							<span>0%</span>
+							<span className="text-yellow-500 font-semibold text-[14px] opacity-0 group-hover:opacity-100 duration-300">{betPercentage}%</span>
+							<span>100%</span>
+						</div>
+					</div>
+
 					<h4 className={'font-medium text-gray-500 text-xs text-center mt-[10px]'}>{t('expected')}</h4>
 					<p className={'mt-[20px] text-center font-semibold text-[#27AE60]'}>
 						{expectedWinning.toLocaleString()} <span className={'text-blue-500'}>(+bonus)</span>
 					</p>
-					<div className={'text-center text-yellow-400 font-thin text-xs'}>{(coef === Number.POSITIVE_INFINITY ? 0 : coef).toFixed(3)}x</div>
+					<div className={'text-center text-yellow-400 font-thin text-xs'}>
+						{(coef === Number.POSITIVE_INFINITY || Number.isNaN(coef) ? 0 : coef).toFixed(3)}x
+					</div>
 					<motion.button
 						whileTap={{ scale: 0.95 }}
 						onClick={handleBet}
-						disabled={isPending}
+						whileHover={{ scale: 1.03 }}
+						disabled={Number(amount) === 0 || isPending || valueToNumber(balance) < Number(amount)}
 						className={
-							'text-xs font-semibold animate-pulse flex flex-col items-center justify-center h-[40px] text-center w-full mt-[30px] bg-[#FFC800] rounded-lg min-w-[210px] text-primary'
+							'text-xs font-semibold animate-pulse flex flex-col items-center justify-center h-[40px] text-center w-full mt-[30px] bg-[#FFC800] rounded-lg min-w-[210px] text-primary disabled:grayscale disabled:pointer-events-none duration-300'
 						}
 					>
 						{isPending ? (
@@ -222,11 +283,11 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 };
 
 const WaitingScreen: FC<{ round: number }> = () => {
-	// const { mutate: startRound, isPending } = useStartRound(round);
-	//
-	// const handleSpin = () => {
-	// 	startRound();
-	// };
+	const { mutate: startRound, isPending } = useStartRound(19950);
+
+	const handleSpin = () => {
+		startRound();
+	};
 	return (
 		<motion.div
 			initial={{ opacity: 0 }}
@@ -236,14 +297,14 @@ const WaitingScreen: FC<{ round: number }> = () => {
 			className={'grow flex flex-col items-center justify-center min-h-[390px]'}
 		>
 			<span>Waiting for polygon block...</span>
-			{/*<button*/}
-			{/*	type={'button'}*/}
-			{/*	onClick={handleSpin}*/}
-			{/*	disabled={isPending}*/}
-			{/*	className={'bg-yellow-400 disabled:bg-gray-500 rounded-lg px-6 py-2 text-black font-medium'}*/}
-			{/*>*/}
-			{/*	{isPending ? 'Spinning...' : 'Spin the wheel'}*/}
-			{/*</button>*/}
+			<button
+				type={'button'}
+				onClick={handleSpin}
+				disabled={isPending}
+				className={'bg-yellow-400 disabled:bg-gray-500 rounded-lg px-6 py-2 text-black font-medium'}
+			>
+				{isPending ? 'Spinning...' : 'Spin the wheel'}
+			</button>
 		</motion.div>
 	);
 };
