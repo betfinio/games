@@ -98,3 +98,9 @@ html, body {
     background: rgba(213, 213, 213, 0.7);
     border-radius: 10px;
 }
+
+::-webkit-slider-thumb {
+    appearance: none;
+    -webkit-appearance: none;
+    pointer-events: none;
+}

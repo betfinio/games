@@ -1,6 +1,8 @@
 import { TabItem } from '@/src/components/luro/tabs/PlayersTab.tsx';
-import { getTimesByRound, hexToRgbA, jumpToCurrentRound, mapBetsToAuthors } from '@/src/lib/luro';
-import { useLuroState, useObserveBet, useRound, useRoundBank, useRoundBets, useRoundWinner, useStartRound, useVisibleRound } from '@/src/lib/luro/query';
+import { getTimesByRound, hexToRgbA, jumpToCurrentRound } from '@/src/lib/luro';
+import { useLuroState, useObserveBet, useRound, useRoundBank, useRoundBets, useRoundWinner, useVisibleRound } from '@/src/lib/luro/query';
+import { Tooltip, TooltipContent, TooltipTrigger } from 'betfinio_app/tooltip';
+
 import type { CustomLuroBet } from '@/src/lib/luro/types.ts';
 import { addressToColor } from '@/src/lib/roulette';
 import { ZeroAddress, valueToNumber } from '@betfinio/abi';
@@ -9,7 +11,6 @@ import { Pie, type PieTooltipProps } from '@nivo/pie';
 import { useQueryClient } from '@tanstack/react-query';
 import anime from 'animejs';
 import { BetValue } from 'betfinio_app/BetValue';
-import { Tooltip } from 'betfinio_app/tooltip';
 import cx from 'clsx';
 import { AnimatePresence, animate, motion } from 'framer-motion';
 import { Loader, PlusIcon, TriangleIcon } from 'lucide-react';
@@ -123,12 +124,16 @@ export const RoundCircle: FC<{ round: number; className?: string }> = ({ round, 
 	}
 
 	const data: CustomLuroBet[] = useMemo(() => {
-		return bets.map((bet) => ({
+		const a = bets.map((bet) => ({
 			id: bet.address,
 			label: bet.player,
 			value: valueToNumber(bet.amount),
 			color: hexToRgbA(addressToColor(bet.player)),
+			betsNumber: bets.filter((b) => bet.player === b.player).length,
 		}));
+
+		console.log(bets, a);
+		return a;
 	}, [bets]);
 
 	const [chartHeight, setChartHeight] = useState(250);
@@ -142,7 +147,6 @@ export const RoundCircle: FC<{ round: number; className?: string }> = ({ round, 
 		}
 	}, [boxRef.current]);
 
-	console.log(boxRef.current);
 	return (
 		<Tooltip>
 			<motion.div
@@ -264,6 +268,7 @@ const EffectsLayer = () => {
 	};
 
 	useEffect(() => {
+		if (!observedBetAuthor.address) return;
 		if (observedBetAuthor.address === address) {
 			setParticles(generateParticles(address));
 			setTimeout(() => {
@@ -317,11 +322,22 @@ const EffectsLayer = () => {
 const CustomTooltip =
 	(bank: bigint) =>
 	({
-		datum: { id, label, value },
+		datum: { id, label, value, data },
 	}: PieTooltipProps<{
 		value: number;
 		color: string;
-	}>) => <TabItem key={id} amount={value} className={'min-w-[250px]'} player={label as Address} percent={(value * 100) / valueToNumber(bank)} />;
+	}>) => {
+		return (
+			<TabItem
+				key={id}
+				amount={value}
+				betsNumber={(data as CustomLuroBet)?.betsNumber}
+				className={'min-w-[250px]  !z-15'}
+				player={label as Address}
+				percent={(value * 100) / valueToNumber(bank)}
+			/>
+		);
+	};
 const ProgressBar: FC<{ round: number; authors: CustomLuroBet[] }> = ({ round }) => {
 	const { data: roundData } = useRound(round);
 	const { data: bank = 0n, isLoading: isBankLoading } = useRoundBank(round);
@@ -428,10 +444,7 @@ const ProgressBar: FC<{ round: number; authors: CustomLuroBet[] }> = ({ round })
 							{end > Date.now() ? remaining.toFormat('hh:mm:ss') : 'Ended'}
 						</div>
 						<div className={'text-xl  lg:text-3xl'}>
-							<div className={'flex gap-1 lg:gap-2 items-center'}>
-								<Bet className={' w-5 h-5 lg:w-7 lg:h-7'} />
-								<Counter doMillify={true} from={from} to={to} />
-							</div>
+							<Counter doMillify={true} from={from} to={to} />
 						</div>
 					</motion.div>
 				);
@@ -442,14 +455,8 @@ const ProgressBar: FC<{ round: number; authors: CustomLuroBet[] }> = ({ round })
 	return (
 		<>
 			<motion.div className={cx('absolute w-[115%] h-[115%] -top-[7.5%] -left-[7.5%]')}>
-				<div className={'rotate-180 absolute z-10 top-3 left-1/2 -translate-x-1/2'}>
-					<TriangleIcon
-						fill={'#FFC800'}
-						className={cx(
-							'text-yellow-400 w-4 h-4  opacity-0 duration-300 delay-300',
-							(wheelState.data.state !== 'standby' || currentRound !== round) && 'opacity-100',
-						)}
-					/>
+				<div className={'rotate-180 absolute z-10 top-[8px] lg:top-[11px] left-1/2 -translate-x-1/2'}>
+					<TriangleIcon fill={'#FFC800'} stroke={'#FFC800'} className={cx('text-yellow-400 w-6 h-6 duration-300 delay-300 opacity-100')} />
 				</div>
 
 				<CircularProgressbar className={cx('opacity-100 duration-300', wheelState.data.state !== 'standby' && '!opacity-0')} styles={styles} value={progress} />
@@ -556,6 +563,10 @@ export const Counter: FC<{ from: number; to: number; doMillify?: boolean }> = ({
 	useEffect(() => {
 		const node = nodeRef.current;
 
+		if (node) {
+			node.style.color = '#ffc800';
+		}
+
 		const controls = animate(from, to, {
 			duration: 0.5,
 			onUpdate(value) {
@@ -565,8 +576,27 @@ export const Counter: FC<{ from: number; to: number; doMillify?: boolean }> = ({
 			},
 		});
 
+		controls.then(() => {
+			if (node) {
+				node.style.color = 'white';
+			}
+		});
+
 		return () => controls.stop();
 	}, [from, to]);
 
-	return <div className={'relative'} ref={nodeRef} />;
+	return (
+		<>
+			<>
+				<TooltipTrigger>
+					<div className={'flex gap-1 lg:gap-2 items-center relative z-[10]'}>
+						<Bet classNaаme={' w-5 h-5 lg:w-7 lg:h-7'} />
+						<div className={''} ref={nodeRef} />
+					</div>
+				</TooltipTrigger>
+
+				<TooltipContent className={'font-semibold'}>{to.toLocaleString()} BET</TooltipContent>
+			</>
+		</>
+	);
 };
