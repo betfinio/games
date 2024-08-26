@@ -67,6 +67,7 @@ export const usePlaceBet = () => {
 			await waitForTransactionReceipt(config.getClient(), { hash: data });
 			update({ variant: 'default', description: 'Transaction is confirmed', title: 'Bet placed', action: getTransactionLink(data), duration: 5000 });
 			await queryClient.invalidateQueries({ queryKey: ['luro', 'bets', 'round'] });
+			await queryClient.invalidateQueries({ queryKey: ['luro', 'round'] });
 		},
 		onSettled: () => console.log('placeBet settled'),
 	});
