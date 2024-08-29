@@ -93,7 +93,7 @@ const columns = [
 
 const AllRoundsTable = () => {
 	const { address = ZeroAddress } = useAccount();
-	const { data: rounds = [],isLoading } = useRounds(address);
+	const { data: rounds = [], isLoading } = useRounds(address);
 	const navigate = useNavigate();
 	const handleClick = (row: Round) => {
 		navigate({ to: '/luro', search: { round: row.round } });
@@ -101,14 +101,14 @@ const AllRoundsTable = () => {
 	return (
 		<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.5 }}>
 			{/*// @ts-ignore*/}
-			<DataTable data={rounds} columns={columns} onRowClick={handleClick} isLoading={isLoading} loaderClassName="h-[185px]" noResultsClassName="h-[185px]"/>
+			<DataTable data={rounds} columns={columns} onRowClick={handleClick} isLoading={isLoading} loaderClassName="h-[185px]" noResultsClassName="h-[185px]" />
 		</motion.div>
 	);
 };
 
 const PlayerRoundsTable = () => {
 	const { address = ZeroAddress } = useAccount();
-	const { data: rounds = [],isLoading } = useRounds(address, true);
+	const { data: rounds = [], isLoading } = useRounds(address, true);
 	const navigate = useNavigate();
 	const handleClick = (row: Round) => {
 		navigate({ to: '/luro', search: { round: row.round } });
@@ -116,7 +116,7 @@ const PlayerRoundsTable = () => {
 	return (
 		<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.5 }}>
 			{/*// @ts-ignore*/}
-			<DataTable data={rounds} columns={columns} onRowClick={handleClick} isLoading={isLoading} loaderClassName="h-[185px]"  noResultsClassName="h-[185px]"/>
+			<DataTable data={rounds} columns={columns} onRowClick={handleClick} isLoading={isLoading} loaderClassName="h-[185px]" noResultsClassName="h-[185px]" />
 		</motion.div>
 	);
 };
