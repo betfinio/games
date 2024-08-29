@@ -60,15 +60,11 @@ export const RoundInfo = () => {
 				<LuckyRound className={'w-8 h-8 md:w-10 md:h-10 text-yellow-400'} />
 				<div className={'flex flex-col'}>
 					<span className={'text-lg leading-5'}>Lucky round</span>
-					<span className={'text-sm leading-5'}>{ENV.includes('prod') ? '1 day' : '10 min'}</span>
+					<span className={'text-sm leading-5'}>#{currentRound}</span>
 				</div>
 			</motion.div>
 
-			<div className={'hidden sm:flex flex-row items-center justify-start md:justify-center gap-4'}>
-				<p className={'font-bold text-lg'}>
-					Round <span className={'font-normal'}>#{currentRound}</span>
-				</p>
-			</div>
+			<div className={'hidden sm:flex flex-row items-center justify-start md:justify-center gap-4'} />
 
 			<Stats betsCount={betsCount} volume={volume} staking={staking} isFetched={isBetsFetched && isVolumeFetched} />
 

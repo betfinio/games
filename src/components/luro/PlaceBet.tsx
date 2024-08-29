@@ -258,7 +258,7 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 					</motion.button>
 				</div>
 
-				<div className={cx('rounded-xl bg-primaryLight p-3 relative w-full lg:w-full mt-3 border border-gray-800')}>
+				<div className={cx('hidden md:block rounded-xl bg-primaryLight p-3 relative w-full lg:w-full mt-3 border border-gray-800')}>
 					<div className={'grid grid-cols-2 gap-2 text-xs'}>
 						<div className={'bg-primary py-2 text-center flex flex-col gap-1 rounded-[8px]'}>
 							<div className={'text-gray-500'}>Your active bets</div>
