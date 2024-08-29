@@ -17,7 +17,7 @@ const columnHelper = createColumnHelper<RouletteBet>();
 
 export const AllBetsTable = () => {
 	const [selected, setSelected] = useState<null | RouletteBet>(null);
-	const { data: bets = [], isFetched: isBetsFetched } = useLastRouletteBets();
+	const { data: bets = [], isFetched: isBetsFetched, isLoading } = useLastRouletteBets();
 
 	const columns = [
 		columnHelper.accessor('player', {
@@ -84,7 +84,7 @@ export const AllBetsTable = () => {
 		setSelected(bet);
 	};
 
-	if (bets.length === 0) {
+	if (bets.length === 0 && !isLoading) {
 		return <div className={'flex justify-center p-3'}>No bets yet</div>;
 	}
 
@@ -98,7 +98,7 @@ export const AllBetsTable = () => {
 				</DialogContent>
 			</Dialog>
 			{/*// @ts-ignore*/}
-			<DataTable columns={columns} data={bets} />
+			<DataTable columns={columns} data={bets} isLoading={isLoading} loaderClassName="h-[285px]" />
 		</div>
 	);
 };
