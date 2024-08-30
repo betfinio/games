@@ -1,8 +1,8 @@
 import { type FC, useMemo } from 'react';
 
 import RoundMobileInfo from '@/src/components/luro/RoundMobileInfo.tsx';
-import { ENV } from '@/src/global.ts';
 import { useBetsCount, useTotalVolume, useVisibleRound } from '@/src/lib/luro/query';
+import { Route } from '@/src/routes/luro/$interval.tsx';
 import { valueToNumber } from '@betfinio/abi';
 import { LuckyRound } from '@betfinio/ui/dist/icons/LuckyRound';
 import { BetValue } from 'betfinio_app/BetValue';
@@ -39,7 +39,6 @@ const Stats: FC<{ betsCount: number; volume: bigint; staking: bigint; isFetched:
 
 export const RoundInfo = () => {
 	const { data: currentRound } = useVisibleRound();
-
 	const { data: betsCount = 0, isFetched: isBetsFetched } = useBetsCount();
 	const { data: volume = 0n, isFetched: isVolumeFetched } = useTotalVolume();
 

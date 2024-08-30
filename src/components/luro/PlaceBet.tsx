@@ -1,3 +1,4 @@
+import { LURO, LURO_5MIN } from '@/src/global.ts';
 import { hexToRgbA, jumpToCurrentRound } from '@/src/lib/luro';
 import { getCurrentRoundInfo } from '@/src/lib/luro/api';
 import {
@@ -12,6 +13,7 @@ import {
 	useVisibleRound,
 } from '@/src/lib/luro/query';
 import { addressToColor } from '@/src/lib/roulette';
+import { Route } from '@/src/routes/luro/$interval.tsx';
 import { ZeroAddress } from '@betfinio/abi';
 import { valueToNumber } from '@betfinio/abi';
 import { LuckyRound } from '@betfinio/ui/dist/icons/LuckyRound';
@@ -56,6 +58,7 @@ export const PlaceBet = () => {
 const StandByScreen: FC<{ round: number }> = ({ round }) => {
 	const { t } = useTranslation('', { keyPrefix: 'games.luro.placeBet' });
 	const [amount, setAmount] = useState<string>('10000');
+	const { interval } = Route.useParams();
 	const { address = ZeroAddress } = useAccount();
 	const { data: allowance = 0n, isFetching: loading } = useAllowance(address);
 	const { data: balance = 0n } = useBalance(address);
@@ -127,8 +130,8 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 			requestAllowance?.('bet', BigInt(Number(amount)) * 10n ** 18n);
 			return;
 		}
-
-		placeBet({ round: round, amount: Number(amount), player: address });
+		const luro = interval === '1d' ? LURO : LURO_5MIN;
+		placeBet({ round: round, amount: Number(amount), player: address, address: luro });
 	};
 
 	const myBetVolume = useMemo(() => {

@@ -1,10 +1,11 @@
 import { TabItem } from '@/src/components/luro/tabs/PlayersTab.tsx';
-import { getTimesByRound, hexToRgbA, jumpToCurrentRound } from '@/src/lib/luro';
+import { type LuroInterval, getTimesByRound, hexToRgbA, jumpToCurrentRound } from '@/src/lib/luro';
 import { useLuroState, useObserveBet, useRound, useRoundBank, useRoundBets, useRoundWinner, useVisibleRound } from '@/src/lib/luro/query';
 import { Tooltip, TooltipContent, TooltipTrigger } from 'betfinio_app/tooltip';
 
 import type { CustomLuroBet } from '@/src/lib/luro/types.ts';
 import { addressToColor } from '@/src/lib/roulette';
+import { Route } from '@/src/routes/luro/$interval.tsx';
 import { ZeroAddress, valueToNumber } from '@betfinio/abi';
 import { Bet } from '@betfinio/ui/dist/icons';
 import { Pie, type PieTooltipProps } from '@nivo/pie';
@@ -362,8 +363,9 @@ const ProgressBar: FC<{ round: number; authors: CustomLuroBet[] }> = ({ round })
 		},
 	};
 	const [progress, setProgress] = useState(0);
+	const { interval } = Route.useParams();
 
-	const { start, end } = getTimesByRound(round);
+	const { start, end } = getTimesByRound(round, interval as LuroInterval);
 
 	const changeLotteryState = () => {
 		if (luroState.state === 'standby' && !isLotteryStateLoading && !isLotteryStatePending) {

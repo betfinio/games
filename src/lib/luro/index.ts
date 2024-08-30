@@ -75,29 +75,24 @@ export const handleError = (e: Error, t: TFunction) => {
 	toast({ variant: 'destructive', description: t(e.cause?.reason || 'unknown') });
 };
 
-export const getLuroInterval = () => {
+export const getLuroInterval = (interval: LuroInterval) => {
 	if (import.meta.env.PUBLIC_ENVIRONMENT.includes('prod')) {
-		return 60 * 5;
+		return interval === '5m' ? 60 * 5 : 60 * 60 * 24;
 	}
 	return 60 * 2;
 };
 
-export const getCurrentRound = () => {
+export const getCurrentRound = (interval: LuroInterval) => {
 	if (import.meta.env.PUBLIC_ENVIRONMENT.includes('prod')) {
-		return Math.floor(Date.now() / 1000 / (60 * 5));
+		return interval === '5m' ? Math.floor(Date.now() / 1000 / (60 * 5)) : Math.floor((Date.now() + 1000 * 60 * 60 * 6) / 1000 / (60 * 60 * 24));
 	}
 	return Math.floor(Date.now() / 1000 / (60 * 10));
 };
 
-export const getRoundByTimestamp = (timestamp: number) => {
+export const getTimesByRound = (round: number, interval: LuroInterval) => {
 	if (import.meta.env.PUBLIC_ENVIRONMENT.includes('prod')) {
-		return Math.floor((timestamp + 1000 * 60 * 60 * 6) / 1000 / (60 * 60 * 24));
-	}
-	return Math.floor(timestamp / 1000 / (60 * 10));
-};
-
-export const getTimesByRound = (round: number) => {
-	if (import.meta.env.PUBLIC_ENVIRONMENT.includes('prod')) {
+		if (interval === '1d') {
+		}
 		const start = round * 60 * 5 * 1000;
 		return { start, end: start + 60 * 5 * 1000 };
 	}
@@ -122,3 +117,5 @@ export function hexToRgbA(hex: string) {
 	}
 	throw new Error('Bad Hex');
 }
+
+export type LuroInterval = '1d' | '5m';

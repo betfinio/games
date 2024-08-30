@@ -1,6 +1,6 @@
 import { RoundCircle } from '@/src/components/luro/RoundCircle.tsx';
 import { ETHSCAN } from '@/src/global.ts';
-import { getTimesByRound, mapBetsToRoundTable } from '@/src/lib/luro';
+import { type LuroInterval, getTimesByRound, mapBetsToRoundTable } from '@/src/lib/luro';
 import {
 	useBonusDistribution,
 	useDistributeBonus,
@@ -13,6 +13,7 @@ import {
 } from '@/src/lib/luro/query';
 import type { Round, RoundModalPlayer } from '@/src/lib/luro/types.ts';
 import { addressToColor } from '@/src/lib/roulette';
+import { Route } from '@/src/routes/luro/$interval.tsx';
 import { ZeroAddress } from '@betfinio/abi';
 import { truncateEthAddress, valueToNumber } from '@betfinio/abi';
 import Bank from '@betfinio/ui/dist/icons/Bank';
@@ -36,9 +37,10 @@ export const ModalContent: FC<{
 	roundId: number;
 	interval: number;
 	round: Round | null;
-}> = ({ onClose, interval, roundId, round }) => {
+}> = ({ onClose, roundId, round }) => {
 	const { t } = useTranslation('', { keyPrefix: 'games.luro.roundModal' });
-	const { start, end } = getTimesByRound(roundId);
+	const { interval } = Route.useParams();
+	const { start, end } = getTimesByRound(roundId, interval as LuroInterval);
 	const isFinished = DateTime.fromMillis(Date.now()).diff(DateTime.fromMillis(end)).milliseconds > 0;
 
 	const { data: volume = 0n } = useRoundBank(roundId);
@@ -96,7 +98,8 @@ interface RoundDetailsProps {
 const BonusDistribution: FC<{ round: number }> = ({ round }) => {
 	const { data: distributed } = useBonusDistribution(round);
 	const { mutate: distribute } = useDistributeBonus();
-	const { end } = getTimesByRound(round);
+	const { interval } = Route.useParams();
+	const { end } = getTimesByRound(round, interval as LuroInterval);
 	const handleDistribute = () => {
 		console.log('distribute');
 		distribute({ round });
@@ -166,7 +169,7 @@ const WinnerBetInfo: FC<{ round: number }> = ({ round }) => {
 
 	const winner = winners.find((w) => w.round === round);
 
-	if (round === currentRound) {
+	if (round === currentRound || winner === undefined) {
 		return null;
 	}
 	return (
@@ -175,9 +178,9 @@ const WinnerBetInfo: FC<{ round: number }> = ({ round }) => {
 			{isLoading || isFetching ? (
 				<Loader className={'w-3 h-3 animate-spin'} />
 			) : (
-				<Link target={'_blank'} to={`${ETHSCAN}/address/${winner.bet}`} className={'underline'}>
+				<a target={'_blank'} rel={'noreferrer'} href={`${ETHSCAN}/address/${winner.bet}`} className={'underline'}>
 					{winner.bet}
-				</Link>
+				</a>
 			)}
 
 			<div className={'mt-5 flex gap-2'}>
