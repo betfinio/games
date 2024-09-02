@@ -11,6 +11,8 @@ const getApp = () => {
 			return 'betfinio_app@https://app.betfin.dev/mf-manifest.json';
 		case 'production':
 			return 'betfinio_app@https://app.betfin.io/mf-manifest.json';
+		case 'production-network':
+			return 'betfinio_app@https://app.betfin.network/mf-manifest.json';
 		case 'production-gg':
 			return 'betfinio_app@https://app.betfin.gg/mf-manifest.json';
 		default:
@@ -24,6 +26,8 @@ function getOutput() {
 			return 'https://games.betfin.dev';
 		case 'production':
 			return 'https://games.betfin.io';
+		case 'production-network':
+			return 'https://games.betfin.network';
 		case 'production-gg':
 			return 'https://games.betfin.gg';
 		default:
