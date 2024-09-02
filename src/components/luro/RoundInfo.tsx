@@ -1,16 +1,16 @@
-import { type FC, useMemo } from 'react';
 import RoundMobileInfo from '@/src/components/luro/RoundMobileInfo.tsx';
+import SwitchModal from '@/src/components/luro/SwitchModal.tsx';
+import type { LuroInterval } from '@/src/lib/luro';
 import { useBetsCount, useTotalVolume, useVisibleRound } from '@/src/lib/luro/query';
+import { Route } from '@/src/routes/luro/$interval.tsx';
 import { valueToNumber } from '@betfinio/abi';
 import { LuckyRound } from '@betfinio/ui/dist/icons/LuckyRound';
 import { BetValue } from 'betfinio_app/BetValue';
+import { Dialog, DialogContent, DialogTrigger } from 'betfinio_app/dialog';
 import cx from 'clsx';
 import { motion } from 'framer-motion';
 import { CircleHelp, Menu } from 'lucide-react';
-import { Dialog, DialogContent, DialogTrigger } from 'betfinio_app/dialog';
-import SwitchModal from '@/src/components/luro/SwitchModal.tsx';
-import { Route } from '@/src/routes/luro/$interval.tsx';
-import type { LuroInterval } from '@/src/lib/luro';
+import { type FC, useMemo } from 'react';
 
 const Stats: FC<{ betsCount: number; volume: bigint; staking: bigint; isFetched: boolean }> = ({ betsCount, volume, staking, isFetched }) => {
 	return (

@@ -1,8 +1,8 @@
+import type { LuroInterval } from '@/src/lib/luro';
 import { Link } from '@tanstack/react-router';
 import cx from 'clsx';
 import { motion } from 'framer-motion';
 import type { FC } from 'react';
-import type { LuroInterval } from '@/src/lib/luro';
 
 const SwitchModal: FC<{ selected: LuroInterval }> = ({ selected }) => {
 	const types = ['5m', '1d'];
