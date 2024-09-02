@@ -12,7 +12,6 @@ const RoundMobileInfo: FC<{ bets: number; volume: bigint; staking: bigint }> = (
 				<DialogTrigger asChild>
 					<motion.div className={'flex flex-col items-center justify-center cursor-pointer text-[#FFC800] hover:text-[#FFC800] lg:text-white duration-300'}>
 						<ChartBarIcon className={'text-[#FFC800] w-6'} />
-						<span className={'hidden sm:inline text-xs'}>Stats</span>
 					</motion.div>
 				</DialogTrigger>
 				<DialogContent className={'games max-w-0 w-auto'}>

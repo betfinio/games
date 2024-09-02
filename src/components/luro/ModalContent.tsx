@@ -305,5 +305,7 @@ const BetsTable: FC<{ round: number; className?: string; volume: bigint; bonusSh
 	];
 
 	// @ts-ignore
-	return <DataTable columns={columns} data={players} state={{ columnVisibility: { totalWin: (roundData?.winnerOffset || 0n) > 0n } }} />;
+	return <div className={'mt-4'}>
+		<DataTable columns={columns} data={players} state={{ columnVisibility: { totalWin: (roundData?.winnerOffset || 0n) > 0n } }} />
+	</div>
 };
