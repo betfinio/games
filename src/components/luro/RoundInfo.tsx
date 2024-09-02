@@ -1,14 +1,16 @@
-import { type FC, useMemo } from 'react';
-
 import RoundMobileInfo from '@/src/components/luro/RoundMobileInfo.tsx';
-import { ENV } from '@/src/global.ts';
+import SwitchModal from '@/src/components/luro/SwitchModal.tsx';
+import type { LuroInterval } from '@/src/lib/luro';
 import { useBetsCount, useTotalVolume, useVisibleRound } from '@/src/lib/luro/query';
+import { Route } from '@/src/routes/luro/$interval.tsx';
 import { valueToNumber } from '@betfinio/abi';
 import { LuckyRound } from '@betfinio/ui/dist/icons/LuckyRound';
 import { BetValue } from 'betfinio_app/BetValue';
+import { Dialog, DialogContent, DialogTrigger } from 'betfinio_app/dialog';
 import cx from 'clsx';
 import { motion } from 'framer-motion';
 import { CircleHelp, Menu } from 'lucide-react';
+import { type FC, useMemo } from 'react';
 
 const Stats: FC<{ betsCount: number; volume: bigint; staking: bigint; isFetched: boolean }> = ({ betsCount, volume, staking, isFetched }) => {
 	return (
@@ -39,10 +41,9 @@ const Stats: FC<{ betsCount: number; volume: bigint; staking: bigint; isFetched:
 
 export const RoundInfo = () => {
 	const { data: currentRound } = useVisibleRound();
-
 	const { data: betsCount = 0, isFetched: isBetsFetched } = useBetsCount();
 	const { data: volume = 0n, isFetched: isVolumeFetched } = useTotalVolume();
-
+	const { interval } = Route.useParams();
 	const staking = useMemo(() => {
 		return (volume * 36n) / 1000n;
 	}, [volume]);
@@ -53,26 +54,27 @@ export const RoundInfo = () => {
 				'px-5 py-6 bg-primaryLight border border-gray-800 rounded-lg max-h-[80px] flex gap-5 xl:gap-10 flex-row justify-between md:items-center relative'
 			}
 		>
-			<motion.div className={'flex gap-2 md:gap-4 items-center cursor-pointer'}>
-				<div>
-					<Menu className={'w-8 md:w-10 aspect-square text-white'} />
-				</div>
-				<LuckyRound className={'w-8 h-8 md:w-10 md:h-10 text-yellow-400'} />
-				<div className={'flex flex-col'}>
-					<span className={'text-lg leading-5'}>Lucky round</span>
-					<span className={'text-sm leading-5'}>{ENV.includes('prod') ? '1 day' : '10 min'}</span>
-				</div>
-			</motion.div>
+			<Dialog>
+				<DialogTrigger asChild>
+					<motion.div className={'flex gap-2 md:gap-4 items-center cursor-pointer'}>
+						<Menu className={'w-8 md:w-10 aspect-square text-white'} />
+						<LuckyRound className={'w-8 h-8 md:w-10 md:h-10 text-yellow-400'} />
+						<div className={'flex flex-col'}>
+							<span className={'md:text-lg leading-5 text-sm'}>Lucky round</span>
+							<span className={'text-sm leading-5 text-gray-300'}>#{currentRound}</span>
+						</div>
+					</motion.div>
+				</DialogTrigger>
+				<DialogContent className={'w-fit games'}>
+					<SwitchModal selected={interval as LuroInterval} />
+				</DialogContent>
+			</Dialog>
 
-			<div className={'hidden sm:flex flex-row items-center justify-start md:justify-center gap-4'}>
-				<p className={'font-bold text-lg'}>
-					Round <span className={'font-normal'}>#{currentRound}</span>
-				</p>
-			</div>
+			<div className={'hidden sm:flex flex-row items-center justify-start md:justify-center gap-4'} />
 
 			<Stats betsCount={betsCount} volume={volume} staking={staking} isFetched={isBetsFetched && isVolumeFetched} />
 
-			<div className={'flex flex-row justify-between items-center gap-4 sm:gap-8 px-6 sm:px-0'}>
+			<div className={'flex flex-row justify-between items-center gap-4 sm:gap-8 px-4 sm:px-0'}>
 				<RoundMobileInfo bets={betsCount} volume={volume} staking={staking} />
 
 				<a

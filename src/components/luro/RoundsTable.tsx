@@ -1,5 +1,6 @@
-import { useRound, useRounds, useWinners } from '@/src/lib/luro/query';
+import { useRounds, useWinners } from '@/src/lib/luro/query';
 import type { Round } from '@/src/lib/luro/types.ts';
+import { Route } from '@/src/routes/luro/$interval.tsx';
 import { ZeroAddress } from '@betfinio/abi';
 import { truncateEthAddress, valueToNumber } from '@betfinio/abi';
 import { Link, useNavigate } from '@tanstack/react-router';
@@ -18,8 +19,12 @@ const RoundsTable: FC<{ className?: string }> = ({ className = '' }) => {
 		<div className={cx('w-full overflow-x-auto min-h-[100px]', className)}>
 			<Tabs defaultValue={'all'}>
 				<TabsList>
-					<TabsTrigger value={'all'}>All rounds</TabsTrigger>
-					<TabsTrigger value={'my'}>My rounds</TabsTrigger>
+					<TabsTrigger variant={'default'} value={'all'}>
+						All rounds
+					</TabsTrigger>
+					<TabsTrigger variant={'default'} value={'my'}>
+						My rounds
+					</TabsTrigger>
 				</TabsList>
 				<TabsContent value={'all'}>
 					<AllRoundsTable />
@@ -84,7 +89,7 @@ const columns = [
 		header: '',
 		id: 'actions',
 		cell: (props) => (
-			<Link to={`/luro?round=${props.row.original.round}`} className={'w-full'}>
+			<Link to={`./?round=${props.row.original.round}`} className={'w-full'}>
 				<Expand className={'w-4 h-4 text-white'} />
 			</Link>
 		),
@@ -93,30 +98,32 @@ const columns = [
 
 const AllRoundsTable = () => {
 	const { address = ZeroAddress } = useAccount();
-	const { data: rounds = [] } = useRounds(address);
+	const { data: rounds = [], isLoading } = useRounds(address);
 	const navigate = useNavigate();
+	const { interval } = Route.useParams();
 	const handleClick = (row: Round) => {
-		navigate({ to: '/luro', search: { round: row.round } });
+		navigate({ to: '/luro/$interval', params: { interval }, search: { round: row.round } });
 	};
 	return (
 		<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.5 }}>
 			{/*// @ts-ignore*/}
-			<DataTable data={rounds} columns={columns} onRowClick={handleClick} />
+			<DataTable data={rounds} columns={columns} onRowClick={handleClick} isLoading={isLoading} loaderClassName="h-[185px]" noResultsClassName="h-[185px]" />
 		</motion.div>
 	);
 };
 
 const PlayerRoundsTable = () => {
 	const { address = ZeroAddress } = useAccount();
-	const { data: rounds = [] } = useRounds(address, true);
+	const { data: rounds = [], isLoading } = useRounds(address, true);
 	const navigate = useNavigate();
 	const handleClick = (row: Round) => {
-		navigate({ to: '/luro', search: { round: row.round } });
+		const { interval } = Route.useParams();
+		navigate({ to: '/luro/$interval', params: { interval }, search: { round: row.round } });
 	};
 	return (
 		<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.5 }}>
 			{/*// @ts-ignore*/}
-			<DataTable data={rounds} columns={columns} onRowClick={handleClick} />
+			<DataTable data={rounds} columns={columns} onRowClick={handleClick} isLoading={isLoading} loaderClassName="h-[185px]" noResultsClassName="h-[185px]" />
 		</motion.div>
 	);
 };

@@ -75,7 +75,7 @@ export interface TabItemProps {
 	betsNumber?: number;
 }
 
-export const TabItem: FC<TabItemProps> = ({ player, amount, percent, betsNumber, className }) => {
+export const TabItem: FC<TabItemProps> = ({ player, amount, percent, betsNumber = 0, className }) => {
 	const { data: username } = useUsername(player);
 	const { address = ZeroAddress } = useAccount();
 	const { data: customUsername } = useCustomUsername(address, player);

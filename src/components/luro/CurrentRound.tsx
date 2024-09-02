@@ -6,7 +6,7 @@ export const CurrentRound = () => {
 	const { data: round } = useVisibleRound();
 
 	return (
-		<div className={'flex flex-col lg:flex-row justify-between gap-4 '}>
+		<div className={'flex flex-col-reverse md:flex-col lg:flex-row justify-between gap-4  '}>
 			<RoundCircle round={round} />
 			<PlaceBet />
 		</div>

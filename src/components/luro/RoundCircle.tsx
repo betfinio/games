@@ -1,10 +1,11 @@
 import { TabItem } from '@/src/components/luro/tabs/PlayersTab.tsx';
-import { getTimesByRound, hexToRgbA, jumpToCurrentRound } from '@/src/lib/luro';
+import { type LuroInterval, getTimesByRound, hexToRgbA, jumpToCurrentRound } from '@/src/lib/luro';
 import { useLuroState, useObserveBet, useRound, useRoundBank, useRoundBets, useRoundWinner, useVisibleRound } from '@/src/lib/luro/query';
 import { Tooltip, TooltipContent, TooltipTrigger } from 'betfinio_app/tooltip';
 
 import type { CustomLuroBet } from '@/src/lib/luro/types.ts';
 import { addressToColor } from '@/src/lib/roulette';
+import { Route } from '@/src/routes/luro/$interval.tsx';
 import { ZeroAddress, valueToNumber } from '@betfinio/abi';
 import { Bet } from '@betfinio/ui/dist/icons';
 import { Pie, type PieTooltipProps } from '@nivo/pie';
@@ -156,7 +157,7 @@ export const RoundCircle: FC<{ round: number; className?: string }> = ({ round, 
 				)}
 			>
 				{currentRound === round && <EffectsLayer />}
-				<div className={cx('h-full h-[250px] xl:h-[325px]', currentRound !== round && '!h-[325px]')} ref={boxRef}>
+				<div className={cx('h-[250px] xl:h-[325px]', currentRound !== round && '!h-[325px]')} ref={boxRef}>
 					<div className={'relative'}>
 						<ProgressBar round={round} authors={data} />
 
@@ -362,8 +363,9 @@ const ProgressBar: FC<{ round: number; authors: CustomLuroBet[] }> = ({ round })
 		},
 	};
 	const [progress, setProgress] = useState(0);
+	const { interval } = Route.useParams();
 
-	const { start, end } = getTimesByRound(round);
+	const { start, end } = getTimesByRound(round, interval as LuroInterval);
 
 	const changeLotteryState = () => {
 		if (luroState.state === 'standby' && !isLotteryStateLoading && !isLotteryStatePending) {
@@ -587,16 +589,14 @@ export const Counter: FC<{ from: number; to: number; doMillify?: boolean }> = ({
 
 	return (
 		<>
-			<>
-				<TooltipTrigger>
-					<div className={'flex gap-1 lg:gap-2 items-center relative z-[10]'}>
-						<Bet classNaаme={' w-5 h-5 lg:w-7 lg:h-7'} />
-						<div className={''} ref={nodeRef} />
-					</div>
-				</TooltipTrigger>
+			<TooltipTrigger>
+				<div className={'flex gap-1 lg:gap-2 items-center relative z-[10]'}>
+					<Bet className={' w-5 h-5 lg:w-7 lg:h-7'} />
+					<div className={''} ref={nodeRef} />
+				</div>
+			</TooltipTrigger>
 
-				<TooltipContent className={'font-semibold'}>{to.toLocaleString()} BET</TooltipContent>
-			</>
+			<TooltipContent className={'font-semibold'}>{to.toLocaleString()} BET</TooltipContent>
 		</>
 	);
 };

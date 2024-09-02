@@ -81,6 +81,7 @@ export interface PlaceBetParams {
 	round: number;
 	amount: number;
 	player: Address;
+	address: Address;
 }
 
 export interface CustomLuroBet {

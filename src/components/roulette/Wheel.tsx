@@ -4,19 +4,21 @@ import { ZeroAddress } from '@betfinio/abi';
 import { valueToNumber } from '@betfinio/abi';
 import { useQueryClient } from '@tanstack/react-query';
 import anime from 'animejs';
-import { toast } from 'betfinio_app/use-toast';
+import { toast, useToast } from 'betfinio_app/use-toast';
 import cx from 'clsx';
 import { motion } from 'framer-motion';
 import { PlayIcon } from 'lucide-react';
 import { type FC, useEffect, useState } from 'react';
 import type { Address } from 'viem';
 import { useAccount, useConfig } from 'wagmi';
+import { RouletteResultToast } from './RouletteResultToast';
 
 const rouletteWheelNumbers = [
 	0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26,
 ];
 
 const RouletteWheel: FC = () => {
+	const { toast, dismiss } = useToast();
 	const { state: wheelStateData, updateState: updateWheelState } = useRouletteState();
 	const { address = ZeroAddress } = useAccount();
 	const { data: bets = [], isFetched: isBetsFetched } = useRouletteBets(address);
@@ -107,9 +109,9 @@ const RouletteWheel: FC = () => {
 			duration: singleRotationDuration, // random duration
 			easing: `cubicBezier(${bezier.join(',')})`,
 			complete: () => {
+				dismiss();
 				toast({
-					title: `Landed: ${rouletteBet.winNumber}. ${rouletteBet.result > 0n ? 'You won' : 'You lost'}`,
-					description: rouletteBet.result > 0n && `You won ${valueToNumber(rouletteBet.result)} BET`,
+					component: <RouletteResultToast rouletteBet={rouletteBet} />,
 				});
 				updateWheelState({ state: 'standby' });
 				setTmp(result);
