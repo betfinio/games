@@ -181,111 +181,111 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 				{t('title')}
 				<LuckyRound className={'w-5 h-5 text-yellow-400'} />
 			</div>
-				<div
-					onMouseEnter={() => {
-						setHovering(true);
+			<div
+				onMouseEnter={() => {
+					setHovering(true);
+				}}
+				onMouseLeave={() => {
+					setHovering(false);
+				}}
+				style={{ filter: compiledShadow }}
+				className={cx('rounded-xl bg-primaryLight border border-gray-800 p-4 relative w-full duration-300 drop-shadow-[0_35px_35px_rgba(255,0,0,1)] ')}
+			>
+				<h4 className={'font-medium text-center text-gray-500 text-xs '}>{t('amount')}</h4>
+				<NumericFormat
+					className={cx(
+						'w-full mt-2 rounded-lg border border-yellow-400 text-center text-base lg:text-lg bg-primary py-3 font-semibold text-white disabled:cursor-not-allowedduration-300',
+						valueToNumber(balance) < Number(amount) && 'text-red-400',
+					)}
+					thousandSeparator={','}
+					min={1}
+					allowNegative={false}
+					maxLength={15}
+					disabled={loading}
+					placeholder={valueToNumber(balance) < Number(amount) ? 'Please top-up balance' : 'Amount'}
+					value={amount}
+					onValueChange={(values) => {
+						const { value } = values;
+						handleBetChange(value);
 					}}
-					onMouseLeave={() => {
-						setHovering(false);
-					}}
-					style={{ filter: compiledShadow }}
-					className={cx('rounded-xl bg-primaryLight border border-gray-800 p-4 relative w-full duration-300 drop-shadow-[0_35px_35px_rgba(255,0,0,1)] ')}
-				>
-					<h4 className={'font-medium text-center text-gray-500 text-xs '}>{t('amount')}</h4>
-					<NumericFormat
-						className={cx(
-							'w-full mt-2 rounded-lg border border-yellow-400 text-center text-base lg:text-lg bg-primary py-3 font-semibold text-white disabled:cursor-not-allowedduration-300',
-							valueToNumber(balance) < Number(amount) && 'text-red-400',
-						)}
-						thousandSeparator={','}
-						min={1}
-						allowNegative={false}
-						maxLength={15}
-						disabled={loading}
-						placeholder={valueToNumber(balance) < Number(amount) ? 'Please top-up balance' : 'Amount'}
-						value={amount}
-						onValueChange={(values) => {
-							const { value } = values;
-							handleBetChange(value);
-						}}
-					/>
+				/>
 
-					<div className={cx('relative mt-4 h-[24px]', balance === 0n && 'grayscale pointer-events-none')}>
-						<div className="w-full bg-gray-700 h-[2px] rounded-full mt-1 relative">
-							<div className="absolute bg-yellow-500 h-[2px] rounded-full hover:bg-red" style={{ width: `${betPercentage}%` }} />
-							<motion.div
-								className="absolute bg-yellow-500 w-[10px] h-[10px] top-[-4px] rounded-full hover:bg-red"
-								style={{ left: `calc(${betPercentage}% - 5px)` }}
-							/>
-							<input
-								type="range"
-								min={1000}
-								max={valueToNumber(balance)}
-								value={betPercentage}
-								onChange={handleSliderChange}
-								className="absolute w-full h-[2px] opacity-0 cursor-pointer"
-							/>
-						</div>
-						<div className="flex justify-between text-gray-500 text-[11px] mt-2">
-							<span>0%</span>
-							<span className="text-yellow-500 font-semibold text-[14px] opacity-0 group-hover:opacity-100 duration-300">{betPercentage}%</span>
-							<span>100%</span>
-						</div>
+				<div className={cx('relative mt-4 h-[24px]', balance === 0n && 'grayscale pointer-events-none')}>
+					<div className="w-full bg-gray-700 h-[2px] rounded-full mt-1 relative">
+						<div className="absolute bg-yellow-500 h-[2px] rounded-full hover:bg-red" style={{ width: `${betPercentage}%` }} />
+						<motion.div
+							className="absolute bg-yellow-500 w-[10px] h-[10px] top-[-4px] rounded-full hover:bg-red"
+							style={{ left: `calc(${betPercentage}% - 5px)` }}
+						/>
+						<input
+							type="range"
+							min={1000}
+							max={valueToNumber(balance)}
+							value={betPercentage}
+							onChange={handleSliderChange}
+							className="absolute w-full h-[2px] opacity-0 cursor-pointer"
+						/>
 					</div>
-
-					<h4 className={'font-medium text-gray-500 text-xs text-center mt-[10px]'}>{t('expected')}</h4>
-					<p className={'mt-[20px] text-center font-semibold text-[#27AE60]'}>
-						{expectedWinning.toLocaleString()} <span className={'text-blue-500'}>(+bonus)</span>
-					</p>
-					<div className={'text-center text-yellow-400 font-thin text-xs'}>
-						{(coef === Number.POSITIVE_INFINITY || Number.isNaN(coef) ? 0 : coef).toFixed(3)}x
+					<div className="flex justify-between text-gray-500 text-[11px] mt-2">
+						<span>0%</span>
+						<span className="text-yellow-500 font-semibold text-[14px] opacity-0 group-hover:opacity-100 duration-300">{betPercentage}%</span>
+						<span>100%</span>
 					</div>
-					<motion.button
-						whileTap={{ scale: 0.95 }}
-						onClick={handleBet}
-						whileHover={{ scale: 1.03 }}
-						disabled={Number(amount) === 0 || isPending || valueToNumber(balance) < Number(amount)}
-						className={
-							'text-xs font-semibold flex flex-col hover:scale-110 items-center justify-center h-[40px] text-center w-full mt-[30px] bg-[#FFC800] rounded-lg min-w-[210px] text-primary disabled:grayscale disabled:pointer-events-none duration-300'
-						}
-					>
-						{isPending ? (
-							<Loader size={30} color={'black'} className={'animate-spin'} />
-						) : (
-							<span className={'flex flex-row items-center gap-1 text-base uppercase'}>
-								{t('bet')}
-								<Coins className={'text-black w-4'} />
-							</span>
-						)}
-					</motion.button>
 				</div>
 
-				<div className={cx('hidden md:block rounded-xl bg-primaryLight p-3 relative w-full lg:w-full mt-3 border border-gray-800')}>
-					<div className={'grid grid-cols-2 gap-2 text-xs'}>
-						<div className={'bg-primary py-2 text-center flex flex-col gap-1 rounded-[8px]'}>
-							<div className={'text-gray-500'}>Your active bets</div>
-							<Tooltip>
+				<h4 className={'font-medium text-gray-500 text-xs text-center mt-[10px]'}>{t('expected')}</h4>
+				<p className={'mt-[20px] text-center font-semibold text-[#27AE60]'}>
+					{expectedWinning.toLocaleString()} <span className={'text-blue-500'}>(+bonus)</span>
+				</p>
+				<div className={'text-center text-yellow-400 font-thin text-xs'}>
+					{(coef === Number.POSITIVE_INFINITY || Number.isNaN(coef) ? 0 : coef).toFixed(3)}x
+				</div>
+				<motion.button
+					whileTap={{ scale: 0.95 }}
+					onClick={handleBet}
+					whileHover={{ scale: 1.03 }}
+					disabled={Number(amount) === 0 || isPending || valueToNumber(balance) < Number(amount)}
+					className={
+						'text-xs font-semibold flex flex-col hover:scale-110 items-center justify-center h-[40px] text-center w-full mt-[30px] bg-[#FFC800] rounded-lg min-w-[210px] text-primary disabled:grayscale disabled:pointer-events-none duration-300'
+					}
+				>
+					{isPending ? (
+						<Loader size={30} color={'black'} className={'animate-spin'} />
+					) : (
+						<span className={'flex flex-row items-center gap-1 text-base uppercase'}>
+							{t('bet')}
+							<Coins className={'text-black w-4'} />
+						</span>
+					)}
+				</motion.button>
+			</div>
+
+			<div className={cx('hidden md:block rounded-xl bg-primaryLight p-3 relative w-full lg:w-full mt-3 border border-gray-800')}>
+				<div className={'grid grid-cols-2 gap-2 text-xs'}>
+					<div className={'bg-primary py-2 text-center flex flex-col gap-1 rounded-[8px]'}>
+						<div className={'text-gray-500'}>Your active bets</div>
+						<Tooltip>
 							<div className={'text-yellow-400 font-semibold flex justify-center gap-1'}>
-								<TooltipTrigger>{millify(valueToNumber(myBetVolume))} ({myPercent}%)</TooltipTrigger>
-								<TooltipContent className={'font-semibold'}>
-									{myBetVolume > 0 && valueToNumber(myBetVolume).toLocaleString()}
-								</TooltipContent>
+								<TooltipTrigger>
+									{millify(valueToNumber(myBetVolume))} ({myPercent}%)
+								</TooltipTrigger>
+								<TooltipContent className={'font-semibold'}>{myBetVolume > 0 && valueToNumber(myBetVolume).toLocaleString()}</TooltipContent>
 							</div>
-							</Tooltip>
-						</div>
-						<div className={'bg-primary py-2 text-center flex flex-col gap-1 rounded-[8px]'}>
-							<div className={'text-gray-500'}>Potential win</div>
-							<Tooltip>
+						</Tooltip>
+					</div>
+					<div className={'bg-primary py-2 text-center flex flex-col gap-1 rounded-[8px]'}>
+						<div className={'text-gray-500'}>Potential win</div>
+						<Tooltip>
 							<div className={'text-green-500 font-semibold flex justify-center gap-1'}>
 								<TooltipTrigger>{millify(potentialWin)}</TooltipTrigger>
 								<TooltipContent className={'font-semibold'}>
 									{`${potentialWin.toLocaleString()} BET`} <span className={'text-green-500'}>{myBetVolume > 0 && `(${myCoef.toFixed(2)}x)`}</span>
 								</TooltipContent>
 							</div>
-							</Tooltip>
-						</div>
+						</Tooltip>
 					</div>
 				</div>
+			</div>
 		</motion.div>
 	);
 };
