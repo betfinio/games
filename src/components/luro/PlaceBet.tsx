@@ -181,7 +181,6 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 				{t('title')}
 				<LuckyRound className={'w-5 h-5 text-yellow-400'} />
 			</div>
-			<Tooltip>
 				<div
 					onMouseEnter={() => {
 						setHovering(true);
@@ -265,22 +264,28 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 					<div className={'grid grid-cols-2 gap-2 text-xs'}>
 						<div className={'bg-primary py-2 text-center flex flex-col gap-1 rounded-[8px]'}>
 							<div className={'text-gray-500'}>Your active bets</div>
+							<Tooltip>
 							<div className={'text-yellow-400 font-semibold flex justify-center gap-1'}>
-								<BetValue value={valueToNumber(myBetVolume)} /> ({myPercent}%)
+								<TooltipTrigger>{millify(valueToNumber(myBetVolume))} ({myPercent}%)</TooltipTrigger>
+								<TooltipContent className={'font-semibold'}>
+									{myBetVolume > 0 && valueToNumber(myBetVolume).toLocaleString()}
+								</TooltipContent>
 							</div>
+							</Tooltip>
 						</div>
 						<div className={'bg-primary py-2 text-center flex flex-col gap-1 rounded-[8px]'}>
-							<p className={'text-gray-500'}>Potential win</p>
+							<div className={'text-gray-500'}>Potential win</div>
+							<Tooltip>
 							<div className={'text-green-500 font-semibold flex justify-center gap-1'}>
 								<TooltipTrigger>{millify(potentialWin)}</TooltipTrigger>
 								<TooltipContent className={'font-semibold'}>
 									{`${potentialWin.toLocaleString()} BET`} <span className={'text-green-500'}>{myBetVolume > 0 && `(${myCoef.toFixed(2)}x)`}</span>
 								</TooltipContent>
 							</div>
+							</Tooltip>
 						</div>
 					</div>
 				</div>
-			</Tooltip>
 		</motion.div>
 	);
 };
