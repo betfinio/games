@@ -156,7 +156,7 @@ export const RoundCircle: FC<{ round: number; className?: string }> = ({ round, 
 					className,
 				)}
 			>
-				{currentRound === round && <EffectsLayer />}
+				{currentRound === round && <EffectsLayer round={round} />}
 				<div className={cx('h-[250px] xl:h-[325px]', currentRound !== round && '!h-[325px]')} ref={boxRef}>
 					<div className={'relative'}>
 						<ProgressBar round={round} authors={data} />
@@ -246,11 +246,11 @@ export const RoundCircle: FC<{ round: number; className?: string }> = ({ round, 
 	);
 };
 
-const EffectsLayer = () => {
+const EffectsLayer: FC<{ round: number }> = ({ round }) => {
 	const {
 		query: { data: observedBetAuthor },
 		resetObservedBet,
-	} = useObserveBet();
+	} = useObserveBet(round);
 	const { address } = useAccount();
 	const [particles, setParticles] = useState<Array<{ x: number; y: number; color: string }>>([]);
 	const [otherParticles, setOtherParticles] = useState<Array<{ x: number; y: number; color: string }>>([]);

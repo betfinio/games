@@ -27,16 +27,34 @@ import type { Address, WriteContractErrorType } from 'viem';
 import { waitForTransactionReceipt } from 'viem/actions';
 import { useAccount, useConfig, useWatchContractEvent } from 'wagmi';
 
-export const useObserveBet = () => {
+export const useObserveBet = (round: number) => {
 	const queryClient = useQueryClient();
 	const resetObservedBet = () => {
-		queryClient.setQueryData(['luro', 'bets', 'newBet'], ZeroAddress);
+		queryClient.setQueryData(['luro', address, 'bets', 'newBet'], ZeroAddress);
 	};
 	const { interval } = Route.useParams();
 	const address = interval === '1d' ? LURO : LURO_5MIN;
 	const query = useQuery<{ address: Address; strength: number }>({
 		queryKey: ['luro', address, 'bets', 'newBet'],
 		initialData: { address: ZeroAddress, strength: 0 },
+	});
+
+	const luro = interval === '1d' ? LURO : LURO_5MIN;
+	console.log(luro);
+	useWatchContractEvent({
+		abi: LuckyRoundContract.abi,
+		address: luro,
+		eventName: 'BetCreated',
+		args: {
+			round: BigInt(round),
+		},
+		onLogs: async (betLogs) => {
+			console.log('BET LOGS', betLogs);
+			// @ts-ignore
+			animateNewBet(betLogs[0]?.args?.player ?? ZeroAddress, 10, queryClient, address);
+			await queryClient.invalidateQueries({ queryKey: ['luro', luro, 'round'] });
+			await queryClient.invalidateQueries({ queryKey: ['luro', luro, 'bets'] });
+		},
 	});
 
 	return { query, resetObservedBet };
@@ -238,21 +256,6 @@ export const useRound = (round: number) => {
 	const config = useConfig();
 	const { interval } = Route.useParams();
 	const luro = interval === '1d' ? LURO : LURO_5MIN;
-	useWatchContractEvent({
-		abi: LuckyRoundContract.abi,
-		address: luro,
-		eventName: 'BetCreated',
-		args: {
-			round: BigInt(round),
-		},
-		onLogs: async (betLogs) => {
-			console.log('BET LOGS', betLogs);
-			// @ts-ignore
-			animateNewBet(betLogs[0]?.args?.player ?? ZeroAddress, 10, queryClient);
-			await queryClient.invalidateQueries({ queryKey: ['luro', luro, 'round'] });
-			await queryClient.invalidateQueries({ queryKey: ['luro', luro, 'bets'] });
-		},
-	});
 
 	useWatchContractEvent({
 		abi: LuckyRoundContract.abi,

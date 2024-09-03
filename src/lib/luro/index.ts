@@ -66,8 +66,8 @@ export const mapBetsToRoundTable = (bets: LuroBet[], winner: Address, volume: bi
 		});
 };
 
-export const animateNewBet = (address: Address, strength: number, queryClient: QueryClient) => {
-	queryClient.setQueryData(['luro', 'bets', 'newBet'], { address, strength });
+export const animateNewBet = (address: Address, strength: number, queryClient: QueryClient, luroAddress: string) => {
+	queryClient.setQueryData(['luro', luroAddress, 'bets', 'newBet'], { address, strength });
 };
 
 export const handleError = (e: Error, t: TFunction) => {
