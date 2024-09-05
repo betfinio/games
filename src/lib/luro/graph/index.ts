@@ -10,7 +10,7 @@ const client = new Client({
 export const requestRounds = async (address: Address): Promise<{ round: number }[]> => {
 	const query = gql`
       query($address: String) {
-          roundStarts(where: {address: $address}, first: 50, orderBy: round) {
+          roundStarts(where: {address: $address}, last: 100, orderBy: round) {
               round
           }
       }
@@ -34,7 +34,7 @@ export const fetchWinners = async (luro: Address): Promise<WinnerInfo[]> => {
 	console.log('fetching winners');
 	const query = gql`
       query($address: String)  {
-          winnerCalculateds(where: {address: $address}) {
+          winnerCalculateds(where: {address: $address}, last: 100, orderBy: round) {
               winner
               winnerOffset
               transactionHash
