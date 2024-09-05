@@ -23,6 +23,9 @@ import ConfettiExplosion from 'react-confetti-explosion';
 import type { Address } from 'viem';
 import { useAccount } from 'wagmi';
 
+import Crown from '@/src/assets/luro/crown.svg';
+import Duck from '@/src/assets/luro/duck.png';
+
 const largeProps = {
 	force: 0.8,
 	duration: 3000,
@@ -226,7 +229,7 @@ export const RoundCircle: FC<{ round: number; className?: string }> = ({ round, 
 						{roundData?.status === 2 && (
 							<>
 								<div className={'shrink-0'}>
-									<img alt={'duck'} src={'/luro/duck.png'} className={'max-h-[200px] md:h-[300px]'} />
+									<img alt={'duck'} src={Duck as string} className={'max-h-[200px] md:h-[300px]'} />
 								</div>
 								<div className={'flex flex-col min-w-[220px] gap-4'}>
 									<div
@@ -484,7 +487,7 @@ const BetCircleWinner: FC<{ player: Address; amount: number; percent: number; co
 			transition={{ duration: 0.5 }}
 			className={cx('absolute flex flex-col items-center justify-center w-full h-full top-0 gap-2 duration-300', loading && 'blur-sm')}
 		>
-			<img alt={'crown'} src={'/luro/crown.svg'} />
+			<img alt={'crown'} src={Crown as string} />
 			<div className={'z-10'}>
 				<TabItem player={player} amount={amount} percent={percent} />
 			</div>
