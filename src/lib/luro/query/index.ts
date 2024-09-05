@@ -9,7 +9,6 @@ import {
 	fetchRoundBets,
 	fetchRounds,
 	fetchTotalVolume,
-	fetchWinners,
 	getRoundWinnerByOffset,
 	placeBet,
 	startRound,
@@ -26,6 +25,7 @@ import { useTranslation } from 'react-i18next';
 import type { Address, WriteContractErrorType } from 'viem';
 import { waitForTransactionReceipt } from 'viem/actions';
 import { useAccount, useConfig, useWatchContractEvent } from 'wagmi';
+import {fetchWinners} from "@/src/lib/luro/graph";
 
 export const useObserveBet = (round: number) => {
 	const queryClient = useQueryClient();
@@ -233,12 +233,11 @@ export const useAvailableBonus = (address: Address) => {
 };
 
 export const useWinners = () => {
-	const config = useConfig();
 	const { interval } = Route.useParams();
 	const luro = interval === '1d' ? LURO : LURO_5MIN;
 	return useQuery<WinnerInfo[]>({
 		queryKey: ['luro', luro, 'winners'],
-		queryFn: () => fetchWinners(luro, config),
+		queryFn: () => fetchWinners(luro),
 	});
 };
 
