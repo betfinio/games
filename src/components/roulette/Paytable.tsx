@@ -1,7 +1,6 @@
 import { useLimits } from '@/src/lib/roulette/query';
 import { valueToNumber } from '@betfinio/abi';
 import { BetValue } from 'betfinio_app/BetValue';
-import { DialogClose } from 'betfinio_app/dialog';
 import { Link, X } from 'lucide-react';
 import type { FC } from 'react';
 
