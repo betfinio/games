@@ -7,11 +7,11 @@ import enJSON from './translations/en.json';
 import ruJSON from './translations/ru.json';
 
 // @ts-ignore
+import czShared from 'betfinio_app/locales/cz';
+// @ts-ignore
 import enShared from 'betfinio_app/locales/en';
 // @ts-ignore
 import ruShared from 'betfinio_app/locales/ru';
-// @ts-ignore
-import czShared from 'betfinio_app/locales/cz';
 
 const resources = {
 	en: {
