@@ -17,7 +17,7 @@ import {
 import type { FuncProps, Limit, LocalBet, RouletteBet, SpinParams, WheelState } from '@/src/lib/roulette/types.ts';
 import { RouletteContract } from '@betfinio/abi';
 import { ZeroAddress } from '@betfinio/abi';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useDebounce } from '@uidotdev/usehooks';
 import type { WriteContractReturnType } from '@wagmi/core';
 import { getTransactionLink } from 'betfinio_app/helpers';
@@ -32,6 +32,24 @@ export const useLocalBets = () =>
 		queryKey: ['roulette', 'local', 'bets'],
 		queryFn: fetchLocalBets,
 	});
+
+export const usePaytable = () => {
+	const queryClient = useQueryClient();
+	const { data: isOpen } = useQuery<boolean>({
+		queryKey: ['roulette', 'paytable'],
+		initialData: false,
+	});
+
+	return { isOpen, closePaytable: () => closePaytable(queryClient), openPaytable: () => openPaytable(queryClient) };
+};
+
+export const closePaytable = (queryClient: QueryClient) => {
+	queryClient.setQueryData(['roulette', 'paytable'], false);
+};
+
+export const openPaytable = (queryClient: QueryClient) => {
+	queryClient.setQueryData(['roulette', 'paytable'], true);
+};
 
 export const usePotentialWin = () => {
 	const { data: bets = [] } = useLocalBets();
@@ -131,6 +149,9 @@ export const useSpin = () => {
 		onError: (e) => {
 			// @ts-ignore
 			if (e.cause?.reason) {
+				if (e.cause.reason === 'RO04') {
+					openPaytable(queryClient);
+				}
 				// @ts-ignore
 				toast({ variant: 'destructive', description: errors(e.cause.reason) });
 			} else {

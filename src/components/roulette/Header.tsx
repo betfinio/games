@@ -1,11 +1,11 @@
 import Paytable from '@/src/components/roulette/Paytable.tsx';
 import { DYNAMIC_STAKING } from '@/src/global.ts';
-import { useLocalBets, usePotentialWin } from '@/src/lib/roulette/query';
+import { useLocalBets, usePaytable, usePotentialWin } from '@/src/lib/roulette/query';
 import { valueToNumber } from '@betfinio/abi';
 import { Bag } from '@betfinio/ui/dist/icons';
 import { BetValue } from 'betfinio_app/BetValue';
 import { Button } from 'betfinio_app/button';
-import { Dialog, DialogContent, DialogTrigger } from 'betfinio_app/dialog';
+import { Dialog, DialogContent } from 'betfinio_app/dialog';
 import { useBalance } from 'betfinio_app/lib/query/token';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from 'betfinio_app/tooltip';
 import cx from 'clsx';
@@ -19,6 +19,8 @@ const Header: FC = () => {
 	const maxPayout = useMemo(() => {
 		return balance / 20n;
 	}, [balance]);
+
+	const { isOpen: isPaytableOpen, openPaytable, closePaytable } = usePaytable();
 
 	const { data: bets = [] } = useLocalBets();
 	const { data: potentialWin = 1928234n * 10n ** 18n, isLoading } = usePotentialWin();
@@ -92,15 +94,16 @@ const Header: FC = () => {
 					<div className={'h-[80%] bg-white text-white w-[1px]'} />
 				</div>
 				<div className={cx('flex flex-row justify-between items-center gap-8 px-6')}>
-					<Dialog>
-						<DialogTrigger>
-							<div className={'flex flex-col items-center justify-center cursor-pointer text-[#FFC800] hover:text-[#FFC800] lg:text-white duration-300'}>
-								<CircleHelp className={'w-6 h-6'} />
-								<span className={'hidden sm:inline text-xs'}>Paytable</span>
-							</div>
-						</DialogTrigger>
+					<Dialog open={isPaytableOpen} onOpenChange={closePaytable}>
+						<div
+							onClick={openPaytable}
+							className={'flex flex-col items-center justify-center cursor-pointer text-[#FFC800] hover:text-[#FFC800] lg:text-white duration-300'}
+						>
+							<CircleHelp className={'w-6 h-6'} />
+							<span className={'hidden sm:inline text-xs'}>Paytable</span>
+						</div>
 						<DialogContent>
-							<Paytable />
+							<Paytable onClose={closePaytable} />
 						</DialogContent>
 					</Dialog>
 					<a

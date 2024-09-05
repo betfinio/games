@@ -1,20 +1,19 @@
 import { useLimits } from '@/src/lib/roulette/query';
 import { valueToNumber } from '@betfinio/abi';
 import { BetValue } from 'betfinio_app/BetValue';
-import { DialogClose } from 'betfinio_app/dialog';
 import { Link, X } from 'lucide-react';
+import type { FC } from 'react';
 
-const Paytable = () => {
+const Paytable: FC<{ onClose: () => void }> = ({ onClose }) => {
 	const { data: limits = [] } = useLimits();
 	return (
 		<div className={'bg-primaryLighter games rounded-lg p-4 w-full text-white relative'}>
-			<DialogClose>
-				<X
-					className={
-						'absolute top-4 right-4 rounded-full text-white border border-white w-6 h-6 p-1 cursor-pointer hover:border-red-roulette hover:text-red-roulette duration-300'
-					}
-				/>
-			</DialogClose>
+			<X
+				onClick={onClose}
+				className={
+					'absolute top-4 right-4 rounded-full text-white border border-white w-6 h-6 p-1 cursor-pointer hover:border-red-roulette hover:text-red-roulette duration-300'
+				}
+			/>
 			<h2 className={'text-yellow-400 font-semibold text-lg'}>Paytable</h2>
 			<div className={'w-full grid grid-cols-4 gap-1 my-4'}>
 				<span className={'font-semibold text-lg'}>Bet type</span>

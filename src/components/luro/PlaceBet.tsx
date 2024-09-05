@@ -221,7 +221,7 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 							type="range"
 							min={1000}
 							max={valueToNumber(balance)}
-							value={betPercentage}
+							value={amount}
 							onChange={handleSliderChange}
 							className="absolute w-full h-[2px] opacity-0 cursor-pointer"
 						/>
