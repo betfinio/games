@@ -1,4 +1,5 @@
 import { BETS_MEMORY, FIRST_BLOCK, PARTNER } from '@/src/global.ts';
+import { requestRounds } from '@/src/lib/luro/graph';
 import type { ICurrentRoundInfo } from '@/src/lib/luro/query';
 import type { LuroBet, PlaceBetParams, Round, RoundStatusEnum, WinnerInfo } from '@/src/lib/luro/types.ts';
 import { BetsMemoryContract, LuckyRoundBetContract, LuckyRoundContract, PartnerContract, defaultMulticall } from '@betfinio/abi';
@@ -114,18 +115,9 @@ export const getCurrentRoundInfo = (iBets: LuroBet[]): ICurrentRoundInfo => {
 export const fetchRounds = async (address: Address, player: Address, onlyPlayers: boolean, config?: Client): Promise<Round[]> => {
 	if (!config) return [];
 	console.log('fetching rounds', address);
-	// return [];
-	const activeRounds = await getContractEvents(config, {
-		abi: LuckyRoundContract.abi,
-		address: address,
-		fromBlock: BigInt(FIRST_BLOCK),
-		eventName: 'RoundStart',
-	});
-	console.log('rounds fetched', activeRounds.length);
-	// @ts-ignore
-	return (await Promise.all(activeRounds.reverse().map((e) => fetchRound(address, e.args.round, player, config)))).filter(
-		(e) => !onlyPlayers || e.player.bets > 0n,
-	);
+	const activeRounds = await requestRounds(address);
+	console.log(activeRounds);
+	return (await Promise.all(activeRounds.reverse().map((e) => fetchRound(address, e.round, player, config)))).filter((e) => !onlyPlayers || e.player.bets > 0n);
 };
 export const getRoundWinnerByOffset = (bets: LuroBet[], offset: bigint) => {
 	if (!offset) return null;
@@ -138,7 +130,6 @@ export const getRoundWinnerByOffset = (bets: LuroBet[], offset: bigint) => {
 };
 
 export const fetchRound = async (address: Address, round: number, player: Address, config: Client): Promise<Round> => {
-	console.log('fetching round', round);
 	const data = await multicall(config, {
 		multicallAddress: defaultMulticall,
 		contracts: [

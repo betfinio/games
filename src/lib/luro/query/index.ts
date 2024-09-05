@@ -9,11 +9,11 @@ import {
 	fetchRoundBets,
 	fetchRounds,
 	fetchTotalVolume,
-	fetchWinners,
 	getRoundWinnerByOffset,
 	placeBet,
 	startRound,
 } from '@/src/lib/luro/api';
+import { fetchWinners } from '@/src/lib/luro/graph';
 import type { LuroBet, PlaceBetParams, Round, WheelState, WinnerInfo } from '@/src/lib/luro/types.ts';
 import { Route } from '@/src/routes/luro/$interval.tsx';
 import { LuckyRoundContract } from '@betfinio/abi';
@@ -233,12 +233,11 @@ export const useAvailableBonus = (address: Address) => {
 };
 
 export const useWinners = () => {
-	const config = useConfig();
 	const { interval } = Route.useParams();
 	const luro = interval === '1d' ? LURO : LURO_5MIN;
 	return useQuery<WinnerInfo[]>({
 		queryKey: ['luro', luro, 'winners'],
-		queryFn: () => fetchWinners(luro, config),
+		queryFn: () => fetchWinners(luro),
 	});
 };
 

@@ -15,6 +15,7 @@ import type { FC } from 'react';
 import { useAccount } from 'wagmi';
 
 const RoundsTable: FC<{ className?: string }> = ({ className = '' }) => {
+	useWinners();
 	return (
 		<div className={cx('w-full overflow-x-auto min-h-[100px]', className)}>
 			<Tabs defaultValue={'all'}>
