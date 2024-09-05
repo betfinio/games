@@ -76,36 +76,26 @@ export const handleError = (e: Error, t: TFunction) => {
 };
 
 export const getLuroInterval = (interval: LuroInterval) => {
-	if (import.meta.env.PUBLIC_ENVIRONMENT.includes('prod')) {
-		if (interval === '5m') {
-			return 60 * 5;
-		}
-		return 60 * 60 * 24;
+	if (interval === '5m') {
+		return 60 * 5;
 	}
-	return 60 * 2;
+	return 60 * 60 * 24;
 };
 
 export const getCurrentRound = (interval: LuroInterval) => {
-	if (import.meta.env.PUBLIC_ENVIRONMENT.includes('prod')) {
-		if (interval === '5m') {
-			return Math.floor(Date.now() / 1000 / (60 * 5));
-		}
-		return Math.floor((Date.now() + 1000 * 60 * 60 * 6) / 1000 / (60 * 60 * 24));
+	if (interval === '5m') {
+		return Math.floor(Date.now() / 1000 / (60 * 5));
 	}
-	return Math.floor(Date.now() / 1000 / (60 * 10));
+	return Math.floor((Date.now() + 1000 * 60 * 60 * 6) / 1000 / (60 * 60 * 24));
 };
 
 export const getTimesByRound = (round: number, interval: LuroInterval) => {
-	if (import.meta.env.PUBLIC_ENVIRONMENT.includes('prod')) {
-		if (interval === '1d') {
-			const start = round * 60 * 60 * 24 * 1000 - 1000 * 60 * 60 * 6;
-			return { start, end: start + 60 * 60 * 24 * 1000 };
-		}
+	if (interval === '5m') {
 		const start = round * 60 * 5 * 1000;
 		return { start, end: start + 60 * 5 * 1000 };
 	}
-	const start = round * 60 * 10 * 1000;
-	return { start, end: start + 60 * 10 * 1000 };
+	const start = round * 60 * 60 * 24 * 1000 - 1000 * 60 * 60 * 6;
+	return { start, end: start + 60 * 60 * 24 * 1000 };
 };
 
 export const jumpToCurrentRound = (queryClient: QueryClient) => {
