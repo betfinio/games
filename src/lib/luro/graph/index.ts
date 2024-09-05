@@ -10,7 +10,7 @@ const client = new Client({
 export const requestRounds = async (address: Address): Promise<{ round: number }[]> => {
 	const query = gql`
       query($address: String) {
-          roundStarts(where: {address: $address}, last: 100, orderBy: round) {
+          roundStarts(where: {address: $address}, orderBy: round, orderDirection: desc) {
               round
           }
       }
@@ -19,7 +19,7 @@ export const requestRounds = async (address: Address): Promise<{ round: number }
 	const result = await client.query(query, { address });
 
 	console.log(result);
-	return result.data.roundStarts;
+	return result.data.roundStarts.reverse();
 };
 
 interface GraphWinnerInfo {
@@ -34,7 +34,7 @@ export const fetchWinners = async (luro: Address): Promise<WinnerInfo[]> => {
 	console.log('fetching winners');
 	const query = gql`
       query($address: String)  {
-          winnerCalculateds(where: {address: $address}, last: 100, orderBy: round) {
+          winnerCalculateds(where: {address: $address}, first: 100, orderBy: round, orderDirection: desc) {
               winner
               winnerOffset
               transactionHash
