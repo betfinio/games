@@ -1,4 +1,5 @@
 import { BETS_MEMORY, FIRST_BLOCK, PARTNER } from '@/src/global.ts';
+import { requestRounds } from '@/src/lib/luro/graph';
 import type { ICurrentRoundInfo } from '@/src/lib/luro/query';
 import type { LuroBet, PlaceBetParams, Round, RoundStatusEnum, WinnerInfo } from '@/src/lib/luro/types.ts';
 import { BetsMemoryContract, LuckyRoundBetContract, LuckyRoundContract, PartnerContract, defaultMulticall } from '@betfinio/abi';
@@ -7,7 +8,6 @@ import { writeContract } from '@wagmi/core';
 import { type Address, type Client, encodeAbiParameters, parseAbiParameters } from 'viem';
 import { getContractEvents, multicall, readContract } from 'viem/actions';
 import type { Config } from 'wagmi';
-import { requestRounds } from '@/src/lib/luro/graph';
 
 export async function placeBet({ round, amount, player, address }: PlaceBetParams, config: Config) {
 	try {

@@ -1,6 +1,6 @@
+import type { WinnerInfo } from '@/src/lib/luro/types.ts';
 import { gql, request } from 'graphql-request';
 import type { Address } from 'viem';
-import type { WinnerInfo } from '@/src/lib/luro/types.ts';
 const URL = import.meta.env.PUBLIC_LUCKY_ROUND_GRAPH_URL;
 
 export const requestRounds = async (address: Address): Promise<{ round: number }[]> => {
