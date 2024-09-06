@@ -103,19 +103,6 @@ export const useStartRound = (round: number) => {
 	const config = useConfig();
 	const { interval } = Route.useParams();
 	const address = interval === '1d' ? LURO : LURO_5MIN;
-	useWatchContractEvent({
-		abi: LuckyRoundContract.abi,
-		address: address,
-		eventName: 'RequestedCalculation',
-		onLogs: (rolledLogs) => {
-			console.log('ROLLED LOGS', rolledLogs);
-			// @ts-ignore
-			if (Number(rolledLogs[0].args.round) === round) {
-				console.log('START SPINNING');
-				updateState({ state: 'spinning' });
-			}
-		},
-	});
 
 	useWatchContractEvent({
 		abi: LuckyRoundContract.abi,
@@ -253,21 +240,24 @@ export const useRound = (round: number) => {
 	const { address = ZeroAddress } = useAccount();
 	const queryClient = useQueryClient();
 	const config = useConfig();
+	const { updateState } = useLuroState();
 	const { interval } = Route.useParams();
 	const luro = interval === '1d' ? LURO : LURO_5MIN;
 
 	useWatchContractEvent({
 		abi: LuckyRoundContract.abi,
-		address: luro,
+		address: address,
 		eventName: 'RequestedCalculation',
-		onLogs: (logs) => {
-			console.log('request', logs[0]);
+		onLogs: (rolledLogs) => {
+			console.log('ROLLED LOGS', rolledLogs);
 			// @ts-ignore
-			console.log('round', Number(logs[0].args.round));
-			// @ts-ignore
-			queryClient.invalidateQueries({ queryKey: ['luro', luro, 'round', Number(logs[0].args.round)] });
+			if (Number(rolledLogs[0].args.round) === round) {
+				console.log('START SPINNING');
+				updateState({ state: 'spinning' });
+			}
 		},
 	});
+
 	return useQuery<Round>({
 		queryKey: ['luro', luro, 'round', round],
 		queryFn: () => {
