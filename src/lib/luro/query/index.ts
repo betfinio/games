@@ -242,8 +242,6 @@ export const useRound = (round: number) => {
 	const { interval } = Route.useParams();
 	const luro = interval === '1d' ? LURO : LURO_5MIN;
 
-
-
 	return useQuery<Round>({
 		queryKey: ['luro', luro, 'round', round],
 		queryFn: () => {
@@ -283,8 +281,7 @@ export const useVisibleRound = () => {
 		return getCurrentRound(interval as LuroInterval);
 	};
 	const { updateState } = useLuroState();
-	
-	
+
 	useWatchContractEvent({
 		abi: LuckyRoundContract.abi,
 		address: address,
