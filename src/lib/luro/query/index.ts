@@ -238,25 +238,11 @@ export const useRoundWinner = (round: number) => {
 
 export const useRound = (round: number) => {
 	const { address = ZeroAddress } = useAccount();
-	const queryClient = useQueryClient();
 	const config = useConfig();
-	const { updateState } = useLuroState();
 	const { interval } = Route.useParams();
 	const luro = interval === '1d' ? LURO : LURO_5MIN;
 
-	useWatchContractEvent({
-		abi: LuckyRoundContract.abi,
-		address: address,
-		eventName: 'RequestedCalculation',
-		onLogs: (rolledLogs) => {
-			console.log('ROLLED LOGS', rolledLogs);
-			// @ts-ignore
-			if (Number(rolledLogs[0].args.round) === round) {
-				console.log('START SPINNING');
-				updateState({ state: 'spinning' });
-			}
-		},
-	});
+
 
 	return useQuery<Round>({
 		queryKey: ['luro', luro, 'round', round],
@@ -296,6 +282,22 @@ export const useVisibleRound = () => {
 		await queryClient.invalidateQueries({ queryKey: ['luro', address, 'bets', 'round'] });
 		return getCurrentRound(interval as LuroInterval);
 	};
+	const { updateState } = useLuroState();
+	
+	
+	useWatchContractEvent({
+		abi: LuckyRoundContract.abi,
+		address: address,
+		eventName: 'RequestedCalculation',
+		onLogs: (rolledLogs) => {
+			console.log('ROLLED LOGS', rolledLogs);
+			// @ts-ignore
+			if (Number(rolledLogs[0].args.round) === round) {
+				console.log('START SPINNING');
+				updateState({ state: 'spinning' });
+			}
+		},
+	});
 
 	return useQuery({
 		queryKey: ['luro', address, 'visibleRound'],
