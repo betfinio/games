@@ -290,8 +290,8 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 	);
 };
 
-const WaitingScreen: FC<{ round: number }> = () => {
-	const { mutate: startRound, isPending } = useStartRound(19950);
+const WaitingScreen: FC<{ round: number }> = ({ round }) => {
+	const { mutate: startRound, isPending } = useStartRound(round);
 
 	const handleSpin = () => {
 		startRound();

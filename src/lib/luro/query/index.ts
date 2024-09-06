@@ -281,11 +281,11 @@ export const useLuroState = () => {
 	const { interval } = Route.useParams();
 	const address = interval === '1d' ? LURO : LURO_5MIN;
 	const state = useQuery<WheelState>({
-		queryKey: ['luro', 'state'],
+		queryKey: ['luro', address, 'state'],
 		initialData: { state: 'standby' },
 	});
-
 	const updateState = (st: WheelState) => {
+		console.log('SET WHEEL STATE DATA', st);
 		queryClient.setQueryData(['luro', address, 'state'], st);
 	};
 
