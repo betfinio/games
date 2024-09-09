@@ -2,6 +2,7 @@ import type { WinnerInfo } from '@/src/lib/luro/types.ts';
 import { Client, cacheExchange, fetchExchange, gql } from 'urql';
 import type { Address } from 'viem';
 const URL = import.meta.env.PUBLIC_LUCKY_ROUND_GRAPH_URL;
+
 const client = new Client({
 	url: URL,
 	exchanges: [cacheExchange, fetchExchange],
