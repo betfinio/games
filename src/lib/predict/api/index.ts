@@ -1,4 +1,5 @@
 import { games } from '@/src/lib/predict';
+import { requestRounds } from '@/src/lib/predict/gql';
 import {
 	BetInterfaceContract,
 	BetsMemoryContract,
@@ -125,21 +126,12 @@ export async function fetchPrice(options: Options, params: { address: Address; t
 }
 
 export async function fetchRounds(options: Options, params: { game: Address }): Promise<number[]> {
-	if (!options.config) throw Error('Config is required!');
 	const { game } = params;
-	const { config } = options;
 	console.log('fetching rounds', game);
-	const currentBlock = await getBlock(config);
-	const events = await getContractEvents(config.getClient(), {
-		abi: GameContract.abi,
-		address: game,
-		fromBlock: currentBlock.number - 100000n,
-		toBlock: 'latest',
-		eventName: 'RoundCreated',
-	});
-	return [...events.reverse().slice(0, 10)].map((e) => {
-		return Number.parseInt(e.topics[1] || '0', 16);
-	});
+
+	const rounds = await requestRounds(game);
+
+	return rounds.map(({ round }) => round);
 }
 
 export async function fetchPlayerRounds(options: Options, params: { game: Address; player: Address }): Promise<number[]> {
