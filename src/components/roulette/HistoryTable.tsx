@@ -14,25 +14,6 @@ import { ShieldCheckIcon, X } from 'lucide-react';
 import { DateTime } from 'luxon';
 import type { FC } from 'react';
 
-const tabAnim = {
-	hide: {
-		opacity: 0,
-		transition: {
-			duration: 0.2,
-			ease: 'linear',
-			when: 'beforeChildren',
-		},
-	},
-	show: {
-		opacity: 1,
-		transition: {
-			duration: 0.2,
-			ease: 'linear',
-			when: 'beforeChildren',
-		},
-	},
-};
-
 const History = () => {
 	return (
 		<Tabs defaultValue={'my'}>
@@ -57,8 +38,6 @@ export const RoundModal: FC<{
 	selectedBet: RouletteBet | null;
 	onClose: () => void;
 }> = ({ selectedBet, onClose }) => {
-	const { data: proofTx, isFetching } = useProofRandom(selectedBet?.requestId || 0n);
-
 	return (
 		<motion.div
 			onClick={(e) => e.stopPropagation()}
@@ -139,15 +118,12 @@ export const RoundModal: FC<{
 				<p className={'text-[#8794A1] font-semibold'}>Proof of random:</p>
 				<ShieldCheckIcon className={'text-[#38BB7F] w-5 h-5'} />
 				<a
-					href={`${ETHSCAN}/tx/${proofTx}`}
+					href={`${ETHSCAN}/tx/${selectedBet?.hash}`}
 					target={'_blank'}
-					className={cx(
-						'block text-center underline cursor-pointer hover:text-[#7366FF] duration-300',
-						isFetching && 'animate-pulse blur-sm pointer-events-none',
-					)}
+					className={cx('block text-center underline cursor-pointer hover:text-[#7366FF] duration-300')}
 					rel="noreferrer"
 				>
-					{truncateEthAddress(proofTx)}
+					{truncateEthAddress(selectedBet?.hash || ZeroAddress)}
 				</a>
 			</div>
 			<div className={'text-xs mt-1 text-center '}>

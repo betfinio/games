@@ -705,7 +705,7 @@ const TableDesktopControls: FC<TableDesktopControlsProps> = ({ onHighlight }) =>
 					<div>
 						{chip.map((e, i) => (
 							<Chip
-								labelClassName={''}
+								labelClassName={'translate-y-0'}
 								key={i}
 								value={e.amount}
 								fontSize={6}
