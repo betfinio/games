@@ -3,7 +3,7 @@ import { Client, cacheExchange, fetchExchange, gql } from 'urql';
 import type { Address } from 'viem';
 const URL = import.meta.env.PUBLIC_ROULETTE_GRAPH_URL;
 import { ROULETTE } from '@/src/global.ts';
-import { consola } from 'consola';
+import logger from '@/src/config/logger';
 const client = new Client({
 	url: URL,
 	exchanges: [cacheExchange, fetchExchange],
@@ -20,7 +20,7 @@ interface BetInfo {
 	transactionHash: string;
 }
 export const fetchBetsByPlayer = async (address: Address): Promise<RouletteBet[]> => {
-	consola.info('[roulette]', 'fetching bets by player', address);
+	logger.start('[roulette]', 'fetching bets by player', address);
 	const query = gql`
       query($address: String) {
           landeds(where: {player: $address}, orderBy: blockTimestamp, orderDirection: desc, first: 50) {
@@ -36,6 +36,7 @@ export const fetchBetsByPlayer = async (address: Address): Promise<RouletteBet[]
       }
 	`;
 	const result = await client.query(query, { address });
+	logger.success('[roulette]', 'fetching bets by player', result.data.landeds.length);
 	return result.data.landeds.map(
 		(landed: BetInfo) =>
 			({
