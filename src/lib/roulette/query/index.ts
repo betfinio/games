@@ -14,6 +14,7 @@ import {
 	undoPlace,
 	unplace,
 } from '@/src/lib/roulette/api';
+import { fetchAllBets, fetchBetsByPlayer } from '@/src/lib/roulette/graph';
 import type { FuncProps, Limit, LocalBet, RouletteBet, SpinParams, WheelState } from '@/src/lib/roulette/types.ts';
 import { RouletteContract } from '@betfinio/abi';
 import { ZeroAddress } from '@betfinio/abi';
@@ -70,10 +71,9 @@ export const useLimits = () => {
 };
 
 export const useRouletteBets = (address: Address) => {
-	const config = useConfig();
 	return useQuery<RouletteBet[]>({
 		queryKey: ['roulette', 'bets', address],
-		queryFn: () => fetchRouletteBets(address, config),
+		queryFn: () => fetchBetsByPlayer(address),
 	});
 };
 
@@ -149,6 +149,7 @@ export const useSpin = () => {
 		onError: (e) => {
 			// @ts-ignore
 			if (e.cause?.reason) {
+				// @ts-ignore
 				if (e.cause.reason === 'RO04') {
 					openPaytable(queryClient);
 				}
@@ -212,11 +213,10 @@ export const useChangeChip = () => {
 	});
 };
 
-export const useLastRouletteBets = () => {
-	const config = useConfig();
+export const useLastRouletteBets = (count: number) => {
 	return useQuery<RouletteBet[]>({
-		queryKey: ['roulette', 'bets', 'last'],
-		queryFn: () => fetchLastRouletteBets(config),
+		queryKey: ['roulette', 'bets', 'last', count],
+		queryFn: () => fetchAllBets(count),
 	});
 };
 

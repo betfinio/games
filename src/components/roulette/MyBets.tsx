@@ -1,3 +1,4 @@
+import { ETHSCAN } from '@/src/global.ts';
 import { getColor } from '@/src/lib/roulette';
 import { useRouletteBets } from '@/src/lib/roulette/query';
 import type { RouletteBet } from '@/src/lib/roulette/types.ts';
@@ -19,16 +20,20 @@ const columnHelper = createColumnHelper<RouletteBet>();
 export const MyBetsTable = () => {
 	const [selected, setSelected] = useState<null | RouletteBet>(null);
 	const { address = ZeroAddress } = useAccount();
-	const { data: bets = [], isFetched: isBetsFetched, isLoading } = useRouletteBets(address);
+	const { data: bets = [], isLoading } = useRouletteBets(address);
 
 	const columns = [
 		columnHelper.accessor('address', {
-			header: 'Address',
-			cell: (props) => <span className={'text-gray-400 whitespace-nowrap'}>{truncateEthAddress(props.getValue())}</span>,
+			header: 'Bet address',
+			cell: (props) => (
+				<a target={'_blank'} rel={'noreferrer'} href={`${ETHSCAN}/address/${props.getValue()}`} className={'text-gray-400 whitespace-nowrap'}>
+					{truncateEthAddress(props.getValue())}
+				</a>
+			),
 		}),
 		columnHelper.accessor('created', {
 			header: 'Date',
-			cell: (props) => <span className={'text-white'}>{DateTime.fromMillis(Number(props.getValue()) * 1000).toFormat('DD, T')}</span>,
+			cell: (props) => <span className={'text-white'}>{DateTime.fromMillis(Number(props.getValue()) * 1000).toFormat('DD, T:ss')}</span>,
 		}),
 		columnHelper.accessor('amount', {
 			header: 'Amount',

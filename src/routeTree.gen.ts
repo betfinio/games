@@ -127,16 +127,99 @@ declare module '@tanstack/react-router' {
 
 // Create and export the route tree
 
-export const routeTree = rootRoute.addChildren({
-  IndexRoute,
-  SoonRoute,
-  LuroIntervalRoute,
-  LuroSoonRoute,
-  PredictPairRoute,
-  LuroIndexRoute,
-  PredictIndexRoute,
-  RouletteIndexRoute,
-})
+export interface FileRoutesByFullPath {
+  '/': typeof IndexRoute
+  '/soon': typeof SoonRoute
+  '/luro/$interval': typeof LuroIntervalRoute
+  '/luro/soon': typeof LuroSoonRoute
+  '/predict/$pair': typeof PredictPairRoute
+  '/luro': typeof LuroIndexRoute
+  '/predict': typeof PredictIndexRoute
+  '/roulette': typeof RouletteIndexRoute
+}
+
+export interface FileRoutesByTo {
+  '/': typeof IndexRoute
+  '/soon': typeof SoonRoute
+  '/luro/$interval': typeof LuroIntervalRoute
+  '/luro/soon': typeof LuroSoonRoute
+  '/predict/$pair': typeof PredictPairRoute
+  '/luro': typeof LuroIndexRoute
+  '/predict': typeof PredictIndexRoute
+  '/roulette': typeof RouletteIndexRoute
+}
+
+export interface FileRoutesById {
+  __root__: typeof rootRoute
+  '/': typeof IndexRoute
+  '/soon': typeof SoonRoute
+  '/luro/$interval': typeof LuroIntervalRoute
+  '/luro/soon': typeof LuroSoonRoute
+  '/predict/$pair': typeof PredictPairRoute
+  '/luro/': typeof LuroIndexRoute
+  '/predict/': typeof PredictIndexRoute
+  '/roulette/': typeof RouletteIndexRoute
+}
+
+export interface FileRouteTypes {
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths:
+    | '/'
+    | '/soon'
+    | '/luro/$interval'
+    | '/luro/soon'
+    | '/predict/$pair'
+    | '/luro'
+    | '/predict'
+    | '/roulette'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/'
+    | '/soon'
+    | '/luro/$interval'
+    | '/luro/soon'
+    | '/predict/$pair'
+    | '/luro'
+    | '/predict'
+    | '/roulette'
+  id:
+    | '__root__'
+    | '/'
+    | '/soon'
+    | '/luro/$interval'
+    | '/luro/soon'
+    | '/predict/$pair'
+    | '/luro/'
+    | '/predict/'
+    | '/roulette/'
+  fileRoutesById: FileRoutesById
+}
+
+export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
+  SoonRoute: typeof SoonRoute
+  LuroIntervalRoute: typeof LuroIntervalRoute
+  LuroSoonRoute: typeof LuroSoonRoute
+  PredictPairRoute: typeof PredictPairRoute
+  LuroIndexRoute: typeof LuroIndexRoute
+  PredictIndexRoute: typeof PredictIndexRoute
+  RouletteIndexRoute: typeof RouletteIndexRoute
+}
+
+const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
+  SoonRoute: SoonRoute,
+  LuroIntervalRoute: LuroIntervalRoute,
+  LuroSoonRoute: LuroSoonRoute,
+  PredictPairRoute: PredictPairRoute,
+  LuroIndexRoute: LuroIndexRoute,
+  PredictIndexRoute: PredictIndexRoute,
+  RouletteIndexRoute: RouletteIndexRoute,
+}
+
+export const routeTree = rootRoute
+  ._addFileChildren(rootRouteChildren)
+  ._addFileTypes<FileRouteTypes>()
 
 /* prettier-ignore-end */
 

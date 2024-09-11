@@ -17,7 +17,7 @@ const columnHelper = createColumnHelper<RouletteBet>();
 
 export const AllBetsTable = () => {
 	const [selected, setSelected] = useState<null | RouletteBet>(null);
-	const { data: bets = [], isFetched: isBetsFetched, isLoading } = useLastRouletteBets();
+	const { data: bets = [], isLoading } = useLastRouletteBets(50);
 
 	const columns = [
 		columnHelper.accessor('player', {

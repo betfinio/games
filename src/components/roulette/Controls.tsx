@@ -246,7 +246,7 @@ const RouletteControls = () => {
 							}
 						>
 							<Chip
-								labelClassName={''}
+								labelClassName={'translate-y-0'}
 								className={cx('duration-300 flex items-center justify-center', {
 									'text-amber-500': valueToNumber(bigValue) > 1000000,
 									'text-red-500': valueToNumber(bigValue) > 500000 && valueToNumber(bigValue) <= 1000000,
