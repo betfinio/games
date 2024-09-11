@@ -1,3 +1,4 @@
+import logger from '@/src/config/logger';
 import { BETS_MEMORY, FIRST_BLOCK, PARTNER } from '@/src/global.ts';
 import { requestRounds } from '@/src/lib/luro/graph';
 import type { ICurrentRoundInfo } from '@/src/lib/luro/query';
@@ -199,7 +200,7 @@ export const fetchRound = async (address: Address, round: number, player: Addres
 };
 
 export const fetchBetsCount = async (address: Address, config: Config): Promise<number> => {
-	console.log('fetching total bets number');
+	logger.info('fetching total bets number');
 	return Number(
 		await readContract(config.getClient(), {
 			abi: BetsMemoryContract.abi,

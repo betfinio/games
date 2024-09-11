@@ -14,7 +14,7 @@ import {
 	undoPlace,
 	unplace,
 } from '@/src/lib/roulette/api';
-import { fetchAllBets, fetchBetsByPlayer } from '@/src/lib/roulette/graph';
+import { fetchAllBets, fetchBetsByPlayer } from '../gql';
 import type { FuncProps, Limit, LocalBet, RouletteBet, SpinParams, WheelState } from '@/src/lib/roulette/types.ts';
 import { RouletteContract } from '@betfinio/abi';
 import { ZeroAddress } from '@betfinio/abi';
