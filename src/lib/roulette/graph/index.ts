@@ -2,8 +2,8 @@ import type { RouletteBet } from '@/src/lib/roulette/types.ts';
 import { Client, cacheExchange, fetchExchange, gql } from 'urql';
 import type { Address } from 'viem';
 const URL = import.meta.env.PUBLIC_ROULETTE_GRAPH_URL;
-import { ROULETTE } from '@/src/global.ts';
 import logger from '@/src/config/logger';
+import { ROULETTE } from '@/src/global.ts';
 const client = new Client({
 	url: URL,
 	exchanges: [cacheExchange, fetchExchange],
