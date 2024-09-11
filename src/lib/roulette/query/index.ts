@@ -14,7 +14,6 @@ import {
 	undoPlace,
 	unplace,
 } from '@/src/lib/roulette/api';
-import { fetchAllBets, fetchBetsByPlayer } from '../gql';
 import type { FuncProps, Limit, LocalBet, RouletteBet, SpinParams, WheelState } from '@/src/lib/roulette/types.ts';
 import { RouletteContract } from '@betfinio/abi';
 import { ZeroAddress } from '@betfinio/abi';
@@ -27,6 +26,7 @@ import { useTranslation } from 'react-i18next';
 import type { Address, WriteContractErrorType } from 'viem';
 import { waitForTransactionReceipt } from 'viem/actions';
 import { useAccount, useConfig, useWatchContractEvent } from 'wagmi';
+import { fetchAllBets, fetchBetsByPlayer } from '../gql';
 
 export const useLocalBets = () =>
 	useQuery<LocalBet[]>({
