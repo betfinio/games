@@ -16,5 +16,5 @@
 //
 // const client = new GraphQLClient(url);
 export const requestRounds = async (address: Address): Promise<CreatedRoundsByAddressQuery['roundCreateds']> => {
-	return []
+	return [];
 };
