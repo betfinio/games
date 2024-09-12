@@ -14,7 +14,7 @@ import {
 	fetchYesterdayPrice,
 	placeBet,
 } from '@/src/lib/predict/api';
-import { type CalculateRoundParams, type Game, type PlaceBetParams, type PredictBet, type Result, defaultResult } from '@/src/lib/predict/types.ts';
+import { type CalculateRoundParams, type Game, type PlaceBetParams, type PredictBet, type Result, type Round, defaultResult } from '@/src/lib/predict/types.ts';
 import { BetsMemoryContract, GameContract } from '@betfinio/abi';
 import { ZeroAddress } from '@betfinio/abi';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -110,20 +110,6 @@ export const useLastBets = (count: number) => {
 	});
 };
 
-export const useRoundInfo = (game: Game, round: number) => {
-	const config = useConfig();
-
-	const { address = ZeroAddress } = useAccount({ config });
-	const { client: supabase } = useSupabase();
-
-	return useQuery({
-		queryKey: ['predict', 'round', round],
-		queryFn: () => fetchRound({ config, supabase }, { game, round, player: address }),
-		refetchOnMount: false,
-		refetchOnWindowFocus: false,
-	});
-};
-
 export const useRoundBets = (game: Address, round: number) => {
 	const config = useConfig();
 	return useQuery<PredictBet[]>({
@@ -150,25 +136,42 @@ export const usePool = (game: Address, round: number) => {
 		queryFn: () => fetchPool({ config }, { game, round }),
 	});
 };
-export const useRounds = (game: Address) => {
+export const useRounds = (game: Game, onlyPlayers?: boolean) => {
 	const config = useConfig();
 
 	const client = useQueryClient();
+	const { address = ZeroAddress } = useAccount({ config });
+	const { client: supabase } = useSupabase();
 	useWatchContractEvent({
 		abi: GameContract.abi,
-		address: game,
+		address: game.address,
 		config: config,
 		eventName: 'RoundCreated',
 		onLogs: async () => {
-			await client.invalidateQueries({ queryKey: ['predict', 'rounds', game] });
+			await client.invalidateQueries({ queryKey: ['predict', 'rounds', game, onlyPlayers] });
 		},
 	});
 
-	return useQuery<number[]>({
-		queryKey: ['predict', 'rounds', game],
-		queryFn: () => fetchRounds({ config }, { game }),
+	return useQuery<Round[]>({
+		queryKey: ['predict', 'rounds', game, onlyPlayers],
+		queryFn: () => fetchRounds({ config, supabase }, { game, player: address, onlyPlayers }),
 	});
 };
+
+export const useRoundInfo = (game: Game, round: number) => {
+	const config = useConfig();
+
+	const { address = ZeroAddress } = useAccount({ config });
+	const { client: supabase } = useSupabase();
+
+	return useQuery({
+		queryKey: ['predict', 'round', round],
+		queryFn: () => fetchRound({ config, supabase }, { game, round, player: address }),
+		refetchOnMount: false,
+		refetchOnWindowFocus: false,
+	});
+};
+
 export const usePlayerRounds = (game: Address) => {
 	const config = useConfig();
 	const { client: supabase } = useSupabase();

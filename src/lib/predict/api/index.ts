@@ -1,5 +1,5 @@
 import { games } from '@/src/lib/predict';
-import { requestRounds } from '@/src/lib/predict/gql';
+import { fetchRoundIds } from '@/src/lib/predict/gql';
 import {
 	BetInterfaceContract,
 	BetsMemoryContract,
@@ -20,6 +20,19 @@ import { type CalculateRoundParams, type Game, type PlaceBetParams, type Predict
 const PREDICT_ADDRESS = import.meta.env.PUBLIC_PREDICT_ADDRESS as Address;
 const BETS_MEMORY_ADDRESS = import.meta.env.PUBLIC_BETS_MEMORY_ADDRESS as Address;
 const PARTNER_ADDRESS = import.meta.env.PUBLIC_PARTNER_ADDRESS as Address;
+
+export const fetchRounds = async (options: Options, params: { game: Game; player: Address; onlyPlayers?: boolean }): Promise<Round[]> => {
+	const { config } = options;
+	const { game, player, onlyPlayers } = params;
+	const { address: gameAddress } = game;
+
+	if (!config) return [];
+	const roundIds = await fetchRoundIds(gameAddress, 1, 100);
+
+	return (await Promise.all(roundIds.map((round) => fetchRound(options, { game, round, player })))).filter(
+		(round) => !onlyPlayers || round.currentPlayerBets > 0,
+	);
+};
 
 export async function fetchRound(options: Options, params: { game: Game; round: number; player: Address }): Promise<Round> {
 	if (!options.config) throw Error('Config is required!');
@@ -123,15 +136,6 @@ export async function fetchPrice(options: Options, params: { address: Address; t
 		console.log(e);
 		return defaultResult;
 	}
-}
-
-export async function fetchRounds(options: Options, params: { game: Address }): Promise<number[]> {
-	const { game } = params;
-	console.log('fetching rounds', game);
-
-	const rounds = await requestRounds(game);
-
-	return rounds.map(({ round }) => round);
 }
 
 export async function fetchPlayerRounds(options: Options, params: { game: Address; player: Address }): Promise<number[]> {

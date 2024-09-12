@@ -22,3 +22,9 @@ query RouletteAllLandeds {
         transactionHash
     }
 }
+
+query PredictRoundCreatedsByGameAddress ($address: Bytes, $first: Int, $skip: Int)  {
+    roundCreateds (where: {address: $address}, first: $first, skip: $skip, orderBy: round, orderDirection: desc)  {
+        round
+    }
+}
