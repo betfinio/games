@@ -24,10 +24,11 @@ bun.lockb
 
 *.gen.*
 
-schema.graphql
-
 src/routeTree.gen.ts
 
 graphql.schema.json
 
 src/gql/
+
+
+.graphclient/

@@ -3,6 +3,7 @@
 	"private": true,
 	"version": "1.0.0",
 	"scripts": {
+		"prebuild": "graphclient build",
 		"build": "rsbuild build",
 		"check": "biome check --write",
 		"dev": "rsbuild dev --open",
@@ -10,7 +11,8 @@
 		"local": "rsbuild dev --env-mode localhost --open",
 		"format": "biome format --write",
 		"preview": "rsbuild preview",
-		"codegen": "graphql-codegen --config codegen.ts"
+		"codegen": "graphql-codegen --config codegen.ts",
+		"build:schema": "dotenv -e .env.development.local -- graphclient build"
 	},
 	"dependencies": {
 		"@betfinio/abi": "^1.0.5",
@@ -18,10 +20,11 @@
 		"@module-federation/enhanced": "^0.3.5",
 		"@nivo/bar": "^0.87.0",
 		"@nivo/pie": "^0.87.0",
+		"@rsbuild/plugin-node-polyfill": "^1.0.4",
 		"@rsbuild/plugin-svgr": "^1.0.1",
 		"@supabase/supabase-js": "^2.45.4",
 		"@tanstack/react-query": "^5.55.4",
-		"@tanstack/react-router": "^1.57.9",
+		"@tanstack/react-router": "^1.57.10",
 		"@tanstack/react-table": "^8.20.5",
 		"@types/animejs": "^3.1.12",
 		"@types/react-window": "^1.8.8",
@@ -52,19 +55,20 @@
 		"react-ts-tradingview-widgets": "^1.2.5",
 		"react-window": "^1.8.10",
 		"tailwind-merge": "^2.5.2",
-		"tailwindcss": "^3.4.10",
+		"tailwindcss": "^3.4.11",
 		"tailwindcss-animate": "^1.0.7",
 		"urql": "^4.1.0",
-		"viem": "^2.21.5",
-		"wagmi": "^2.12.10"
+		"viem": "^2.21.6",
+		"wagmi": "^2.12.11"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.8.3",
+		"@graphprotocol/client-cli": "^3.0.7",
 		"@graphql-codegen/cli": "5.0.2",
 		"@graphql-codegen/client-preset": "4.3.3",
-		"@graphql-codegen/typescript-graphql-request": "^6.2.0",
 		"@graphql-codegen/near-operation-file-preset": "^3.0.0",
 		"@graphql-codegen/typescript": "^4.0.9",
+		"@graphql-codegen/typescript-graphql-request": "^6.2.0",
 		"@graphql-codegen/typescript-operations": "^4.2.3",
 		"@radix-ui/react-tabs": "^1.1.0",
 		"@rsbuild/core": "^1.0.2",

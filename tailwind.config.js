@@ -2,7 +2,7 @@
 module.exports = {
 	darkMode: ['class'],
 	important: '.games',
-	content: ['./pages/**/*.{ts,tsx}', './components/**/*.{ts,tsx}', './app/**/*.{ts,tsx}', './src/**/*.{ts,tsx}', './@mf-types/**/*.*'],
+	content: ['./pages/**/*.{ts,tsx}', './components/**/*.{ts,tsx}', './app/**/*.{ts,tsx}', './src/**/*.{ts,tsx}'],
 	prefix: '',
 	theme: {
 		container: {

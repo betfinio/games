@@ -4,7 +4,4 @@ import { Root } from 'betfinio_app/root';
 
 export const Route = createRootRoute({
 	component: () => <Root id={'games'} instance={instance} />,
-	notFoundComponent: () => {
-		window.location.href = '/predict/BTCUSDT';
-	},
 });
