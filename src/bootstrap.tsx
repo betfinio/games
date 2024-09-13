@@ -1,10 +1,10 @@
 import './globals.css';
 import 'betfinio_app/style';
-import {createRouter, RouterProvider} from '@tanstack/react-router';
+import { RouterProvider, createRouter } from '@tanstack/react-router';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
-import {routeTree} from './routeTree.gen';
+import { routeTree } from './routeTree.gen';
 
 const router = createRouter({ routeTree });
 
