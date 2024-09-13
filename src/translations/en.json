@@ -34,6 +34,12 @@
 			"win": "Win",
 			"status": "Status",
 			"round": "Round",
+			"columns": {
+				"round": "Round",
+				"price": "Price change",
+				"bets": "Bets",
+				"status": "Status"
+			},
 			"filter": {
 				"all": "All bets",
 				"my": "My bets"
