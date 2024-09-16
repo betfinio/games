@@ -12,7 +12,7 @@
 		"format": "biome format --write",
 		"preview": "rsbuild preview",
 		"codegen": "graphql-codegen --config codegen.ts",
-		"build:schema": "dotenv -e .env.production.local -- graphclient build"
+		"build:schema": "dotenv -e .env.development.local -- graphclient build"
 	},
 	"dependencies": {
 		"@betfinio/abi": "^1.0.5",
