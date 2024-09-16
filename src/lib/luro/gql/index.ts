@@ -1,6 +1,6 @@
 import {
 	LuroPlayerBetsDocument,
-	LuroPlayerBetsQuery,
+	type LuroPlayerBetsQuery,
 	LuroRoundStartsDocument,
 	type LuroRoundStartsQuery,
 	LuroWinnersDocument,
