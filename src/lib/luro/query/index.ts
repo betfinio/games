@@ -8,6 +8,7 @@ import {
 	fetchRound,
 	fetchRoundBets,
 	fetchRounds,
+	fetchRoundsByPlayer,
 	fetchTotalVolume,
 	getRoundWinnerByOffset,
 	placeBet,
@@ -313,6 +314,15 @@ export const useRounds = (player: Address, onlyPlayers = false) => {
 	return useQuery<Round[]>({
 		queryKey: ['luro', address, 'rounds', player, onlyPlayers],
 		queryFn: () => fetchRounds(address, player, onlyPlayers, config.getClient()),
+	});
+};
+export const usePlayerRounds = (player: Address) => {
+	const config = useConfig();
+	const { interval } = Route.useParams();
+	const address = interval === '1d' ? LURO : LURO_5MIN;
+	return useQuery<Round[]>({
+		queryKey: ['luro', address, 'rounds', player],
+		queryFn: () => fetchRoundsByPlayer(address, player, config.getClient()),
 	});
 };
 

@@ -1,4 +1,13 @@
-import { LuroRoundStartsDocument, type LuroRoundStartsQuery, LuroWinnersDocument, type LuroWinnersQuery, type WinnerCalculated, execute } from '@/.graphclient';
+import {
+	LuroPlayerBetsDocument,
+	LuroPlayerBetsQuery,
+	LuroRoundStartsDocument,
+	type LuroRoundStartsQuery,
+	LuroWinnersDocument,
+	type LuroWinnersQuery,
+	type WinnerCalculated,
+	execute,
+} from '@/.graphclient';
 import logger from '@/src/config/logger.ts';
 import type { WinnerInfo } from '@/src/lib/luro/types.ts';
 import type { ExecutionResult } from 'graphql/execution';
@@ -8,9 +17,17 @@ export const requestRounds = async (address: Address): Promise<{ round: number }
 	logger.start('[luro]', 'fetching rounds by game', address);
 	const data: ExecutionResult<LuroRoundStartsQuery> = await execute(LuroRoundStartsDocument, { address });
 	logger.success('[luro]', 'fetching rounds by game', data.data?.roundStarts.length);
-	logger.verbose('[luro]', data.data?.roundStarts);
 	if (data.data) {
 		return data.data.roundStarts.map((round) => ({ round: Number(round.round) }));
+	}
+	return [];
+};
+export const requestPlayerRounds = async (address: Address, player: Address): Promise<{ round: number }[]> => {
+	logger.start('[luro]', 'fetching rounds by game and player', address, player);
+	const data: ExecutionResult<LuroPlayerBetsQuery> = await execute(LuroPlayerBetsDocument, { address, player });
+	logger.success('[luro]', 'fetching rounds by game and player', data.data?.betCreateds.length);
+	if (data.data) {
+		return data.data.betCreateds.map((round) => ({ round: Number(round.round) }));
 	}
 	return [];
 };

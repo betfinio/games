@@ -1,8 +1,7 @@
-import { useRounds, useWinners } from '@/src/lib/luro/query';
+import { usePlayerRounds, useRounds, useWinners } from '@/src/lib/luro/query';
 import type { Round } from '@/src/lib/luro/types.ts';
 import { Route } from '@/src/routes/luro/$interval.tsx';
-import { ZeroAddress } from '@betfinio/abi';
-import { truncateEthAddress, valueToNumber } from '@betfinio/abi';
+import { ZeroAddress, truncateEthAddress, valueToNumber } from '@betfinio/abi';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { createColumnHelper } from '@tanstack/react-table';
 import { BetValue } from 'betfinio_app/BetValue';
@@ -115,7 +114,7 @@ const AllRoundsTable = () => {
 
 const PlayerRoundsTable = () => {
 	const { address = ZeroAddress } = useAccount();
-	const { data: rounds = [], isLoading } = useRounds(address, true);
+	const { data: rounds = [], isLoading } = usePlayerRounds(address);
 	const navigate = useNavigate();
 	const handleClick = (row: Round) => {
 		const { interval } = Route.useParams();

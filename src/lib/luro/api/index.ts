@@ -16,7 +16,7 @@ import { writeContract } from '@wagmi/core';
 import { type Address, type Client, encodeAbiParameters, parseAbiParameters } from 'viem';
 import { getContractEvents, multicall, readContract } from 'viem/actions';
 import type { Config } from 'wagmi';
-import { requestRounds } from '../gql';
+import { requestPlayerRounds, requestRounds } from '../gql';
 
 export async function placeBet({ round, amount, player, address }: PlaceBetParams, config: Config) {
 	try {
@@ -124,7 +124,13 @@ export const getCurrentRoundInfo = (iBets: LuroBet[]): ICurrentRoundInfo => {
 export const fetchRounds = async (address: Address, player: Address, onlyPlayers: boolean, config?: Client): Promise<Round[]> => {
 	if (!config) return [];
 	const activeRounds = await requestRounds(address);
-	return (await Promise.all(activeRounds.map((e) => fetchRound(address, e.round, player, config)))).filter((e) => !onlyPlayers || e.player.bets > 0n);
+	return await Promise.all(activeRounds.map((e) => fetchRound(address, e.round, player, config)));
+};
+
+export const fetchRoundsByPlayer = async (address: Address, player: Address, config?: Client): Promise<Round[]> => {
+	if (!config) return [];
+	const activeRounds = await requestPlayerRounds(address, player);
+	return await Promise.all(activeRounds.map((e) => fetchRound(address, e.round, player, config)));
 };
 export const getRoundWinnerByOffset = (bets: LuroBet[], offset: bigint) => {
 	if (!offset) return null;
