@@ -1,6 +1,6 @@
 import logger from '@/src/config/logger';
 import { BETS_MEMORY, FIRST_BLOCK, PARTNER } from '@/src/global.ts';
-import { requestRounds } from '@/src/lib/luro/graph';
+import { requestRounds } from '../gql';
 import type { ICurrentRoundInfo } from '@/src/lib/luro/query';
 import type { LuroBet, PlaceBetParams, Round, RoundStatusEnum, WinnerInfo } from '@/src/lib/luro/types.ts';
 import { BetsMemoryContract, LuckyRoundBetContract, LuckyRoundContract, PartnerContract, defaultMulticall } from '@betfinio/abi';

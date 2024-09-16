@@ -1,16 +1,9 @@
-import {
-	type Landed,
-	RouletteAllLandedsDocument,
-	type RouletteAllLandedsQuery,
-	RouletteMyLandedsDocument,
-	type RouletteMyLandedsQuery,
-	execute,
-} from '@/.graphclient';
+import {execute, type Landed, RouletteAllLandedsDocument, type RouletteAllLandedsQuery, RouletteMyLandedsDocument, type RouletteMyLandedsQuery,} from '@/.graphclient';
 import logger from '@/src/config/logger';
-import { ROULETTE } from '@/src/global.ts';
-import type { RouletteBet } from '@/src/lib/roulette/types.ts';
-import type { ExecutionResult } from 'graphql/execution';
-import type { Address } from 'viem';
+import {ROULETTE} from '@/src/global.ts';
+import type {RouletteBet} from '@/src/lib/roulette/types.ts';
+import type {ExecutionResult} from 'graphql/execution';
+import type {Address} from 'viem';
 
 export const fetchBetsByPlayer = async (address: Address): Promise<RouletteBet[]> => {
 	logger.start('[roulette]', 'fetching bets by player', address);

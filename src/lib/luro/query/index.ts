@@ -13,7 +13,7 @@ import {
 	placeBet,
 	startRound,
 } from '@/src/lib/luro/api';
-import { fetchWinners } from '@/src/lib/luro/graph';
+import { fetchWinners } from '../gql';
 import type { LuroBet, PlaceBetParams, Round, WheelState, WinnerInfo } from '@/src/lib/luro/types.ts';
 import { Route } from '@/src/routes/luro/$interval.tsx';
 import { LuckyRoundContract } from '@betfinio/abi';

@@ -1,30 +1,47 @@
 query RouletteMyLandeds($address: Bytes) {
-	landeds(where: { player: $address }, orderBy: blockTimestamp, orderDirection: desc, first: 50) {
-		player
-		bet
-		result
-		requestId
-		winAmount
-		betAmount
-		blockTimestamp
-		transactionHash
-	}
+    landeds(where: { player: $address }, orderBy: blockTimestamp, orderDirection: desc, first: 50) {
+        player
+        bet
+        result
+        requestId
+        winAmount
+        betAmount
+        blockTimestamp
+        transactionHash
+    }
 }
 query RouletteAllLandeds {
-	landeds(orderBy: blockTimestamp, orderDirection: desc, first: 50) {
-		player
-		bet
-		result
-		requestId
-		winAmount
-		betAmount
-		blockTimestamp
-		transactionHash
-	}
+    landeds(orderBy: blockTimestamp, orderDirection: desc, first: 50) {
+        player
+        bet
+        result
+        requestId
+        winAmount
+        betAmount
+        blockTimestamp
+        transactionHash
+    }
 }
 
 query PredictRoundCreatedsByGameAddress($address: Bytes, $first: Int, $skip: Int) {
-	roundCreateds(where: { address: $address }, first: $first, skip: $skip, orderBy: round, orderDirection: desc) {
-		round
-	}
+    roundCreateds(where: { address: $address }, first: $first, skip: $skip, orderBy: round, orderDirection: desc) {
+        round
+    }
+}
+
+
+query LuroRoundStarts($address: Bytes) {
+    roundStarts(where: {address: $address}, orderBy: blockTimestamp, orderDirection: desc) {
+        round
+    }
+}
+
+query LuroWinners($address: Bytes) {
+    winnerCalculateds(where: {address: $address}, first: 100, orderBy: round, orderDirection: desc) {
+        winner
+        winnerOffset
+        transactionHash
+        round
+        bet
+    }
 }
