@@ -13,7 +13,6 @@ import {
 	placeBet,
 	startRound,
 } from '@/src/lib/luro/api';
-import { fetchWinners } from '../gql';
 import type { LuroBet, PlaceBetParams, Round, WheelState, WinnerInfo } from '@/src/lib/luro/types.ts';
 import { Route } from '@/src/routes/luro/$interval.tsx';
 import { LuckyRoundContract } from '@betfinio/abi';
@@ -26,6 +25,7 @@ import { useTranslation } from 'react-i18next';
 import type { Address, WriteContractErrorType } from 'viem';
 import { waitForTransactionReceipt } from 'viem/actions';
 import { useAccount, useConfig, useWatchContractEvent } from 'wagmi';
+import { fetchWinners } from '../gql';
 
 export const useObserveBet = (round: number) => {
 	const queryClient = useQueryClient();

@@ -1,9 +1,9 @@
-import {execute, LuroRoundStartsDocument, type LuroRoundStartsQuery, LuroWinnersDocument, type LuroWinnersQuery, type WinnerCalculated} from '@/.graphclient';
+import { LuroRoundStartsDocument, type LuroRoundStartsQuery, LuroWinnersDocument, type LuroWinnersQuery, type WinnerCalculated, execute } from '@/.graphclient';
 import logger from '@/src/config/logger.ts';
-import type {WinnerInfo} from '@/src/lib/luro/types.ts';
-import type {ExecutionResult} from 'graphql/execution';
-import {cacheExchange, Client, fetchExchange} from 'urql';
-import type {Address} from 'viem';
+import type { WinnerInfo } from '@/src/lib/luro/types.ts';
+import type { ExecutionResult } from 'graphql/execution';
+import { Client, cacheExchange, fetchExchange } from 'urql';
+import type { Address } from 'viem';
 
 const URL = import.meta.env.PUBLIC_LUCKY_ROUND_GRAPH_URL;
 
