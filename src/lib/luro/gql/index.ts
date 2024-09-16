@@ -2,20 +2,13 @@ import { LuroRoundStartsDocument, type LuroRoundStartsQuery, LuroWinnersDocument
 import logger from '@/src/config/logger.ts';
 import type { WinnerInfo } from '@/src/lib/luro/types.ts';
 import type { ExecutionResult } from 'graphql/execution';
-import { Client, cacheExchange, fetchExchange } from 'urql';
 import type { Address } from 'viem';
-
-const URL = import.meta.env.PUBLIC_LUCKY_ROUND_GRAPH_URL;
-
-const client = new Client({
-	url: URL,
-	exchanges: [cacheExchange, fetchExchange],
-});
 
 export const requestRounds = async (address: Address): Promise<{ round: number }[]> => {
 	logger.start('[luro]', 'fetching rounds by game', address);
 	const data: ExecutionResult<LuroRoundStartsQuery> = await execute(LuroRoundStartsDocument, { address });
 	logger.success('[luro]', 'fetching rounds by game', data.data?.roundStarts.length);
+	logger.verbose('[luro]', data.data?.roundStarts);
 	if (data.data) {
 		return data.data.roundStarts.map((round) => ({ round: Number(round.round) }));
 	}

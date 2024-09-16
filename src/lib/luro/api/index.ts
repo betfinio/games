@@ -2,8 +2,16 @@ import logger from '@/src/config/logger';
 import { BETS_MEMORY, FIRST_BLOCK, PARTNER } from '@/src/global.ts';
 import type { ICurrentRoundInfo } from '@/src/lib/luro/query';
 import type { LuroBet, PlaceBetParams, Round, RoundStatusEnum, WinnerInfo } from '@/src/lib/luro/types.ts';
-import { BetsMemoryContract, LuckyRoundBetContract, LuckyRoundContract, PartnerContract, defaultMulticall } from '@betfinio/abi';
-import { ZeroAddress, arrayFrom, valueToNumber } from '@betfinio/abi';
+import {
+	BetsMemoryContract,
+	LuckyRoundBetContract,
+	LuckyRoundContract,
+	PartnerContract,
+	ZeroAddress,
+	arrayFrom,
+	defaultMulticall,
+	valueToNumber,
+} from '@betfinio/abi';
 import { writeContract } from '@wagmi/core';
 import { type Address, type Client, encodeAbiParameters, parseAbiParameters } from 'viem';
 import { getContractEvents, multicall, readContract } from 'viem/actions';
@@ -115,10 +123,8 @@ export const getCurrentRoundInfo = (iBets: LuroBet[]): ICurrentRoundInfo => {
 
 export const fetchRounds = async (address: Address, player: Address, onlyPlayers: boolean, config?: Client): Promise<Round[]> => {
 	if (!config) return [];
-	console.log('fetching rounds', address);
 	const activeRounds = await requestRounds(address);
-	console.log(activeRounds);
-	return (await Promise.all(activeRounds.reverse().map((e) => fetchRound(address, e.round, player, config)))).filter((e) => !onlyPlayers || e.player.bets > 0n);
+	return (await Promise.all(activeRounds.map((e) => fetchRound(address, e.round, player, config)))).filter((e) => !onlyPlayers || e.player.bets > 0n);
 };
 export const getRoundWinnerByOffset = (bets: LuroBet[], offset: bigint) => {
 	if (!offset) return null;
