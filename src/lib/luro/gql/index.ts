@@ -3,6 +3,8 @@ import {
 	type LuroPlayerBetsQuery,
 	LuroRoundStartsDocument,
 	type LuroRoundStartsQuery,
+	LuroWinnerDocument,
+	type LuroWinnerQuery,
 	LuroWinnersDocument,
 	type LuroWinnersQuery,
 	type WinnerCalculated,
@@ -40,6 +42,15 @@ export const fetchWinners = async (luro: Address): Promise<WinnerInfo[]> => {
 		return data.data.winnerCalculateds.map(populateWinner);
 	}
 	return [];
+};
+export const fetchWinner = async (luro: Address, round: number): Promise<WinnerInfo | null> => {
+	logger.start('[luro]', 'fetching winner by game and round', luro, round);
+	const data: ExecutionResult<LuroWinnerQuery> = await execute(LuroWinnerDocument, { address: luro, round: round });
+	logger.success('[luro]', 'fetching winners by game and round', data.data?.winnerCalculateds.length);
+	if (data.data && data.data.winnerCalculateds.length === 1) {
+		return populateWinner(data.data.winnerCalculateds[0]);
+	}
+	return null;
 };
 
 function populateWinner(log: Pick<WinnerCalculated, 'winner' | 'winnerOffset' | 'transactionHash' | 'round' | 'bet'>): WinnerInfo {

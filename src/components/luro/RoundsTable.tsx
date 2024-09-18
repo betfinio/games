@@ -1,4 +1,4 @@
-import { usePlayerRounds, useRounds, useWinners } from '@/src/lib/luro/query';
+import { usePlayerRounds, useRounds, useWinner, useWinners } from '@/src/lib/luro/query';
 import type { Round } from '@/src/lib/luro/types.ts';
 import { Route } from '@/src/routes/luro/$interval.tsx';
 import { ZeroAddress, truncateEthAddress, valueToNumber } from '@betfinio/abi';
@@ -129,11 +129,11 @@ const PlayerRoundsTable = () => {
 };
 
 const WinnerInfo: FC<{ round: number }> = ({ round }) => {
-	const { data: winners = [], isLoading, isFetching } = useWinners();
+	const { data: winner = null, isLoading, isFetching } = useWinner(round);
+	console.log(round, winner);
 	if (isLoading || isFetching) {
 		return <Loader className={'w-3 h-3 animate-spin'} />;
 	}
-	const winner = winners.find((w) => w.round === round);
 	if (!winner) {
 		return <div>Waiting</div>;
 	}
