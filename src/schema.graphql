@@ -35,6 +35,22 @@ query LuroRoundStarts($address: Bytes) {
 	}
 }
 
+query LuroPlayerBets($address: Bytes, $player: Bytes) {
+	betCreateds(where: { address: $address, player: $player }, orderBy: blockTimestamp, orderDirection: desc) {
+		round
+	}
+}
+
+query LuroWinner($address: Bytes, $round: BigInt) {
+	winnerCalculateds(where: { address: $address, round: $round }) {
+		winner
+		winnerOffset
+		transactionHash
+		round
+		bet
+	}
+}
+
 query LuroWinners($address: Bytes) {
 	winnerCalculateds(where: { address: $address }, first: 100, orderBy: round, orderDirection: desc) {
 		winner
