@@ -84,6 +84,11 @@ export interface PlaceBetParams {
 	address: Address;
 }
 
+export interface BonusClaimParams {
+	player: Address;
+	address: Address;
+}
+
 export interface CustomLuroBet {
 	id: Address;
 	label: Address;

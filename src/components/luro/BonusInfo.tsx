@@ -58,7 +58,7 @@ export const BonusInfo = () => {
 					</div>
 					<div className={'bg-primaryLight rounded-xl p-4 border border-gray-800'}>
 						<div className={'relative'}>
-							<div className={'lg:px-[65px] relative z-10'}>
+							<div className={'lg:px-20 relative z-10'}>
 								<BonusChart bonuses={bonuses} />
 							</div>
 							<div className={'hidden lg:block absolute bottom-0 w-full'}>

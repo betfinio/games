@@ -22,6 +22,7 @@ import { BetValue } from 'betfinio_app/BetValue';
 import { useAllowanceModal } from 'betfinio_app/allowance';
 import { useIsMember } from 'betfinio_app/lib/query/pass';
 import { useAllowance, useBalance } from 'betfinio_app/lib/query/token';
+import { Slider } from 'betfinio_app/slider';
 import { Tooltip, TooltipContent, TooltipTrigger } from 'betfinio_app/tooltip';
 import { toast } from 'betfinio_app/use-toast';
 import cx from 'clsx';
@@ -161,9 +162,7 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 
 	const [betPercentage, setBetPercentage] = useState(30);
 
-	const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const value = Number(e.target.value);
-		console.log(value);
+	const handleSliderChange = (value: number) => {
 		setBetPercentage(Math.floor((value / valueToNumber(balance)) * 100));
 		setAmount(value.toFixed(0));
 	};
@@ -194,7 +193,7 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 				<h4 className={'font-medium text-center text-gray-500 text-xs '}>{t('amount')}</h4>
 				<NumericFormat
 					className={cx(
-						'w-full mt-2 rounded-lg border border-yellow-400 text-center text-base lg:text-lg bg-primary py-3 font-semibold text-white disabled:cursor-not-allowedduration-300',
+						'w-full mt-2 rounded-lg border border-yellow-400 text-center text-base lg:text-lg bg-primary py-3 font-semibold text-white disabled:cursor-not-allowed duration-300',
 						valueToNumber(balance) < Number(amount) && 'text-red-400',
 					)}
 					thousandSeparator={','}
@@ -211,26 +210,15 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 				/>
 
 				<div className={cx('relative mt-4 h-[24px]', balance === 0n && 'grayscale pointer-events-none')}>
-					<div className="w-full bg-gray-700 h-[2px] rounded-full mt-1 relative">
-						<div className="absolute bg-yellow-500 h-[2px] rounded-full hover:bg-red" style={{ width: `${betPercentage}%` }} />
-						<motion.div
-							className="absolute bg-yellow-500 w-[10px] h-[10px] top-[-4px] rounded-full hover:bg-red"
-							style={{ left: `calc(${betPercentage}% - 5px)` }}
-						/>
-						<input
-							type="range"
-							min={1000}
-							max={valueToNumber(balance)}
-							value={amount}
-							onChange={handleSliderChange}
-							className="absolute w-full h-[2px] opacity-0 cursor-pointer"
-						/>
-					</div>
-					<div className="flex justify-between text-gray-500 text-[11px] mt-2">
-						<span>0%</span>
-						<span className="text-yellow-500 font-semibold text-[14px] opacity-0 group-hover:opacity-100 duration-300">{betPercentage}%</span>
-						<span>100%</span>
-					</div>
+					<Slider
+						min={1000}
+						max={valueToNumber(balance) - 1}
+						value={[amount]}
+						defaultValue={[10000]}
+						onValueChange={(value: number[]) => {
+							handleSliderChange(value[0]);
+						}}
+					/>
 				</div>
 
 				<h4 className={'font-medium text-gray-500 text-xs text-center mt-[10px]'}>{t('expected')}</h4>
@@ -336,7 +324,6 @@ const RoundResult: FC<{ round: number }> = ({ round }) => {
 
 	const { data: roundData } = useRound(round);
 	const { address = ZeroAddress } = useAccount();
-	if (!roundData) return null;
 
 	const { data: bets = [] } = useRoundBets(round);
 	const { data: volume = 0n } = useRoundBank(round);
@@ -356,6 +343,8 @@ const RoundResult: FC<{ round: number }> = ({ round }) => {
 		});
 		return bonuses.find((bonus) => bonus?.bet?.address === winner?.address);
 	}, [bets, volume, address]);
+
+	if (!roundData) return null;
 
 	if (roundData.player.bets === 0n) {
 		return (

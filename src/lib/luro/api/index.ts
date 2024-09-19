@@ -1,8 +1,8 @@
 import logger from '@/src/config/logger';
-import { BETS_MEMORY, FIRST_BLOCK, PARTNER } from '@/src/global.ts';
+import { BETS_MEMORY, FIRST_BLOCK, LURO, PARTNER } from '@/src/global.ts';
 import { requestRounds } from '@/src/lib/luro/graph';
 import type { ICurrentRoundInfo } from '@/src/lib/luro/query';
-import type { LuroBet, PlaceBetParams, Round, RoundStatusEnum, WinnerInfo } from '@/src/lib/luro/types.ts';
+import type { BonusClaimParams, LuroBet, PlaceBetParams, Round, RoundStatusEnum, WinnerInfo } from '@/src/lib/luro/types.ts';
 import { BetsMemoryContract, LuckyRoundBetContract, LuckyRoundContract, PartnerContract, defaultMulticall } from '@betfinio/abi';
 import { ZeroAddress, arrayFrom, valueToNumber } from '@betfinio/abi';
 import { writeContract } from '@wagmi/core';
@@ -20,6 +20,21 @@ export async function placeBet({ round, amount, player, address }: PlaceBetParam
 			functionName: 'placeBet',
 			value: 0n,
 			args: [address, BigInt(amount) * 10n ** 18n, data],
+		});
+	} catch (e) {
+		console.log(e);
+		throw e;
+	}
+}
+
+export async function claimBonus({ player, address }: BonusClaimParams, config: Config) {
+	try {
+		console.log('CLAIMING A BONUS', address);
+		return await writeContract(config, {
+			abi: LuckyRoundContract.abi,
+			address: address,
+			functionName: 'claimBonus',
+			args: [player],
 		});
 	} catch (e) {
 		console.log(e);

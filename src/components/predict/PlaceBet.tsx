@@ -120,7 +120,7 @@ const PlaceBet: FC<{ game: Game }> = ({ game }) => {
 			<div className={cx('w-full border border-gray-800 rounded-[10px] bg-primaryLight py-5 px-10 flex flex-col items-center gap-6 relative')}>
 				<div className={'w-full'}>
 					<NumericFormat
-						className={'w-full rounded-[10px] text-center text-sm bg-primary p-3 font-semibold text-white disabled:cursor-not-allowed'}
+						className={'w-full rounded-[10px] text-center border border-yellow-400 text-sm bg-primary p-3 font-semibold text-white disabled:cursor-not-allowed'}
 						thousandSeparator={','}
 						min={1}
 						disabled={loading || balance === 0n}
