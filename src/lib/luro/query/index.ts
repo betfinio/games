@@ -90,8 +90,6 @@ export const usePlaceBet = () => {
 			});
 			const receipt = await waitForTransactionReceipt(config.getClient(), { hash: data });
 
-			console.clear();
-			console.log(receipt);
 			if (receipt.status === 'reverted') {
 				update({
 					variant: 'destructive',
@@ -337,7 +335,6 @@ export const useVisibleRound = () => {
 	const address = interval === '1d' ? LURO : LURO_5MIN;
 	const fetchRound = async (): Promise<number> => {
 		await queryClient.invalidateQueries({ queryKey: ['luro', address, 'bets', 'round'] });
-		console.log(getCurrentRound(interval));
 		return getCurrentRound(interval as LuroInterval);
 	};
 	const { updateState } = useLuroState();
