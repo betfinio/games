@@ -1,14 +1,22 @@
 import logger from '@/src/config/logger';
 import { BETS_MEMORY, FIRST_BLOCK, LURO, PARTNER } from '@/src/global.ts';
-import { requestRounds } from '@/src/lib/luro/graph';
 import type { ICurrentRoundInfo } from '@/src/lib/luro/query';
 import type { BonusClaimParams, LuroBet, PlaceBetParams, Round, RoundStatusEnum, WinnerInfo } from '@/src/lib/luro/types.ts';
-import { BetsMemoryContract, LuckyRoundBetContract, LuckyRoundContract, PartnerContract, defaultMulticall } from '@betfinio/abi';
-import { ZeroAddress, arrayFrom, valueToNumber } from '@betfinio/abi';
+import {
+	BetsMemoryContract,
+	LuckyRoundBetContract,
+	LuckyRoundContract,
+	PartnerContract,
+	ZeroAddress,
+	arrayFrom,
+	defaultMulticall,
+	valueToNumber,
+} from '@betfinio/abi';
 import { writeContract } from '@wagmi/core';
 import { type Address, type Client, encodeAbiParameters, parseAbiParameters } from 'viem';
 import { getContractEvents, multicall, readContract } from 'viem/actions';
 import type { Config } from 'wagmi';
+import { requestPlayerRounds, requestRounds } from '../gql';
 
 export async function placeBet({ round, amount, player, address }: PlaceBetParams, config: Config) {
 	try {
@@ -29,7 +37,6 @@ export async function placeBet({ round, amount, player, address }: PlaceBetParam
 
 export async function claimBonus({ player, address }: BonusClaimParams, config: Config) {
 	try {
-		console.log('CLAIMING A BONUS', address);
 		return await writeContract(config, {
 			abi: LuckyRoundContract.abi,
 			address: address,
@@ -130,10 +137,14 @@ export const getCurrentRoundInfo = (iBets: LuroBet[]): ICurrentRoundInfo => {
 
 export const fetchRounds = async (address: Address, player: Address, onlyPlayers: boolean, config?: Client): Promise<Round[]> => {
 	if (!config) return [];
-	console.log('fetching rounds', address);
 	const activeRounds = await requestRounds(address);
-	console.log(activeRounds);
-	return (await Promise.all(activeRounds.reverse().map((e) => fetchRound(address, e.round, player, config)))).filter((e) => !onlyPlayers || e.player.bets > 0n);
+	return await Promise.all(activeRounds.map((e) => fetchRound(address, e.round, player, config)));
+};
+
+export const fetchRoundsByPlayer = async (address: Address, player: Address, config?: Client): Promise<Round[]> => {
+	if (!config) return [];
+	const activeRounds = await requestPlayerRounds(address, player);
+	return await Promise.all(activeRounds.map((e) => fetchRound(address, e.round, player, config)));
 };
 export const getRoundWinnerByOffset = (bets: LuroBet[], offset: bigint) => {
 	if (!offset) return null;

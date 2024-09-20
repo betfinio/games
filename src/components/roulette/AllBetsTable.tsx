@@ -3,7 +3,7 @@ import { useLastRouletteBets } from '@/src/lib/roulette/query';
 import type { RouletteBet } from '@/src/lib/roulette/types.ts';
 import { truncateEthAddress, valueToNumber } from '@betfinio/abi';
 import Fox from '@betfinio/ui/dist/icons/Fox';
-import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
+import { createColumnHelper } from '@tanstack/react-table';
 import { BetValue } from 'betfinio_app/BetValue';
 import { DataTable } from 'betfinio_app/DataTable';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from 'betfinio_app/dialog';
@@ -77,12 +77,6 @@ export const AllBetsTable = () => {
 			cell: (props) => <Search className={'w-5 h-5 cursor-pointer'} onClick={() => setSelected(props.row.original)} />,
 		}),
 	];
-
-	const table = useReactTable<RouletteBet>({ columns: columns, data: bets, getCoreRowModel: getCoreRowModel() });
-
-	const handleClick = (bet: RouletteBet) => {
-		setSelected(bet);
-	};
 
 	if (bets.length === 0 && !isLoading) {
 		return <div className={'flex justify-center p-3'}>No bets yet</div>;

@@ -7,6 +7,10 @@ sources:
     handler:
       graphql:
         endpoint: ${PUBLIC_PREDICT_GRAPH_URL}
+  - name: luro
+    handler:
+      graphql:
+        endpoint: ${PUBLIC_LUCKY_ROUND_GRAPH_URL}
 
 codegen:
   scalars:

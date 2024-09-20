@@ -9,16 +9,15 @@ import {
 	fetchRound,
 	fetchRoundBets,
 	fetchRounds,
+	fetchRoundsByPlayer,
 	fetchTotalVolume,
 	getRoundWinnerByOffset,
 	placeBet,
 	startRound,
 } from '@/src/lib/luro/api';
-import { fetchWinners } from '@/src/lib/luro/graph';
-import type { BonusClaimParams, LuroBet, PlaceBetParams, Round, WheelState, WinnerInfo } from '@/src/lib/luro/types.ts';
+import type { LuroBet, PlaceBetParams, Round, WheelState, WinnerInfo } from '@/src/lib/luro/types.ts';
 import { Route } from '@/src/routes/luro/$interval.tsx';
-import { LuckyRoundContract } from '@betfinio/abi';
-import { ZeroAddress } from '@betfinio/abi';
+import { LuckyRoundContract, ZeroAddress } from '@betfinio/abi';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { type WriteContractReturnType, readContract } from '@wagmi/core';
 import { getTransactionLink } from 'betfinio_app/helpers';
@@ -27,6 +26,7 @@ import { useTranslation } from 'react-i18next';
 import type { Address, WriteContractErrorType } from 'viem';
 import { waitForTransactionReceipt } from 'viem/actions';
 import { useAccount, useConfig, useWatchContractEvent } from 'wagmi';
+import { fetchWinner, fetchWinners } from '../gql';
 
 export const useObserveBet = (round: number) => {
 	const queryClient = useQueryClient();
@@ -82,7 +82,6 @@ export const usePlaceBet = () => {
 		},
 		onMutate: () => console.log('placeBet'),
 		onSuccess: async (data) => {
-			console.log(data);
 			const { update } = toast({
 				title: 'Placing a bet',
 				description: 'Transaction is pending',
@@ -279,6 +278,15 @@ export const useWinners = () => {
 	});
 };
 
+export const useWinner = (round: number) => {
+	const { interval } = Route.useParams();
+	const luro = interval === '1d' ? LURO : LURO_5MIN;
+	return useQuery<WinnerInfo | null>({
+		queryKey: ['luro', luro, 'winners', round],
+		queryFn: () => fetchWinner(luro, round),
+	});
+};
+
 export const useRoundWinner = (round: number) => {
 	const { data: bets } = useRoundBets(round);
 	const { data: roundData } = useRound(round);
@@ -365,6 +373,15 @@ export const useRounds = (player: Address, onlyPlayers = false) => {
 	return useQuery<Round[]>({
 		queryKey: ['luro', address, 'rounds', player, onlyPlayers],
 		queryFn: () => fetchRounds(address, player, onlyPlayers, config.getClient()),
+	});
+};
+export const usePlayerRounds = (player: Address) => {
+	const config = useConfig();
+	const { interval } = Route.useParams();
+	const address = interval === '1d' ? LURO : LURO_5MIN;
+	return useQuery<Round[]>({
+		queryKey: ['luro', address, 'rounds', player],
+		queryFn: () => fetchRoundsByPlayer(address, player, config.getClient()),
 	});
 };
 

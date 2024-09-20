@@ -2,8 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-html, body {
-	background: #0F121D;
+html,
+body {
+	background: #0f121d;
 }
 
 @layer base {
@@ -70,37 +71,34 @@ html, body {
 	}
 }
 
-
 .BET_MODAL {
-	background-image: url('./assets/predict/bet_modal_bg.svg');
+	background-image: url("./assets/predict/bet_modal_bg.svg");
 	background-repeat: no-repeat;
 	background-position-y: bottom;
 	background-size: contain;
 }
 
 .SCROLLBAR::-webkit-scrollbar {
-    background-color: #fff;
-    width: 0px;
-    height: 0px;
-    border-radius: 10px;
+	background-color: #fff;
+	width: 0px;
+	height: 0px;
+	border-radius: 10px;
 }
-
 
 /* Track */
 .SCROLLBAR::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.7);
-    border-radius: 10px;
-
+	background: rgba(0, 0, 0, 0.7);
+	border-radius: 10px;
 }
 
 /* Handle */
 .SCROLLBAR::-webkit-scrollbar-thumb {
-    background: rgba(213, 213, 213, 0.7);
-    border-radius: 10px;
+	background: rgba(213, 213, 213, 0.7);
+	border-radius: 10px;
 }
 
 ::-webkit-slider-thumb {
-    appearance: none;
-    -webkit-appearance: none;
-    pointer-events: none;
+	appearance: none;
+	-webkit-appearance: none;
+	pointer-events: none;
 }
