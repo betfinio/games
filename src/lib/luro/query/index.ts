@@ -1,6 +1,7 @@
 import { LURO, LURO_5MIN } from '@/src/global.ts';
 import { type LuroInterval, animateNewBet, getCurrentRound, handleError } from '@/src/lib/luro';
 import {
+	claimBonus,
 	distributeBonus,
 	fetchAvailableBonus,
 	fetchBetsCount,
@@ -70,12 +71,13 @@ export const usePlaceBet = () => {
 		mutationKey: ['luro', address, 'bets', 'place'],
 		mutationFn: (params) => placeBet(params, config),
 		onError: (e) => {
+			console.dir(e.cause);
 			toast({
 				// @ts-ignore
-				title: t(e.cause?.reason),
+				title: t('default'),
 				variant: 'destructive',
 				// @ts-ignore
-				description: t(e.cause?.message),
+				description: t(e.cause?.reason),
 			});
 		},
 		onMutate: () => console.log('placeBet'),
@@ -86,7 +88,18 @@ export const usePlaceBet = () => {
 				variant: 'loading',
 				duration: 10000,
 			});
-			await waitForTransactionReceipt(config.getClient(), { hash: data });
+			const receipt = await waitForTransactionReceipt(config.getClient(), { hash: data });
+
+			if (receipt.status === 'reverted') {
+				update({
+					variant: 'destructive',
+					description: '',
+					title: 'Transaction failed',
+					action: getTransactionLink(data),
+					duration: 5000,
+				});
+				return;
+			}
 			update({ variant: 'default', description: 'Transaction is confirmed', title: 'Bet placed', action: getTransactionLink(data), duration: 5000 });
 			await queryClient.invalidateQueries({ queryKey: ['luro', address, 'bets', 'round'] });
 			await queryClient.invalidateQueries({ queryKey: ['luro', address, 'round'] });
@@ -213,8 +226,44 @@ export const useAvailableBonus = (address: Address) => {
 	const { interval } = Route.useParams();
 	const luro = interval === '1d' ? LURO : LURO_5MIN;
 	return useQuery({
-		queryKey: ['luro', address, 'bonus', address],
+		queryKey: ['luro', luro, 'bonus', 'available'],
 		queryFn: () => fetchAvailableBonus(luro, address, config),
+	});
+};
+
+export const useClaimBonus = () => {
+	const { t } = useTranslation('', { keyPrefix: 'shared.errors' });
+	const queryClient = useQueryClient();
+	const config = useConfig();
+	const { interval } = Route.useParams();
+	const { address: player = ZeroAddress } = useAccount();
+	const luro = interval === '1d' ? LURO : LURO_5MIN;
+	return useMutation<WriteContractReturnType, WriteContractErrorType>({
+		mutationKey: ['luro', luro, 'bonus', 'claim'],
+		mutationFn: () => claimBonus({ player, address: luro }, config),
+		onError: (e) => {
+			toast({
+				// @ts-ignore
+				title: t(e.cause?.reason),
+				variant: 'destructive',
+				// @ts-ignore
+				description: t(e.cause?.message),
+			});
+		},
+		onMutate: () => console.log('bonusClaim'),
+		onSuccess: async (data) => {
+			console.log(data);
+			const { update } = toast({
+				title: 'Claiming bonus',
+				description: 'Transaction is pending',
+				variant: 'loading',
+				duration: 10000,
+			});
+			await waitForTransactionReceipt(config.getClient(), { hash: data });
+			update({ variant: 'default', description: 'Transaction is confirmed', title: 'Bonus claimed!', action: getTransactionLink(data), duration: 5000 });
+			queryClient.invalidateQueries({ queryKey: ['luro', luro, 'bonus', 'available'] });
+		},
+		onSettled: () => console.log('bonusClaim settled'),
 	});
 };
 
