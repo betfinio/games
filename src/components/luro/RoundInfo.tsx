@@ -14,7 +14,7 @@ import { type FC, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 const Stats: FC<{ betsCount: number; volume: bigint; staking: bigint; isFetched: boolean }> = ({ betsCount, volume, staking, isFetched }) => {
-	const { t } = useTranslation('', { keyPrefix: 'games.luro.roundInfo.stats' });
+	const { t } = useTranslation('games', { keyPrefix: 'luro.roundInfo.stats' });
 	return (
 		<div className={'hidden md:flex gap-4 sm:gap-5 items-center justify-end grow text-xs'}>
 			<div className={'flex flex-col'}>
@@ -42,7 +42,7 @@ const Stats: FC<{ betsCount: number; volume: bigint; staking: bigint; isFetched:
 };
 
 export const RoundInfo = () => {
-	const { t } = useTranslation('', { keyPrefix: 'games.luro.roundInfo' });
+	const { t } = useTranslation('games', { keyPrefix: 'luro.roundInfo' });
 	const { data: currentRound } = useVisibleRound();
 	const { data: betsCount = 0, isFetched: isBetsFetched } = useBetsCount();
 	const { data: volume = 0n, isFetched: isVolumeFetched } = useTotalVolume();

@@ -57,7 +57,7 @@ const SingleBet: FC<PredictBet & { loading: boolean }> = (bet) => {
 export default SingleBet;
 
 const BetModal: FC<PredictBet> = (bet) => {
-	const { t } = useTranslation('', { keyPrefix: 'games.predict.modal' });
+	const { t } = useTranslation('games', { keyPrefix: 'predict.modal' });
 	const game = Object.values(games).find((g) => g.address === bet.predictGame) as Game;
 	const { data: start = defaultResult, isLoading: isStartLoading } = usePrice(game.dataFeed, Number(bet.round) * game.interval);
 	const { data: end = defaultResult, isLoading: isEndLoading } = usePrice(game.dataFeed, (Number(bet.round) + game.duration) * game.interval);

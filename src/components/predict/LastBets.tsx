@@ -8,7 +8,7 @@ import type { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
 const LastBets: FC<{ game: Game }> = ({ game }) => {
-	const { t } = useTranslation('', { keyPrefix: 'games.predict.lastBets' });
+	const { t } = useTranslation('games', { keyPrefix: 'predict.lastBets' });
 	const { data: bets = [], isLoading } = useLastBets(4);
 
 	return (

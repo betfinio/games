@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useAccount } from 'wagmi';
 
 const BonusClaimBlock: FC = () => {
-	const { t } = useTranslation('', { keyPrefix: 'games.luro.bonusClaimBlock' });
+	const { t } = useTranslation('games', { keyPrefix: 'luro.bonusClaimBlock' });
 	const { address = ZeroAddress } = useAccount();
 	const { mutate: claim, isPending } = useClaimBonus();
 	const { data: availableBonus = 0n } = useAvailableBonus(address);

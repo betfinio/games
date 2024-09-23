@@ -36,7 +36,7 @@ const largeProps = {
 };
 
 export const RoundCircle: FC<{ round: number; className?: string }> = ({ round, className = '' }) => {
-	const { t } = useTranslation('', { keyPrefix: 'games.luro.roundCircle' });
+	const { t } = useTranslation('games', { keyPrefix: 'luro.roundCircle' });
 
 	const [confettiExploding, setConfettiExploding] = useState(false);
 	const { address } = useAccount();
@@ -346,7 +346,7 @@ const CustomTooltip =
 		);
 	};
 const ProgressBar: FC<{ round: number; authors: CustomLuroBet[] }> = ({ round }) => {
-	const { t } = useTranslation('', { keyPrefix: 'games.luro.roundCircle' });
+	const { t } = useTranslation('games', { keyPrefix: 'luro.roundCircle' });
 
 	const { data: roundData } = useRound(round);
 	const { data: bank = 0n, isLoading: isBankLoading } = useRoundBank(round);
@@ -484,7 +484,7 @@ const BetCircleWinner: FC<{ player: Address; amount: number; percent: number; co
 	coef,
 	loading,
 }) => {
-	const { t } = useTranslation('', { keyPrefix: 'games.luro.roundCircle' });
+	const { t } = useTranslation('games', { keyPrefix: 'luro.roundCircle' });
 
 	return (
 		<motion.div
@@ -506,7 +506,7 @@ const BetCircleWinner: FC<{ player: Address; amount: number; percent: number; co
 };
 
 const RoundResult: FC<{ round: number }> = ({ round }) => {
-	const { t } = useTranslation('', { keyPrefix: 'games.luro.roundCircle' });
+	const { t } = useTranslation('games', { keyPrefix: 'luro.roundCircle' });
 
 	const { data: roundData, isLoading, isFetching } = useRound(round);
 

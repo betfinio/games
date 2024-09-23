@@ -15,7 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { useAccount } from 'wagmi';
 
 const RoundsTable: FC<{ className?: string }> = ({ className = '' }) => {
-	const { t } = useTranslation('', { keyPrefix: 'games.luro.table' });
+	const { t } = useTranslation('games', { keyPrefix: 'luro.table' });
 
 	const columns = [
 		columnHelper.accessor('round', {
@@ -148,7 +148,7 @@ const PlayerRoundsTable: FC<{ columns: unknown }> = ({ columns }) => {
 };
 
 const WinnerInfo: FC<{ round: number }> = ({ round }) => {
-	const { t } = useTranslation('', { keyPrefix: 'games.luro.table' });
+	const { t } = useTranslation('games', { keyPrefix: 'luro.table' });
 
 	const { data: winner = null, isLoading, isFetching } = useWinner(round);
 	if (isLoading || isFetching) {

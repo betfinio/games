@@ -15,7 +15,7 @@ import { useAccount } from 'wagmi';
 const columnHelper = createColumnHelper<PredictBet>();
 
 const BetsTable: FC<{ isFetching: boolean; bets: PredictBet[]; isFinished: boolean }> = ({ isFetching, isFinished, bets }) => {
-	const { t } = useTranslation('', { keyPrefix: 'games.predict' });
+	const { t } = useTranslation('games', { keyPrefix: 'predict' });
 	const [filter, setFilter] = useState<'all' | 'my'>('all');
 	const { address } = useAccount();
 	const columns = [

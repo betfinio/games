@@ -10,7 +10,7 @@ import { type FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 const RoundPoolInfo: FC<{ game: Game }> = ({ game }) => {
-	const { t } = useTranslation('', { keyPrefix: 'games.predict.roundPool' });
+	const { t } = useTranslation('games', { keyPrefix: 'predict.roundPool' });
 	const { data: round } = useCurrentRound(game.interval);
 	const { data: roundBets = [] } = useRoundBets(game.address, round);
 	const [pool, setPool] = useState<RoundPool>({ long: 0n, short: 0n, longPlayersCount: 0, shortPlayersCount: 0, longCount: 0, shortCount: 0 });

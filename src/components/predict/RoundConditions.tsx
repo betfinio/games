@@ -11,7 +11,7 @@ import type { CircularProgressbarStyles } from 'react-circular-progressbar/dist/
 import { Trans, useTranslation } from 'react-i18next';
 
 const RoundConditions: FC<{ game: Game }> = ({ game }) => {
-	const { t } = useTranslation('', { keyPrefix: 'games.predict.roundConditions' });
+	const { t } = useTranslation('games', { keyPrefix: 'predict.roundConditions' });
 	const { data: price = defaultResult, isFetched: isLatestPriceFetched } = useLatestPrice(game.name);
 	const { data: round, isFetching } = useCurrentRound(game.interval);
 	const { data: start = defaultResult } = usePrice(game.dataFeed, round * game.interval);

@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { useAccount } from 'wagmi';
 
 export const BonusInfo = () => {
-	const { t } = useTranslation('', { keyPrefix: 'games.luro' });
+	const { t } = useTranslation('games', { keyPrefix: 'luro' });
 	const { data: round } = useVisibleRound();
 	const { data: bets = [] } = useRoundBets(round);
 	const { data: volume = 0n } = useRoundBank(round);

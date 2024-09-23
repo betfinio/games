@@ -38,7 +38,7 @@ export const ModalContent: FC<{
 	interval: number;
 	round: Round | null;
 }> = ({ onClose, roundId, round }) => {
-	const { t } = useTranslation('', { keyPrefix: 'games.luro.roundModal' });
+	const { t } = useTranslation('games', { keyPrefix: 'luro.roundModal' });
 	const { interval } = Route.useParams();
 	const { start, end } = getTimesByRound(roundId, interval as LuroInterval);
 	const isFinished = DateTime.fromMillis(Date.now()).diff(DateTime.fromMillis(end)).milliseconds > 0;
@@ -96,7 +96,7 @@ interface RoundDetailsProps {
 }
 
 const BonusDistribution: FC<{ round: number }> = ({ round }) => {
-	const { t } = useTranslation('', { keyPrefix: 'games.luro.roundModal' });
+	const { t } = useTranslation('games', { keyPrefix: 'luro.roundModal' });
 	const { data: distributed } = useBonusDistribution(round);
 	const { mutate: distribute } = useDistributeBonus();
 	const { interval } = Route.useParams();
@@ -123,7 +123,7 @@ const BonusDistribution: FC<{ round: number }> = ({ round }) => {
 };
 
 const RoundDetails: FC<RoundDetailsProps> = ({ volume, usersCount }) => {
-	const { t } = useTranslation('', { keyPrefix: 'games.luro.roundModal.details' });
+	const { t } = useTranslation('games', { keyPrefix: 'luro.roundModal.details' });
 
 	const staking = (volume / 1000n) * 36n;
 	const bonus = (volume / 100n) * 5n;
@@ -167,7 +167,7 @@ const RoundDetails: FC<RoundDetailsProps> = ({ volume, usersCount }) => {
 const columnHelper = createColumnHelper<RoundModalPlayer>();
 
 const WinnerBetInfo: FC<{ round: number }> = ({ round }) => {
-	const { t } = useTranslation('', { keyPrefix: 'games.luro.roundModal.winnerBet' });
+	const { t } = useTranslation('games', { keyPrefix: 'luro.roundModal.winnerBet' });
 
 	const { data: winners = [], isLoading, isFetching } = useWinners();
 	const { data: currentRound } = useVisibleRound();
@@ -212,7 +212,7 @@ const BetsTable: FC<{ round: number; className?: string; volume: bigint; bonusSh
 	bonusShare,
 	winner,
 }) => {
-	const { t } = useTranslation('', { keyPrefix: 'games.luro.roundModal.table' });
+	const { t } = useTranslation('games', { keyPrefix: 'luro.roundModal.table' });
 
 	const { data: bets = [], isFetched: isRoundsFetched } = useRoundBets(round);
 	const { address = ZeroAddress } = useAccount();

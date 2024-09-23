@@ -6,7 +6,7 @@ import type { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
 const BonusAndChart: FC<{ game: Game }> = ({ game }) => {
-	const { t } = useTranslation('', { keyPrefix: 'games.predict' });
+	const { t } = useTranslation('games', { keyPrefix: 'predict' });
 	return (
 		<div className={''}>
 			<Tabs defaultValue={'bonus'}>

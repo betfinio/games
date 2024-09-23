@@ -22,7 +22,7 @@ const RoundModal: FC<{
 	round: number;
 	game: Game;
 }> = ({ round, game }) => {
-	const { t } = useTranslation('', { keyPrefix: 'games.predict.roundModal' });
+	const { t } = useTranslation('games', { keyPrefix: 'predict.roundModal' });
 	const { mutate: calculate } = useCalculate();
 	const start = DateTime.fromMillis(round * game.interval * 1000);
 	const end = DateTime.fromMillis((round + game.duration) * game.interval * 1000);

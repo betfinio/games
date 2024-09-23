@@ -10,7 +10,7 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export const RoundMyInfo = () => {
-	const { t } = useTranslation('', { keyPrefix: 'games.luro.myInfo' });
+	const { t } = useTranslation('games', { keyPrefix: 'luro.myInfo' });
 	const { data: round } = useVisibleRound();
 	const { data: bets = [], isFetched } = useRoundBets(round);
 	const { data: volume = 0n } = useRoundBank(round);

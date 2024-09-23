@@ -17,7 +17,7 @@ import { useTranslation } from 'react-i18next';
 const columnHelper = createColumnHelper<Round>();
 const RoundsTable: FC<{ game: Game }> = ({ game }) => {
 	const { data: currentRound } = useCurrentRound(game.interval);
-	const { t } = useTranslation('', { keyPrefix: 'games.predict.table' });
+	const { t } = useTranslation('games', { keyPrefix: 'predict.table' });
 
 	const getStatus = (game: Game, round: number, calculated: boolean): RoundStatus => {
 		const last = (round + 1) * game.interval;

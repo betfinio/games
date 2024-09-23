@@ -18,7 +18,7 @@ import { NumericFormat } from 'react-number-format';
 import { useAccount } from 'wagmi';
 
 const PlaceBet: FC<{ game: Game }> = ({ game }) => {
-	const { t } = useTranslation('', { keyPrefix: 'games.predict.placeBet' });
+	const { t } = useTranslation('games', { keyPrefix: 'predict.placeBet' });
 	const [amount, setAmount] = useState<string>('5000');
 	const { address = ZeroAddress } = useAccount();
 	const { data: isMember = false } = useIsMember(address);

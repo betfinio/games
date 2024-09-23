@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { useAccount } from 'wagmi';
 
 const BonusInfo: FC<{ game: Game }> = ({ game }) => {
-	const { t } = useTranslation('', { keyPrefix: 'games.predict' });
+	const { t } = useTranslation('games', { keyPrefix: 'predict' });
 	const { data: round } = useCurrentRound(game.interval);
 	const { data: pool } = usePool(game.address, round);
 	const { data: bets } = useRoundBets(game.address, round);

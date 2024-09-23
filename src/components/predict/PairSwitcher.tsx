@@ -10,7 +10,7 @@ import type { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
 const PairSwitcher: FC<Game> = (game) => {
-	const { t } = useTranslation('', { keyPrefix: 'games.predict.pairSwitcher' });
+	const { t } = useTranslation('games', { keyPrefix: 'predict.pairSwitcher' });
 	return (
 		<Dialog>
 			<DialogTrigger asChild>

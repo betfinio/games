@@ -57,7 +57,7 @@ export const PlaceBet = () => {
 };
 
 const StandByScreen: FC<{ round: number }> = ({ round }) => {
-	const { t } = useTranslation('', { keyPrefix: 'games.luro.placeBet' });
+	const { t } = useTranslation('games', { keyPrefix: 'luro.placeBet' });
 	const [amount, setAmount] = useState<string>('10000');
 	const { interval } = Route.useParams();
 	const { address = ZeroAddress } = useAccount();
@@ -278,7 +278,7 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 };
 
 const WaitingScreen: FC<{ round: number }> = ({ round }) => {
-	const { t } = useTranslation('', { keyPrefix: 'games.luro.placeBet' });
+	const { t } = useTranslation('games', { keyPrefix: 'luro.placeBet' });
 
 	const { mutate: startRound, isPending } = useStartRound(round);
 
@@ -307,7 +307,7 @@ const WaitingScreen: FC<{ round: number }> = ({ round }) => {
 };
 
 const SpinningScreen: FC<{ round: number }> = () => {
-	const { t } = useTranslation('', { keyPrefix: 'games.luro.placeBet' });
+	const { t } = useTranslation('games', { keyPrefix: 'luro.placeBet' });
 
 	return (
 		<motion.div
@@ -323,7 +323,7 @@ const SpinningScreen: FC<{ round: number }> = () => {
 };
 
 const RoundResult: FC<{ round: number }> = ({ round }) => {
-	const { t } = useTranslation('', { keyPrefix: 'games.luro.placeBet' });
+	const { t } = useTranslation('games', { keyPrefix: 'luro.placeBet' });
 
 	const queryClient = useQueryClient();
 

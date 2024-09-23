@@ -7,7 +7,7 @@ import type { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
 const CoinInfo: FC<{ bets: number; volume: bigint; staking: bigint; diff: number }> = ({ bets, volume, staking, diff }) => {
-	const { t } = useTranslation('', { keyPrefix: 'predict' });
+	const { t } = useTranslation('games', { keyPrefix: 'predict' });
 
 	return (
 		<div className={'lg:hidden'}>
@@ -29,7 +29,7 @@ const CoinInfo: FC<{ bets: number; volume: bigint; staking: bigint; diff: number
 export default CoinInfo;
 
 const SwitchModal: FC<{ bets: number; volume: bigint; staking: bigint; diff: number }> = ({ bets, volume, staking, diff }) => {
-	const { t } = useTranslation('', { keyPrefix: 'predict' });
+	const { t } = useTranslation('games', { keyPrefix: 'predict' });
 
 	return (
 		<motion.div className={'rounded-lg border border-gray-800 bg-primary p-5 w-[300px] flex flex-col gap-5'}>
