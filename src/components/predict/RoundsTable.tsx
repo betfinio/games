@@ -133,8 +133,8 @@ const RoundsTable: FC<{ game: Game }> = ({ game }) => {
 	return (
 		<Tabs defaultValue={'all'}>
 			<TabsList>
-				<TabsTrigger value={'all'}>All rounds</TabsTrigger>
-				<TabsTrigger value={'my'}>My rounds</TabsTrigger>
+				<TabsTrigger value={'all'}>{t('tabs.all')}</TabsTrigger>
+				<TabsTrigger value={'my'}>{t('tabs.my')}</TabsTrigger>
 			</TabsList>
 			<TabsContent value={'all'}>
 				<AllRoundsTable columns={columns} game={game} />

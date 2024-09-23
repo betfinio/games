@@ -7,8 +7,10 @@ import cx from 'clsx';
 import { motion } from 'framer-motion';
 import { Menu } from 'lucide-react';
 import type { FC } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const PairSwitcher: FC<Game> = (game) => {
+	const { t } = useTranslation('', { keyPrefix: 'games.predict.pairSwitcher' });
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
@@ -19,7 +21,10 @@ const PairSwitcher: FC<Game> = (game) => {
 					<div className={'w-8 md:w-10 aspect-square'}>{getImage(game.name)}</div>
 					<div className={'flex flex-col'}>
 						<span className={'text-lg leading-5'}>{game.name}</span>
-						<span className={'text-sm leading-5'}>Predict {game.interval / 60}min</span>
+						<span className={'text-sm leading-5'}>
+							{t('predict')} {game.interval / 60}
+							{t('minutes')}
+						</span>
 					</div>
 				</motion.div>
 			</DialogTrigger>

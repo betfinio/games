@@ -46,7 +46,7 @@ const BetsTable: FC<{ isFetching: boolean; bets: PredictBet[]; isFinished: boole
 
 			cell: (props) => (
 				<span className={cx('font-semibold text-xs md:text-base', props.getValue() ? 'text-green-500' : 'text-red-500')}>
-					{props.getValue() ? 'LONG' : 'SHORT'}
+					{props.getValue() ? t('table.long') : t('table.short')}
 				</span>
 			),
 		}),

@@ -61,7 +61,7 @@ const PairInfo: FC<{ game: Game }> = ({ game }) => {
 					rel="noreferrer"
 				>
 					<CircleHelp className={'w-6 h-6'} />
-					<span className={'hidden sm:inline text-xs'}>How to Play</span>
+					<span className={'hidden sm:inline text-xs'}>{t('howToPlay')}</span>
 				</a>
 			</div>
 		</div>

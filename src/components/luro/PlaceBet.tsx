@@ -86,29 +86,28 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 	const handleBet = () => {
 		if (address === ZeroAddress) {
 			toast({
-				description: 'Please connect your wallet',
+				description: t('toast.connect'),
 				variant: 'destructive',
 			});
 			return;
 		}
 		if (!isMember) {
 			toast({
-				description: 'Connected wallet is not member of Betfin. Ask someone for an invitation',
+				description: t('toast.notMember'),
 				variant: 'destructive',
 			});
 			return;
 		}
 		if (amount === '') {
 			toast({
-				title: 'Please enter amount',
-				description: '',
+				description: t('toast.amount'),
 				variant: 'destructive',
 			});
 			return;
 		}
 		if (Number(amount) < 1000) {
 			toast({
-				title: 'Minimal bet amount is 1000 BET',
+				title: t('toast.minimalBet'),
 				description: '',
 				variant: 'destructive',
 			});
@@ -119,7 +118,7 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 			BigInt(Number(amount));
 		} catch (e) {
 			toast({
-				title: 'Invalid amount',
+				title: t('toast.invalidAmount'),
 				description: '',
 				variant: 'destructive',
 			});
@@ -201,7 +200,7 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 					allowNegative={false}
 					maxLength={15}
 					disabled={loading}
-					placeholder={valueToNumber(balance) < Number(amount) ? 'Please top-up balance' : 'Amount'}
+					placeholder={valueToNumber(balance) < Number(amount) ? t('placeholder.balance') : t('placeholder.amount')}
 					value={amount}
 					onValueChange={(values) => {
 						const { value } = values;
@@ -223,7 +222,7 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 
 				<h4 className={'font-medium text-gray-500 text-xs text-center mt-[10px]'}>{t('expected')}</h4>
 				<p className={'mt-[20px] text-center font-semibold text-[#27AE60]'}>
-					{expectedWinning.toLocaleString()} <span className={'text-blue-500'}>(+bonus)</span>
+					{expectedWinning.toLocaleString()} <span className={'text-blue-500'}>(+{t('bonus')})</span>
 				</p>
 				<div className={'text-center text-yellow-400 font-thin text-xs'}>
 					{(coef === Number.POSITIVE_INFINITY || Number.isNaN(coef) ? 0 : coef).toFixed(3)}x
@@ -251,7 +250,7 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 			<div className={cx('block rounded-xl bg-primaryLight p-3 relative w-full lg:w-full mt-3 border border-gray-800')}>
 				<div className={'grid grid-cols-2 gap-2 text-xs'}>
 					<div className={'bg-primary py-2 text-center flex flex-col gap-1 rounded-[8px]'}>
-						<div className={'text-gray-500'}>Your active bets</div>
+						<div className={'text-gray-500'}>{t('activeBets')}</div>
 						<Tooltip>
 							<div className={'text-yellow-400 font-semibold flex justify-center gap-1'}>
 								<TooltipTrigger>
@@ -262,7 +261,7 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 						</Tooltip>
 					</div>
 					<div className={'bg-primary py-2 text-center flex flex-col gap-1 rounded-[8px]'}>
-						<div className={'text-gray-500'}>Potential win</div>
+						<div className={'text-gray-500'}>{t('potentialWin')}</div>
 						<Tooltip>
 							<div className={'text-green-500 font-semibold flex justify-center gap-1'}>
 								<TooltipTrigger>{millify(potentialWin)}</TooltipTrigger>
@@ -279,6 +278,8 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 };
 
 const WaitingScreen: FC<{ round: number }> = ({ round }) => {
+	const { t } = useTranslation('', { keyPrefix: 'games.luro.placeBet' });
+
 	const { mutate: startRound, isPending } = useStartRound(round);
 
 	const handleSpin = () => {
@@ -292,20 +293,22 @@ const WaitingScreen: FC<{ round: number }> = ({ round }) => {
 			transition={{ duration: 0.3 }}
 			className={'grow flex flex-col items-center justify-center min-h-[390px]'}
 		>
-			<span>Waiting for polygon block...</span>
+			<span>{t('waiting')}</span>
 			<button
 				type={'button'}
 				onClick={handleSpin}
 				disabled={isPending}
 				className={'bg-yellow-400 disabled:bg-gray-500 rounded-lg px-6 py-2 text-black font-medium'}
 			>
-				{isPending ? 'Spinning...' : 'Spin the wheel'}
+				{isPending ? t('spinning') : t('spinTheWheel')}
 			</button>
 		</motion.div>
 	);
 };
 
 const SpinningScreen: FC<{ round: number }> = () => {
+	const { t } = useTranslation('', { keyPrefix: 'games.luro.placeBet' });
+
 	return (
 		<motion.div
 			initial={{ opacity: 0 }}
@@ -314,12 +317,14 @@ const SpinningScreen: FC<{ round: number }> = () => {
 			transition={{ duration: 0.3 }}
 			className={'grow flex flex-col items-center justify-center min-h-[390px]'}
 		>
-			<span>The winner is being decided....</span>
+			<span>{t('winnerIsBeingDecided')}</span>
 		</motion.div>
 	);
 };
 
 const RoundResult: FC<{ round: number }> = ({ round }) => {
+	const { t } = useTranslation('', { keyPrefix: 'games.luro.placeBet' });
+
 	const queryClient = useQueryClient();
 
 	const { data: roundData } = useRound(round);
@@ -356,12 +361,12 @@ const RoundResult: FC<{ round: number }> = ({ round }) => {
 				className={'grow flex flex-col gap-5 items-center justify-center min-h-[390px]'}
 			>
 				<div className={'flex flex-col w-3/4 h-[200px] items-center justify-center border rounded-[10px] border-yellow-400'}>
-					<div className={'text-xl font-semibold mb-4'}>Round is over</div>
+					<div className={'text-xl font-semibold mb-4'}>{t('over')}</div>
 					<div className={'w-full flex flex-row items-center justify-center gap-1'}>
-						You could win
+						{t('couldWin')}
 						<BetValue className={'text-yellow-400 text-sm'} value={valueToNumber((roundData.total.volume * 935n) / 1000n)} withIcon />
 					</div>
-					<div className={'text-blue-500 text-xs'}>+bonus</div>
+					<div className={'text-blue-500 text-xs'}>+ {t('bonus')}</div>
 				</div>
 				<motion.button
 					initial={{ opacity: 0 }}
@@ -373,7 +378,7 @@ const RoundResult: FC<{ round: number }> = ({ round }) => {
 					transition={{ duration: 1, delay: 2 }}
 					className={'w-3/4 bg-yellow-400 py-3 text-black rounded-[10px]'}
 				>
-					Back to the game
+					{t('backToGame')}
 				</motion.button>
 			</motion.div>
 		);
@@ -389,7 +394,7 @@ const RoundResult: FC<{ round: number }> = ({ round }) => {
 				className={'grow flex flex-col gap-5 items-center justify-center min-h-[390px]'}
 			>
 				<div className={'flex flex-col w-3/4 h-[200px] items-center justify-center border rounded-[10px] border-yellow-400'}>
-					<div className={'text-xl font-semibold mb-4'}>You WIN!</div>
+					<div className={'text-xl font-semibold mb-4'}>{t('youWin')}</div>
 					<div className={'w-full flex flex-row items-center justify-center gap-1'}>
 						<BetValue className={'text-yellow-400 text-lg font-semibold'} value={valueToNumber((roundData.total.volume * 935n) / 1000n)} withIcon />
 					</div>
@@ -397,7 +402,7 @@ const RoundResult: FC<{ round: number }> = ({ round }) => {
 						+bonus <BetValue value={bonus?.bonus || 0} withIcon />
 					</div>
 
-					<div className={'text-gray-400 text-xs mt-2'}>total</div>
+					<div className={'text-gray-400 text-xs mt-2'}>{t('total')}</div>
 					<BetValue
 						className={'text-yellow-400 text-lg font-semibold'}
 						value={valueToNumber((roundData.total.volume * 935n) / 1000n) + (bonus?.bonus ?? 0)}
@@ -415,7 +420,7 @@ const RoundResult: FC<{ round: number }> = ({ round }) => {
 					transition={{ duration: 1, delay: 2 }}
 					className={'w-3/4 bg-yellow-400 py-3 text-black rounded-[10px]'}
 				>
-					Back to the game
+					{t('backToGame')}
 				</motion.button>
 			</motion.div>
 		);
@@ -430,7 +435,7 @@ const RoundResult: FC<{ round: number }> = ({ round }) => {
 			className={'grow flex flex-col gap-5 items-center justify-center min-h-[390px]'}
 		>
 			<div className={'flex flex-col w-3/4 h-[200px] items-center justify-center border rounded-[10px] border-yellow-400'}>
-				<div className={'text-xl font-semibold mb-4'}>Your bonus:</div>
+				<div className={'text-xl font-semibold mb-4'}>{t('yourBonus')}</div>
 				<div className={'text-blue-500 text-sm flex flex-row items-center justify-center gap-1'}>
 					+<BetValue value={bonus?.bonus ?? 0} withIcon />
 				</div>
@@ -446,7 +451,7 @@ const RoundResult: FC<{ round: number }> = ({ round }) => {
 				}}
 				className={'w-3/4 bg-yellow-400 py-3 text-black rounded-[10px]'}
 			>
-				Back to the game
+				{t('backToGame')}
 			</motion.button>
 		</motion.div>
 	);

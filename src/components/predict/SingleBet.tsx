@@ -152,9 +152,16 @@ const BetModal: FC<PredictBet> = (bet) => {
 					<h2 className={'text-gray-500 text-sm'}>{isCurrent ? t('startCurrentPrice') : t('startFinalPrice')}</h2>
 					<div className={cx('text-xl font-semibold', (isStartLoading || isEndLoading) && 'animate-pulse blur-sm')}>
 						<span>{startPrice}$</span>
-						<span className={'text-base font-medium'}> at {startTime}</span>
+						<span className={'text-base font-medium'}>
+							{' '}
+							{t('at')}
+							{startTime}
+						</span>
 						<span className={cx(diff > 0 ? 'text-green-500' : 'text-red-500')}> / {endPrice}$</span>
-						<span className={cx('text-base font-medium')}> at {endTime}</span>
+						<span className={cx('text-base font-medium')}>
+							{' '}
+							{t('at')} {endTime}
+						</span>
 					</div>
 				</div>
 

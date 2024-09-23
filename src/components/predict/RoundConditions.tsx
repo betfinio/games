@@ -57,8 +57,16 @@ const RoundConditions: FC<{ game: Game }> = ({ game }) => {
 				</div>
 
 				<div className={'flex justify-center  text-gray-500 text-xs mt-6'}>
-					You bet if the rate goes <span className={'text-green-500 px-1'}> UP </span> or <span className={'text-red-500 px-1'}>DOWN</span> till{' '}
-					<span className={'text-yellow-400 pl-1'}> {DateTime.fromMillis((round + 4) * game.interval * 1000).toFormat('TT')}</span>
+					<Trans
+						values={{ time: DateTime.fromMillis((round + 4) * game.interval * 1000).toFormat('TT') }}
+						i18nKey={'games.predict.roundConditions.description'}
+						i18n={i18n}
+						components={{
+							green: <span className={'text-green-500 px-1'} />,
+							red: <span className={'text-red-500 px-1'} />,
+							yellow: <span className={'text-yellow-400 pl-1'} />,
+						}}
+					/>
 				</div>
 			</div>
 		</div>

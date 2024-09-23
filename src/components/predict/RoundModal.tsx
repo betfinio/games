@@ -1,5 +1,6 @@
 import BetsTable from '@/src/components/predict/BetsTable.tsx';
 import BonusChart from '@/src/components/predict/BonusChart.tsx';
+import i18n from '@/src/i18n.ts';
 import { useCalculate, useRoundBets, useRoundInfo } from '@/src/lib/predict/query';
 import type { Game, PredictBet, RoundStatus } from '@/src/lib/predict/types';
 import { valueToNumber } from '@betfinio/abi';
@@ -15,7 +16,7 @@ import millify from 'millify';
 import { type FC, useEffect, useMemo, useState } from 'react';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import type { CircularProgressbarStyles } from 'react-circular-progressbar/dist/types';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 const RoundModal: FC<{
 	round: number;
@@ -56,14 +57,14 @@ const RoundModal: FC<{
 	};
 
 	const status: RoundStatus = useMemo(() => {
-		if (!roundData) return 'ended';
+		if (!roundData) return t('status.ended');
 		const last = (round + 1) * game.interval;
 		const ended = (round + game.duration) * game.interval;
 		const now = Math.floor(Date.now() / 1000);
-		if (now < last) return 'accepting';
-		if (now < ended) return 'waiting';
-		if (roundData.calculated) return 'calculated';
-		return 'ended';
+		if (now < last) return t('status.accepting');
+		if (now < ended) return t('status.waiting');
+		if (roundData.calculated) return t('status.calculated');
+		return t('status.ended');
 	}, [roundData, round]);
 	const handleClose = () => {
 		router?.navigate({ to: `/predict/${game.name}` });
@@ -99,11 +100,11 @@ const RoundModal: FC<{
 							{isFinished &&
 								(isLong ? (
 									<div className={'text-2xl font-semibold text-green-500 flex items-center gap-1'}>
-										Long ({coef === Number.POSITIVE_INFINITY ? 1 : coef.toFixed(2)}x)
+										{t('long')} ({coef === Number.POSITIVE_INFINITY ? 1 : coef.toFixed(2)}x)
 									</div>
 								) : (
 									<div className={'text-2xl font-semibold text-red-500 flex items-center gap-1'}>
-										Short ({coef === Number.POSITIVE_INFINITY ? 1 : coef.toFixed(2)}x)
+										{t('short')} ({coef === Number.POSITIVE_INFINITY ? 1 : coef.toFixed(2)}x)
 									</div>
 								))}
 						</div>
@@ -118,7 +119,7 @@ const RoundModal: FC<{
 					<div className={'flex flex-col gap-2 md:flex-row md:gap-10 mt-2 items-start'}>
 						<div className={'flex flex-col gap-2'}>
 							<span className={' flex gap-2'}>
-								Total bonus:
+								{t('totalBonus')}
 								<BetValue value={valueToNumber(totalBonus)} withIcon={true} className={'text-yellow-400'} />
 							</span>
 
@@ -129,7 +130,11 @@ const RoundModal: FC<{
 
 						<div className={' gap-5 md:gap-1 flex md:flex-col'}>
 							<div>
-								<span className={'text-green-500'}>Long</span> / <span className={'text-red-500'}>Short</span> ratio:
+								<Trans
+									i18nKey={'games.predict.roundModal.longShortRatio'}
+									i18n={i18n}
+									components={{ green: <span className={'text-green-500'} />, red: <span className={'text-red-500'} /> }}
+								/>
 							</div>
 							<div className={'flex h-[36px] md:h-[40px] flex-row w-[200px] text-white items-center rounded-md overflow-hidden'}>
 								<div
@@ -180,7 +185,7 @@ const RoundModal: FC<{
 				<BetsTable isFetching={!isFetched} bets={bets} isFinished={isFinished} />
 				<div className={cx('flex flex-row justify-end w-full p-2', status !== 'ended' && '!hidden')}>
 					<button type={'button'} className={'rounded-md px-4 py-2 bg-yellow-400 text-black '} onClick={handleCalculate}>
-						Calculate Result
+						{t('calculateResult')}
 					</button>
 				</div>
 			</motion.div>

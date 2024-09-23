@@ -4,9 +4,11 @@ import type { Game } from '@/src/lib/predict/types';
 import { ZeroAddress, valueToNumber } from '@betfinio/abi';
 import { BetValue } from 'betfinio_app/BetValue';
 import { type FC, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAccount } from 'wagmi';
 
 const BonusInfo: FC<{ game: Game }> = ({ game }) => {
+	const { t } = useTranslation('', { keyPrefix: 'games.predict' });
 	const { data: round } = useCurrentRound(game.interval);
 	const { data: pool } = usePool(game.address, round);
 	const { data: bets } = useRoundBets(game.address, round);
@@ -94,10 +96,12 @@ const BonusInfo: FC<{ game: Game }> = ({ game }) => {
 	}, [bets]);
 	const myBonus = Math.max(expected.longBonus, expected.shortBonus);
 	if (!pool) return null;
+
+	// todo: add bonus description
 	return (
 		<div className={'h-full'}>
 			<h1 className={'flex gap-1 text-xl font-semibold pl-2'}>
-				Your potential bonus:{' '}
+				{t('bonus.title')}
 				<span className={'text-[#FFC800]'}>
 					<BetValue value={myBonus} precision={2} withIcon={true} />
 				</span>
@@ -114,7 +118,7 @@ const BonusInfo: FC<{ game: Game }> = ({ game }) => {
 						<span className={'text-[#FFC800]'}>{valueToNumber(pool?.long + pool?.short).toLocaleString()}</span> that are split among winners according to{' '}
 						<span className={'text-[#FFC800]'}>order</span> and <span className={'text-[#FFC800]'}>size</span> of bets.
 					</div>
-					<p className={'text-center font-semibold'}>The sooner and more you bet the bigger bonus you get.</p>
+					<p className={'text-center font-semibold'}>{t('bonus.info')}</p>
 				</div>
 			</div>
 		</div>

@@ -7,13 +7,15 @@ import type { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
 const CoinInfo: FC<{ bets: number; volume: bigint; staking: bigint; diff: number }> = ({ bets, volume, staking, diff }) => {
+	const { t } = useTranslation('', { keyPrefix: 'predict' });
+
 	return (
 		<div className={'lg:hidden'}>
 			<Dialog>
 				<DialogTrigger asChild>
 					<motion.div className={'flex flex-col items-center justify-center cursor-pointer text-[#FFC800] hover:text-[#FFC800] lg:text-white duration-300'}>
 						<ChartBarIcon className={'text-[#FFC800] w-6'} />
-						<span className={'hidden sm:inline text-xs'}>Stats</span>
+						<span className={'hidden sm:inline text-xs'}>{t('stats')}</span>
 					</motion.div>
 				</DialogTrigger>
 				<DialogContent>
