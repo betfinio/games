@@ -200,7 +200,7 @@ const StandByScreen: FC<{ round: number }> = ({ round }) => {
 					allowNegative={false}
 					maxLength={15}
 					disabled={loading}
-					placeholder={valueToNumber(balance) < Number(amount) ? t('placeholder.balance') : t('placeholder.amount')}
+					placeholder={valueToNumber(balance) < Number(amount) ? t('placeholder.balance') : t('placeholder.Amount')}
 					value={amount}
 					onValueChange={(values) => {
 						const { value } = values;

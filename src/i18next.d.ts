@@ -8,3 +8,4 @@ declare module 'i18next' {
 }
 
 export type ILanguageKeys = (typeof resources)['en']['games'];
+export type ILanguageErrorKeys = keyof (typeof resources)['en']['shared']['errors'];

@@ -1,3 +1,4 @@
+import type { ILanguageErrorKeys } from '@/src/i18next';
 import type { LuroAuthor, LuroBet, RoundModalPlayer } from '@/src/lib/luro/types.ts';
 import type { QueryClient } from '@tanstack/react-query';
 import { toast } from 'betfinio_app/use-toast';
@@ -70,9 +71,8 @@ export const animateNewBet = (address: Address, strength: number, queryClient: Q
 	queryClient.setQueryData(['luro', luroAddress, 'bets', 'newBet'], { address, strength });
 };
 
-export const handleError = (e: Error, t: TFunction) => {
-	// @ts-ignore
-	toast({ variant: 'destructive', description: t(e.cause?.reason || 'unknown') });
+export const handleError = (e: Error, t: TFunction<'shared'>) => {
+	toast({ variant: 'destructive', description: t(`errors.${(e.cause as { reason: ILanguageErrorKeys })?.reason}` || 'errors.unknown') });
 };
 
 export const getLuroInterval = (interval: LuroInterval) => {
