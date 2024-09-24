@@ -6,10 +6,11 @@ import { RoundInfo } from '@/src/components/luro/RoundInfo.tsx';
 import RoundModal from '@/src/components/luro/RoundModal.tsx';
 import { RoundMyInfo } from '@/src/components/luro/RoundMyInfo.tsx';
 import RoundsTable from '@/src/components/luro/RoundsTable.tsx';
+import i18n from '@/src/i18n.ts';
 import { Link, createFileRoute } from '@tanstack/react-router';
 import { getStakingUrl } from 'betfinio_app/lib';
 import { TooltipProvider } from 'betfinio_app/tooltip';
-import { Trans } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 export const Route = createFileRoute('/luro/$interval')({
 	validateSearch: (search: Record<string, unknown>) => {
@@ -21,6 +22,7 @@ export const Route = createFileRoute('/luro/$interval')({
 
 function Luro() {
 	const search = Route.useSearch();
+	const { t } = useTranslation('games');
 	return (
 		<div className={'col-span-4 p-2 md:p-3 lg:p-4  lg:col-start-2'}>
 			<TooltipProvider delayDuration={0}>
@@ -30,7 +32,7 @@ function Luro() {
 						<CurrentRound />
 						<div className={'text-center my-2 justify-self-end'}>
 							<Link to={getStakingUrl('conservative')} className={'text-sm text-[#6A6F84]'}>
-								<Trans i18nKey={'games.luro.feeStaking'} components={{ b: <b className={'text-yellow-400 font-medium'} /> }} />
+								<Trans t={t} i18nKey={'luro.feeStaking'} i18n={i18n} components={{ b: <b className={'text-yellow-400 font-medium'} /> }} />
 							</Link>
 						</div>
 						<BonusInfo />

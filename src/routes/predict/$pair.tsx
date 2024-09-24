@@ -10,7 +10,7 @@ import { games } from '@/src/lib/predict';
 import { createFileRoute } from '@tanstack/react-router';
 import { Dialog } from 'betfinio_app/dialog';
 import { getStakingUrl } from 'betfinio_app/lib';
-import { Trans } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 export const Route = createFileRoute('/predict/$pair')({
 	validateSearch: (search: Record<string, unknown>) => {
@@ -24,6 +24,7 @@ function PredictPage() {
 	const { pair } = Route.useParams();
 	const game = games[pair];
 	const search = Route.useSearch();
+	const { t } = useTranslation('games');
 	return (
 		<div className={'rounded-lg w-full h-full p-2 md:p-3 lg:p-4 gap-2 flex flex-col lg:gap-4'}>
 			<PairInfo game={game} />
@@ -34,7 +35,7 @@ function PredictPage() {
 			</div>
 			<BonusAndChart game={game} />
 			<a href={getStakingUrl()} className={'text-center text-gray-400 text-sm md:text-base cursor-pointer'}>
-				<Trans i18nKey={'games.predict.feeStaking'} i18n={i18n} components={{ b: <b className={'text-yellow-400 font-medium'} /> }} />
+				<Trans t={t} i18nKey={'predict.feeStaking'} i18n={i18n} components={{ b: <b className={'text-yellow-400 font-medium'} /> }} />
 			</a>
 			<RoundsTable game={game} />
 			<Dialog open={!!search.round && search.round > 0}>{search.round && <RoundModal round={search.round} game={game} />}</Dialog>

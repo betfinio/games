@@ -25,6 +25,7 @@ import { useAccount } from 'wagmi';
 
 import Crown from '@/src/assets/luro/crown.svg';
 import Duck from '@/src/assets/luro/duck.png';
+import { useTranslation } from 'react-i18next';
 
 const largeProps = {
 	force: 0.8,
@@ -35,6 +36,8 @@ const largeProps = {
 };
 
 export const RoundCircle: FC<{ round: number; className?: string }> = ({ round, className = '' }) => {
+	const { t } = useTranslation('games', { keyPrefix: 'luro.roundCircle' });
+
 	const [confettiExploding, setConfettiExploding] = useState(false);
 	const { address } = useAccount();
 	const { data: bets = [] } = useRoundBets(round);
@@ -48,7 +51,7 @@ export const RoundCircle: FC<{ round: number; className?: string }> = ({ round, 
 	} = useLuroState();
 
 	const singleRotationDuration = 5000;
-
+	// todo: Extract states to enum
 	useEffect(() => {
 		if (round !== currentRound) {
 			return;
@@ -224,7 +227,7 @@ export const RoundCircle: FC<{ round: number; className?: string }> = ({ round, 
 				</div>
 				{currentRound !== round && (roundData?.total.volume || 0n) > 0n && (
 					<div className={cx('w-full flex gap-4 flex-row items-center justify-evenly')}>
-						{roundData?.status === 0 && 'Waiting for transaction. Any second now...'}
+						{roundData?.status === 0 && t('waiting')}
 
 						{roundData?.status === 2 && (
 							<>
@@ -343,6 +346,8 @@ const CustomTooltip =
 		);
 	};
 const ProgressBar: FC<{ round: number; authors: CustomLuroBet[] }> = ({ round }) => {
+	const { t } = useTranslation('games', { keyPrefix: 'luro.roundCircle' });
+
 	const { data: roundData } = useRound(round);
 	const { data: bank = 0n, isLoading: isBankLoading } = useRoundBank(round);
 	const { data: currentRound } = useVisibleRound();
@@ -446,7 +451,7 @@ const ProgressBar: FC<{ round: number; authors: CustomLuroBet[] }> = ({ round })
 						className={'absolute flex flex-col items-center justify-center w-full h-full -top-4 gap-4'}
 					>
 						<div className={cx('text-md duration-300', Number(remaining.toFormat('ss')) < 30 && 'text-red-500')}>
-							{end > Date.now() ? remaining.toFormat('hh:mm:ss') : 'Ended'}
+							{end > Date.now() ? remaining.toFormat('hh:mm:ss') : t('ended')}
 						</div>
 						<div className={'text-xl  lg:text-3xl'}>
 							<Counter doMillify={true} from={from} to={to} />
@@ -479,6 +484,8 @@ const BetCircleWinner: FC<{ player: Address; amount: number; percent: number; co
 	coef,
 	loading,
 }) => {
+	const { t } = useTranslation('games', { keyPrefix: 'luro.roundCircle' });
+
 	return (
 		<motion.div
 			initial={{ opacity: 0 }}
@@ -492,13 +499,15 @@ const BetCircleWinner: FC<{ player: Address; amount: number; percent: number; co
 				<TabItem player={player} amount={amount} percent={percent} />
 			</div>
 			<div>
-				<span className={'text-yellow-400'}>{coef}x</span> WIN
+				<span className={'text-yellow-400'}>{coef}x</span> {t('win')}
 			</div>
 		</motion.div>
 	);
 };
 
 const RoundResult: FC<{ round: number }> = ({ round }) => {
+	const { t } = useTranslation('games', { keyPrefix: 'luro.roundCircle' });
+
 	const { data: roundData, isLoading, isFetching } = useRound(round);
 
 	const winner = useRoundWinner(round);
@@ -509,12 +518,12 @@ const RoundResult: FC<{ round: number }> = ({ round }) => {
 	if (roundData.player.bets === 0n) {
 		return (
 			<>
-				<div className={'text-xl font-semibold mb-4'}>Round is over</div>
+				<div className={'text-xl font-semibold mb-4'}>{t('over')}</div>
 				<div className={'w-full flex flex-row items-center justify-center gap-1'}>
-					You could win
+					{t('couldWin')}
 					<BetValue className={'text-yellow-400 text-sm'} value={valueToNumber((roundData.total.volume * 935n) / 1000n)} withIcon />
 				</div>
-				<div className={'text-blue-500 text-xs'}>+bonus</div>
+				<div className={'text-blue-500 text-xs'}>+ {t('bonus')}</div>
 			</>
 		);
 	}
@@ -522,16 +531,15 @@ const RoundResult: FC<{ round: number }> = ({ round }) => {
 	if (winner?.player === address) {
 		return (
 			<>
-				<div className={'text-xl font-semibold mb-4'}>You WIN!</div>
+				<div className={'text-xl font-semibold mb-4'}>{t('youWin')}</div>
 				<div className={'w-full flex flex-row items-center justify-center gap-1'}>
 					<BetValue className={'text-yellow-400 text-lg font-semibold'} value={valueToNumber((roundData.total.volume * 935n) / 1000n)} withIcon />
 				</div>
 				<div className={'text-blue-500 text-sm flex flex-row items-center justify-center gap-1'}>
-					{/*TODO: return bonus*/}
-					+bonus
+					{/*TODO: return bonus*/}+ {t('bonus')}
 				</div>
 
-				<div className={'text-gray-400 text-xs mt-2'}>total</div>
+				<div className={'text-gray-400 text-xs mt-2'}>{t('total')}</div>
 				<BetValue className={'text-yellow-400 text-lg font-semibold'} value={valueToNumber((roundData.total.volume * 935n) / 1000n) + 20} withIcon />
 			</>
 		);
@@ -539,7 +547,7 @@ const RoundResult: FC<{ round: number }> = ({ round }) => {
 
 	return (
 		<>
-			<div className={'text-xl font-semibold mb-4'}>Your bonus:</div>
+			<div className={'text-xl font-semibold mb-4'}>{t('yourBonus')}</div>
 			<div className={'text-blue-500 text-sm flex flex-row items-center justify-center gap-1'}>
 				+<BetValue value={20} withIcon />
 			</div>

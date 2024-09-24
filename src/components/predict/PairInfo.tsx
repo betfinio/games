@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 import PairSwitcher from './PairSwitcher.tsx';
 
 const PairInfo: FC<{ game: Game }> = ({ game }) => {
-	const { t } = useTranslation('', { keyPrefix: 'games.predict' });
+	const { t } = useTranslation('games', { keyPrefix: 'predict' });
 	const { data: latest = defaultResult, isFetched: isLatestFetched } = useLatestPrice(game.name);
 	const { data: yesterday = defaultResult, isFetched: isYesterdayFetched } = useYesterdayPrice(game.name);
 	const { data: bets = 0, isFetched: isBetsFetched } = useBetsCount();
@@ -61,7 +61,7 @@ const PairInfo: FC<{ game: Game }> = ({ game }) => {
 					rel="noreferrer"
 				>
 					<CircleHelp className={'w-6 h-6'} />
-					<span className={'hidden sm:inline text-xs'}>How to Play</span>
+					<span className={'hidden sm:inline text-xs'}>{t('howToPlay')}</span>
 				</a>
 			</div>
 		</div>

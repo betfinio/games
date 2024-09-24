@@ -38,7 +38,7 @@ export const ModalContent: FC<{
 	interval: number;
 	round: Round | null;
 }> = ({ onClose, roundId, round }) => {
-	const { t } = useTranslation('', { keyPrefix: 'games.luro.roundModal' });
+	const { t } = useTranslation('games', { keyPrefix: 'luro.roundModal' });
 	const { interval } = Route.useParams();
 	const { start, end } = getTimesByRound(roundId, interval as LuroInterval);
 	const isFinished = DateTime.fromMillis(Date.now()).diff(DateTime.fromMillis(end)).milliseconds > 0;
@@ -96,6 +96,7 @@ interface RoundDetailsProps {
 }
 
 const BonusDistribution: FC<{ round: number }> = ({ round }) => {
+	const { t } = useTranslation('games', { keyPrefix: 'luro.roundModal' });
 	const { data: distributed } = useBonusDistribution(round);
 	const { mutate: distribute } = useDistributeBonus();
 	const { interval } = Route.useParams();
@@ -122,6 +123,8 @@ const BonusDistribution: FC<{ round: number }> = ({ round }) => {
 };
 
 const RoundDetails: FC<RoundDetailsProps> = ({ volume, usersCount }) => {
+	const { t } = useTranslation('games', { keyPrefix: 'luro.roundModal.details' });
+
 	const staking = (volume / 1000n) * 36n;
 	const bonus = (volume / 100n) * 5n;
 	return (
@@ -134,9 +137,9 @@ const RoundDetails: FC<RoundDetailsProps> = ({ volume, usersCount }) => {
 					</div>
 					<div className={'text-sm flex font-semibold'}>
 						({usersCount}
-						<span className={'ml-1'}>bets</span>)
+						<span className={'ml-1'}>{t('bets')}</span>)
 					</div>
-					<div className={'mt-1 text-xs text-[#6A6F84]'}>Total bets</div>
+					<div className={'mt-1 text-xs text-[#6A6F84]'}>{t('totalBets')}</div>
 				</div>
 			</div>
 			<div className={'border rounded-xl border-gray-800 bg-primaryLighter min-h-[100px] flex flex-row justify-center items-center gap-2'}>
@@ -145,7 +148,7 @@ const RoundDetails: FC<RoundDetailsProps> = ({ volume, usersCount }) => {
 					<div className={'mt-3 text-xl font-semibold'}>
 						<BetValue value={valueToNumber(bonus)} precision={1} withIcon={true} />
 					</div>
-					<div className={'mt-1 text-xs text-[#6A6F84]'}>Total bonus</div>
+					<div className={'mt-1 text-xs text-[#6A6F84]'}>{t('totalBonus')}</div>
 				</div>
 			</div>
 			<div className={'border rounded-xl  border-gray-800 bg-primaryLighter min-h-[100px] flex flex-row justify-center items-center gap-2'}>
@@ -154,7 +157,7 @@ const RoundDetails: FC<RoundDetailsProps> = ({ volume, usersCount }) => {
 					<div className={'mt-3 text-xl font-semibold'}>
 						<BetValue value={valueToNumber(staking)} precision={1} withIcon={true} />
 					</div>
-					<div className={'mt-1 text-xs text-[#6A6F84]'}>Paid to staking</div>
+					<div className={'mt-1 text-xs text-[#6A6F84]'}>{t('paidToStaking')}</div>
 				</div>
 			</div>
 		</div>
@@ -164,6 +167,8 @@ const RoundDetails: FC<RoundDetailsProps> = ({ volume, usersCount }) => {
 const columnHelper = createColumnHelper<RoundModalPlayer>();
 
 const WinnerBetInfo: FC<{ round: number }> = ({ round }) => {
+	const { t } = useTranslation('games', { keyPrefix: 'luro.roundModal.winnerBet' });
+
 	const { data: winners = [], isLoading, isFetching } = useWinners();
 	const { data: currentRound } = useVisibleRound();
 
@@ -174,7 +179,7 @@ const WinnerBetInfo: FC<{ round: number }> = ({ round }) => {
 	}
 	return (
 		<div className={'py-5 border-t border-b border-[#1F222F] flex flex-col items-center text-sm font-semibold'}>
-			<p>Winning Bet:</p>
+			<p>{t('winningBet')}</p>
 			{isLoading || isFetching ? (
 				<Loader className={'w-3 h-3 animate-spin'} />
 			) : (
@@ -184,7 +189,7 @@ const WinnerBetInfo: FC<{ round: number }> = ({ round }) => {
 			)}
 
 			<div className={'mt-5 flex gap-2'}>
-				<p className={'text-[#8794A1]'}>Proof of Random:</p>
+				<p className={'text-[#8794A1]'}>{t('proofOfRandom')}</p>
 				{isLoading || isFetching ? (
 					<Loader className={'w-3 h-3 animate-spin'} />
 				) : (
@@ -207,6 +212,8 @@ const BetsTable: FC<{ round: number; className?: string; volume: bigint; bonusSh
 	bonusShare,
 	winner,
 }) => {
+	const { t } = useTranslation('games', { keyPrefix: 'luro.roundModal.table' });
+
 	const { data: bets = [], isFetched: isRoundsFetched } = useRoundBets(round);
 	const { address = ZeroAddress } = useAccount();
 	const { data: roundData } = useRound(round);
@@ -235,7 +242,7 @@ const BetsTable: FC<{ round: number; className?: string; volume: bigint; bonusSh
 			cell: (props) => (
 				<div className={'w-full h-full flex items-center justify-center'}>
 					{props.row.getValue('player') === address.toLowerCase() ? (
-						<div className={'text-[10px] text-[#6A6F84] font-semibold'}>YOU</div>
+						<div className={'text-[10px] text-[#6A6F84] font-semibold'}>{t('you')}</div>
 					) : (
 						props.row.getValue('player') === winner && <GoldenTrophy />
 					)}
@@ -243,7 +250,7 @@ const BetsTable: FC<{ round: number; className?: string; volume: bigint; bonusSh
 			),
 		}),
 		columnHelper.accessor('player', {
-			header: 'Player',
+			header: t('columns.player'),
 			cell: (props) => {
 				const address = props.getValue();
 
@@ -255,7 +262,7 @@ const BetsTable: FC<{ round: number; className?: string; volume: bigint; bonusSh
 			},
 		}),
 		columnHelper.accessor('count', {
-			header: 'Bets',
+			header: t('columns.bets'),
 			cell: (props) => {
 				const count = props.getValue();
 				return <div>{count}</div>;
@@ -263,14 +270,14 @@ const BetsTable: FC<{ round: number; className?: string; volume: bigint; bonusSh
 		}),
 		columnHelper.accessor('volume', {
 			id: 'total_bonus',
-			header: 'Amount',
+			header: t('columns.amount'),
 			cell: (props) => {
 				const pool = props.getValue();
 				return <BetValue value={valueToNumber(pool)} withIcon={true} />;
 			},
 		}),
 		columnHelper.accessor('win', {
-			header: 'Result',
+			header: t('columns.result'),
 			cell: (props) => {
 				const amount = props.getValue();
 				const isWinner = props.row.getValue('player') === winner;
@@ -283,7 +290,7 @@ const BetsTable: FC<{ round: number; className?: string; volume: bigint; bonusSh
 			},
 		}),
 		columnHelper.accessor('bonus', {
-			header: 'Bonus',
+			header: t('columns.bonus'),
 			meta: {
 				className: 'hidden md:table-cell',
 			},
@@ -293,7 +300,7 @@ const BetsTable: FC<{ round: number; className?: string; volume: bigint; bonusSh
 			},
 		}),
 		columnHelper.display({
-			header: 'Total Result',
+			header: t('columns.totalResult'),
 			id: 'totalWin',
 			cell: (props) => {
 				const isWinner = props.row.getValue('player') === winner;

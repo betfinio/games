@@ -18,7 +18,7 @@ import { NumericFormat } from 'react-number-format';
 import { useAccount } from 'wagmi';
 
 const PlaceBet: FC<{ game: Game }> = ({ game }) => {
-	const { t } = useTranslation('', { keyPrefix: 'games.predict.placeBet' });
+	const { t } = useTranslation('games', { keyPrefix: 'predict.placeBet' });
 	const [amount, setAmount] = useState<string>('5000');
 	const { address = ZeroAddress } = useAccount();
 	const { data: isMember = false } = useIsMember(address);
@@ -64,28 +64,28 @@ const PlaceBet: FC<{ game: Game }> = ({ game }) => {
 	const handleBet = async (side: boolean) => {
 		if (address === ZeroAddress) {
 			toast({
-				description: 'Please connect your wallet',
+				description: t('toast.connect'),
 				variant: 'destructive',
 			});
 			return;
 		}
 		if (!isMember) {
 			toast({
-				description: 'Connected wallet is not member of Betfin. Ask someone for an invitation',
+				description: t('toast.notMember'),
 				variant: 'destructive',
 			});
 			return;
 		}
 		if (amount === '') {
 			toast({
-				title: 'Please enter amount',
+				title: t('toast.amount'),
 				variant: 'destructive',
 			});
 			return;
 		}
 		if (Number(amount) < 1) {
 			toast({
-				title: 'Minimal bet amount is 1 BET',
+				title: t('toast.minimalBet'),
 				variant: 'destructive',
 			});
 			return;
@@ -94,7 +94,7 @@ const PlaceBet: FC<{ game: Game }> = ({ game }) => {
 			BigInt(Number(amount));
 		} catch (e) {
 			toast({
-				title: 'Invalid amount',
+				title: t('toast.invalidAmount'),
 				variant: 'destructive',
 			});
 			return;
@@ -103,7 +103,7 @@ const PlaceBet: FC<{ game: Game }> = ({ game }) => {
 			setSide(s);
 			requestAllowance?.('bet', BigInt(amount) * 10n ** 18n);
 			toast({
-				title: "You don't have enough allowance",
+				title: t('toast.allowance'),
 				variant: 'destructive',
 			});
 			return;
@@ -124,7 +124,7 @@ const PlaceBet: FC<{ game: Game }> = ({ game }) => {
 						thousandSeparator={','}
 						min={1}
 						disabled={loading || balance === 0n}
-						placeholder={allowance === 0n ? 'Please increase allowance' : balance === 0n ? 'Please top-up balance' : 'Amount'}
+						placeholder={allowance === 0n ? t('allowance') : balance === 0n ? t('topUpTitle') : t('amount')}
 						value={amount === null ? '' : amount}
 						suffix={' BET'}
 						onValueChange={(values) => {
@@ -147,7 +147,7 @@ const PlaceBet: FC<{ game: Game }> = ({ game }) => {
 						<span className={'text-lg leading-3'}>{t('long')}</span>
 						<div className={'flex flex-row items-center text-xs leading-3 gap-1 whitespace-nowrap'}>
 							{millify(Number(amount) + (valueToNumber(pool.short) / (valueToNumber(pool.long) + Number(amount))) * Number(amount) || 0, { precision: 2 })}
-							<Bet className={'w-3 h-3'} color={'white'} /> + bonus
+							<Bet className={'w-3 h-3'} color={'white'} /> + {t('bonus')}
 						</div>
 					</motion.button>
 					<motion.button
@@ -162,7 +162,7 @@ const PlaceBet: FC<{ game: Game }> = ({ game }) => {
 						<span className={'text-lg leading-3'}>{t('short')}</span>
 						<div className={'flex flex-row items-center text-xs leading-3 gap-1 whitespace-nowrap'}>
 							{millify(Number(amount) + (valueToNumber(pool.long) / (valueToNumber(pool.short) + Number(amount))) * Number(amount) || 0, { precision: 2 })}
-							<Bet className={'w-3 h-3'} color={'white'} /> + bonus
+							<Bet className={'w-3 h-3'} color={'white'} /> + {t('bonus')}
 						</div>
 					</motion.button>
 				</div>
@@ -170,7 +170,7 @@ const PlaceBet: FC<{ game: Game }> = ({ game }) => {
 				<CoefficientRatio pool={pool} amount={amount} />
 				{/*<PlayersBets game={game}/>*/}
 				<div className={'w-full text-xs'}>
-					<h4 className={'font-medium text-gray-500 text-center mb-2'}>Expected winnings</h4>
+					<h4 className={'font-medium text-gray-500 text-center mb-2'}>{t('expectedWinnings')}</h4>
 					<PlayersExpectedWinnings game={game} />
 				</div>
 				{/*{open && (*/}

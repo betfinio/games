@@ -25,7 +25,7 @@ const RoundMobileInfo: FC<{ bets: number; volume: bigint; staking: bigint }> = (
 export default RoundMobileInfo;
 
 const SwitchModal: FC<{ bets: number; volume: bigint; staking: bigint }> = ({ bets, volume, staking }) => {
-	const { t } = useTranslation('', { keyPrefix: 'games.luro.statsModal' });
+	const { t } = useTranslation('games', { keyPrefix: 'luro.statsModal' });
 
 	return (
 		<motion.div className={'rounded-lg border border-gray-800 bg-primary p-5 w-[350px] flex flex-col gap-5 text-white'}>

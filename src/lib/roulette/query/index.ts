@@ -139,7 +139,7 @@ export const usePlace = () => {
 };
 
 export const useSpin = () => {
-	const { t: errors } = useTranslation('', { keyPrefix: 'shared.errors' });
+	const { t: errors } = useTranslation('shared', { keyPrefix: 'errors' });
 	const config = useConfig();
 	const queryClient = useQueryClient();
 

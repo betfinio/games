@@ -7,8 +7,10 @@ import cx from 'clsx';
 import { ArrowDownIcon, ArrowUpIcon, UserIcon } from 'lucide-react';
 import millify from 'millify';
 import { type FC, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const RoundPoolInfo: FC<{ game: Game }> = ({ game }) => {
+	const { t } = useTranslation('games', { keyPrefix: 'predict.roundPool' });
 	const { data: round } = useCurrentRound(game.interval);
 	const { data: roundBets = [] } = useRoundBets(game.address, round);
 	const [pool, setPool] = useState<RoundPool>({ long: 0n, short: 0n, longPlayersCount: 0, shortPlayersCount: 0, longCount: 0, shortCount: 0 });
@@ -54,7 +56,7 @@ const RoundPoolInfo: FC<{ game: Game }> = ({ game }) => {
 				</div>
 			</div>
 			<div className={'flex flex-row items-center justify-center gap-1 text-gray-400 text-xs'}>
-				Bonus pool is <BetValue value={valueToNumber((pool.short + pool.long) / 25n)} withIcon />
+				{t('bonusPool')} <BetValue value={valueToNumber((pool.short + pool.long) / 25n)} withIcon />
 			</div>
 		</div>
 	);

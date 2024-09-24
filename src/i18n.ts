@@ -5,34 +5,24 @@ import { initReactI18next } from 'react-i18next';
 import czJSON from './translations/cz.json';
 import enJSON from './translations/en.json';
 import ruJSON from './translations/ru.json';
+export const defaultNS = 'academy';
 
-// @ts-ignore
-import czShared from 'betfinio_app/locales/cz';
-// @ts-ignore
-import enShared from 'betfinio_app/locales/en';
-// @ts-ignore
-import ruShared from 'betfinio_app/locales/ru';
+import { sharedLang } from 'betfinio_app/locales/index';
 
-const resources = {
+export const resources = {
 	en: {
-		translation: {
-			games: enJSON,
-			shared: enShared,
-		},
+		games: enJSON,
+		shared: sharedLang.en,
 	},
 	cz: {
-		translation: {
-			games: czJSON,
-			shared: czShared,
-		},
+		games: czJSON,
+		shared: sharedLang.cz,
 	},
 	ru: {
-		translation: {
-			games: ruJSON,
-			shared: ruShared,
-		},
+		games: ruJSON,
+		shared: sharedLang.ru,
 	},
-};
+} as const;
 
 const instance: i18n = i18.createInstance();
 instance
@@ -42,6 +32,7 @@ instance
 		resources: resources,
 		lng: 'en', // default language
 		fallbackLng: 'en',
+		defaultNS,
 		interpolation: { escapeValue: false },
 		react: { useSuspense: true },
 	});

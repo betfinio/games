@@ -1,10 +1,23 @@
 {
 	"predict": {
+		"stats": "Stats",
 		"feeStaking": "All bets are subject of <b>3,6% fee</b> which is distributed into <b>Conservative staking.</b>",
+		"howToPlay": "How to Play",
 		"bonus": {
-			"title": "Your potential Bonus:",
-			"description": "test",
-			"info": "The bonus represents <b>4%</b> of all bets <b>({count} BET)</b> that are split among winners according to <b>order</b> and <b>size</b> of bets. <br/>The sooner and more you bet the bigger bonus you get."
+			"title": "Your potential bonus:",
+			"info": "The sooner and more you bet the bigger bonus you get."
+		},
+		"pairSwitcher": {
+			"predict": "Predict",
+			"minutes": "min",
+			"howToPlay": "How to Play"
+		},
+		"switchModal": {
+			"selectPair": "Select Pair"
+		},
+		"lastBets": {
+			"noBets": "No bets yet",
+			"latestBets": "Latest bets"
 		},
 		"tile": {
 			"24change": "24h change %",
@@ -16,6 +29,10 @@
 			"btcusdt": "BTC/USDT",
 			"ethusdt": "ETH/USDT",
 			"maticusdt": "MATIC/USDT"
+		},
+		"tabs": {
+			"bonusChart": "Bonus chart",
+			"priceGraph": "Price graph"
 		},
 		"table": {
 			"player": "Player",
@@ -31,6 +48,8 @@
 			"bonus": "Bonus",
 			"address": "Address",
 			"side": "Side",
+			"long": "LONG",
+			"short": "SHORT",
 			"win": "Win",
 			"status": "Status",
 			"round": "Round",
@@ -57,28 +76,42 @@
 				"waiting": "Waiting",
 				"calculated": "Calculated",
 				"accepting": "Betting"
+			},
+			"tabs": {
+				"all": "All rounds",
+				"my": "My rounds"
 			}
 		},
 		"roundConditions": {
-			"title": "Round",
-			"round": "Current round",
+			"title": "Round Conditions",
 			"price": "Price at <b>{time}</b>",
-			"time": "Remaining time to place bets:",
-			"currentPrice": "Current price"
+			"currentPrice": "Current price",
+			"description": "You bet if the rate goes <green> UP </green> or <red>DOWN</red> till <yellow> {time}</yellow>",
+			"up": "UP",
+			"down": "DOWN"
 		},
 		"placeBet": {
 			"title": "Place a bet",
 			"amount": "Enter the amount of your bet:",
-			"bonus": "First one gets a ",
 			"pool": "Current pool:",
 			"myBets": "Your bets:",
 			"long": "LONG",
 			"short": "SHORT",
 			"allowance": "Increase allowance",
 			"unlock": "Unlock",
+			"bonus": "bonus",
+			"expectedWinnings": "Expected Winnings",
 			"unlockTitle": "Increase BET token allowance to make a bet",
 			"connectTitle": "Connect your wallet to place a bet",
-			"topUpTitle": "Top up your wallet to place a bet"
+			"topUpTitle": "Top up your wallet to place a bet",
+			"toast": {
+				"connect": "Please connect your wallet",
+				"notMember": "Connected wallet is not member of Betfin. Ask someone for an invitation",
+				"amount": "Please enter amount",
+				"minimalBet": "Minimal bet amount is 1 BET",
+				"invalidAmount": "Invalid amount",
+				"allowance": "You don't have enough allowance"
+			}
 		},
 		"modal": {
 			"start": "Start price:",
@@ -98,16 +131,31 @@
 			"status": "Status:",
 			"winnings": "Winnings:",
 			"bonus": "Bonus:",
-			"total": "Total:"
+			"total": "Total:",
+			"at": "at"
 		},
 		"roundModal": {
 			"title": "Round",
+			"calculateResult": "Calculate Result",
+			"totalBonus": "Total bonus:",
+			"status": {
+				"ended": "Ended",
+				"accepting": "Accepting",
+				"waiting": "Waiting",
+				"calculated": "Calculated"
+			},
+			"longShortRatio": "<green>Long</green> / <red>Short</red> ratio:",
+			"long": "Long",
+			"short": "Short",
 			"titleFinished": "Result for round",
 			"activity": "Betting Activity",
 			"volume": "Total round volume",
 			"staking": "Staking contribution",
 			"users": "{players} users",
 			"bets": "{bets} bets"
+		},
+		"roundPool": {
+			"bonusPool": "Bonus pool is"
 		}
 	},
 	"luro": {
@@ -115,15 +163,73 @@
 		"placeBet": {
 			"title": "Place a bet",
 			"amount": "Enter the amount of your bet:",
-			"bonus": "First one gets a ",
+			"bonus": "bonus",
 			"myBets": "Your bets:",
 			"allowance": "Increase allowance",
 			"unlock": "Unlock",
+			"bet": "Bet",
 			"unlockTitle": "Increase BET token allowance to make a bet",
 			"connectTitle": "Connect your wallet to place a bet",
 			"topUpTitle": "Top up your wallet to place a bet",
 			"expected": "Expected winnings from this bet",
-			"bet": "Bet"
+			"toast": {
+				"connect": "Please connect your wallet",
+				"notMember": "Connected wallet is not member of Betfin. Ask someone for an invitation",
+				"amount": "Please enter amount",
+				"minimalBet": "Minimal bet amount is 1000 BET",
+				"invalidAmount": "Invalid amount"
+			},
+			"placeholder": {
+				"balance": "Please top-up balance",
+				"Amount": "Amount"
+			},
+			"activeBets": "Your active bets",
+			"potentialWin": "Potential win",
+			"waiting": "Waiting for polygon block...",
+			"spinning": "Spinning...",
+			"spinTheWheel": "Spin the wheel",
+			"winnerIsBeingDecided": "The winner is being decided....",
+			"over": "Round is over",
+			"couldWin": "You could win",
+			"backToGame": "Back to the game",
+			"youWin": "You WIN!",
+			"total": "total",
+			"yourBonus": "Your bonus:"
+		},
+		"bonusClaimBlock": {
+			"available": "Available for claim:",
+			"claim": "Claim"
+		},
+		"bonusInfo": {
+			"title": "Your bonus for this round:",
+			"info": "The sooner and more you bet the bigger bonus you get.",
+			"everyPlayer": "Bonus is paid to every player!",
+			"firstBet": "First bet",
+			"lastBet": "Last bet",
+			"coefficient": "Coefficient"
+		},
+		"roundInfo": {
+			"luro": "Lucky Round",
+			"howToPlay": "How to play?",
+			"stats": {
+				"totalBets": "Total Bets",
+				"totalVolume": "Total Volume",
+				"stakingRewards": "Staking rewards"
+			}
+		},
+		"roundCircle": {
+			"waiting": "Waiting for transaction. Any second now...",
+			"ended": "Ended",
+			"over": "Round is over",
+			"win": "WIN",
+			"couldWin": "You could win",
+			"youWin": "You WIN!",
+			"bonus": "bonus",
+			"total": "Total",
+			"yourBonus": "Your bonus;"
+		},
+		"myInfo": {
+			"totalBonus": "Total Bonus"
 		},
 		"roundModal": {
 			"title": "Round",
@@ -132,7 +238,28 @@
 			"volume": "Total round volume",
 			"staking": "Staking contribution",
 			"users": "{players} users",
-			"bets": "{bets} bets"
+			"bets": "{bets} bets",
+			"details": {
+				"bets": "bets",
+				"totalBets": "Total bets",
+				"totalBonus": "Total bonus",
+				"paidToStaking": "Paid to staking"
+			},
+			"winnerBet": {
+				"winningBet": "Winning Bet:",
+				"proofOfRandom": "Proof of Random:"
+			},
+			"table": {
+				"you": "YOU",
+				"columns": {
+					"player": "Player",
+					"bets": "Bets",
+					"amount": "Amount",
+					"result": "Result",
+					"bonus": "Bonus",
+					"totalResult": "Total Result"
+				}
+			}
 		},
 		"statsModal": {
 			"bets": "Bets count",
@@ -140,27 +267,19 @@
 			"staking": "Staking Contribution"
 		},
 		"table": {
-			"round": "Round ID",
-			"bets": "Total bets",
-			"bonus": "Total bonus",
-			"playerBet": "Your bet",
-			"playerWin": "Total win (win+bonus)",
-			"player": "Player",
-			"game": "Game",
-			"noData": "There is no data to display",
-			"profit": "Profit",
-			"price": "Price movement($)",
-			"total": "Total",
-			"result": "Result",
-			"amount": "Amount",
-			"address": "Address",
-			"win": "Win",
-			"winner": "Winner Address",
-			"status": "Status",
-			"filter": {
-				"all": "All bets",
-				"my": "My bets"
-			}
+			"tabs": {
+				"all": "All Rounds",
+				"my": "My Rounds"
+			},
+			"columns": {
+				"round": "Round",
+				"bets": "Bets",
+				"totalBets": "Total Bets",
+				"totalBonuses": "Total bonuses",
+				"winner": "Winner",
+				"stakingEarnings": "Stake Earnings"
+			},
+			"waiting": "Waiting"
 		}
 	}
 }

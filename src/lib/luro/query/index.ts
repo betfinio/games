@@ -62,7 +62,7 @@ export const useObserveBet = (round: number) => {
 };
 
 export const usePlaceBet = () => {
-	const { t } = useTranslation('', { keyPrefix: 'shared.errors' });
+	const { t } = useTranslation('shared', { keyPrefix: 'errors' });
 	const queryClient = useQueryClient();
 	const config = useConfig();
 	const { interval } = Route.useParams();
@@ -110,7 +110,7 @@ export const usePlaceBet = () => {
 
 export const useStartRound = (round: number) => {
 	const queryClient = useQueryClient();
-	const { t } = useTranslation('', { keyPrefix: 'shared.errors' });
+	const { t } = useTranslation('shared', { keyPrefix: 'errors' });
 	const { updateState } = useLuroState();
 	const config = useConfig();
 	const { interval } = Route.useParams();
@@ -190,7 +190,7 @@ export const useRoundBonusShare = (round: number) => {
 };
 
 export const useDistributeBonus = () => {
-	const { t } = useTranslation('', { keyPrefix: 'shared.errors' });
+	const { t } = useTranslation('shared', { keyPrefix: 'errors' });
 	const queryClient = useQueryClient();
 	const config = useConfig();
 	const { interval } = Route.useParams();
@@ -232,7 +232,7 @@ export const useAvailableBonus = (address: Address) => {
 };
 
 export const useClaimBonus = () => {
-	const { t } = useTranslation('', { keyPrefix: 'shared.errors' });
+	const { t } = useTranslation('shared', { keyPrefix: 'errors' });
 	const queryClient = useQueryClient();
 	const config = useConfig();
 	const { interval } = Route.useParams();

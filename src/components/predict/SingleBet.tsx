@@ -57,7 +57,7 @@ const SingleBet: FC<PredictBet & { loading: boolean }> = (bet) => {
 export default SingleBet;
 
 const BetModal: FC<PredictBet> = (bet) => {
-	const { t } = useTranslation('', { keyPrefix: 'games.predict.modal' });
+	const { t } = useTranslation('games', { keyPrefix: 'predict.modal' });
 	const game = Object.values(games).find((g) => g.address === bet.predictGame) as Game;
 	const { data: start = defaultResult, isLoading: isStartLoading } = usePrice(game.dataFeed, Number(bet.round) * game.interval);
 	const { data: end = defaultResult, isLoading: isEndLoading } = usePrice(game.dataFeed, (Number(bet.round) + game.duration) * game.interval);
@@ -152,9 +152,16 @@ const BetModal: FC<PredictBet> = (bet) => {
 					<h2 className={'text-gray-500 text-sm'}>{isCurrent ? t('startCurrentPrice') : t('startFinalPrice')}</h2>
 					<div className={cx('text-xl font-semibold', (isStartLoading || isEndLoading) && 'animate-pulse blur-sm')}>
 						<span>{startPrice}$</span>
-						<span className={'text-base font-medium'}> at {startTime}</span>
+						<span className={'text-base font-medium'}>
+							{' '}
+							{t('at')}
+							{startTime}
+						</span>
 						<span className={cx(diff > 0 ? 'text-green-500' : 'text-red-500')}> / {endPrice}$</span>
-						<span className={cx('text-base font-medium')}> at {endTime}</span>
+						<span className={cx('text-base font-medium')}>
+							{' '}
+							{t('at')} {endTime}
+						</span>
 					</div>
 				</div>
 

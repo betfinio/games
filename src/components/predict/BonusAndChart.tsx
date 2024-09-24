@@ -3,14 +3,16 @@ import PriceChart from '@/src/components/predict/PiceGraph.tsx';
 import type { Game } from '@/src/lib/predict/types';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from 'betfinio_app/tabs';
 import type { FC } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const BonusAndChart: FC<{ game: Game }> = ({ game }) => {
+	const { t } = useTranslation('games', { keyPrefix: 'predict' });
 	return (
 		<div className={''}>
 			<Tabs defaultValue={'bonus'}>
 				<TabsList>
-					<TabsTrigger value={'bonus'}>Bonus chart</TabsTrigger>
-					<TabsTrigger value={'chart'}>Price graph</TabsTrigger>
+					<TabsTrigger value={'bonus'}>{t('tabs.bonusChart')}</TabsTrigger>
+					<TabsTrigger value={'chart'}>{t('tabs.priceGraph')}</TabsTrigger>
 				</TabsList>
 				<TabsContent value={'bonus'}>
 					<BonusInfo game={game} />
