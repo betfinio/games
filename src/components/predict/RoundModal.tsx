@@ -57,14 +57,14 @@ const RoundModal: FC<{
 	};
 
 	const status: RoundStatus = useMemo(() => {
-		if (!roundData) return t('status.ended');
+		if (!roundData) return t('status.ended') as RoundStatus;
 		const last = (round + 1) * game.interval;
 		const ended = (round + game.duration) * game.interval;
 		const now = Math.floor(Date.now() / 1000);
-		if (now < last) return t('status.accepting');
-		if (now < ended) return t('status.waiting');
-		if (roundData.calculated) return t('status.calculated');
-		return t('status.ended');
+		if (now < last) return t('status.accepting') as RoundStatus;
+		if (now < ended) return t('status.waiting') as RoundStatus;
+		if (roundData.calculated) return t('status.calculated') as RoundStatus;
+		return t('status.ended') as RoundStatus;
 	}, [roundData, round]);
 	const handleClose = () => {
 		router?.navigate({ to: `/predict/${game.name}` });
@@ -131,7 +131,8 @@ const RoundModal: FC<{
 						<div className={' gap-5 md:gap-1 flex md:flex-col'}>
 							<div>
 								<Trans
-									i18nKey={'games.predict.roundModal.longShortRatio'}
+									t={t}
+									i18nKey={'longShortRatio'}
 									i18n={i18n}
 									components={{ green: <span className={'text-green-500'} />, red: <span className={'text-red-500'} /> }}
 								/>

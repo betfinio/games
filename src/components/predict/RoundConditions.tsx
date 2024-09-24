@@ -27,8 +27,9 @@ const RoundConditions: FC<{ game: Game }> = ({ game }) => {
 					<div className={'text-center flex flex-col gap-1'}>
 						<h4 className={'font-medium text-xs text-gray-500'}>
 							<Trans
+								t={t}
 								values={{ time: DateTime.fromMillis(Number(start.timestamp) * 1000).toFormat('HH:mm') }}
-								i18nKey={'games.predict.roundConditions.price'}
+								i18nKey={'price'}
 								i18n={i18n}
 								components={{ b: <b className={'text-yellow-400 font-semibold'} /> }}
 							/>
@@ -58,8 +59,9 @@ const RoundConditions: FC<{ game: Game }> = ({ game }) => {
 
 				<div className={'flex justify-center  text-gray-500 text-xs mt-6'}>
 					<Trans
+						t={t}
 						values={{ time: DateTime.fromMillis((round + 4) * game.interval * 1000).toFormat('TT') }}
-						i18nKey={'games.predict.roundConditions.description'}
+						i18nKey={'description'}
 						i18n={i18n}
 						components={{
 							green: <span className={'text-green-500 px-1'} />,
