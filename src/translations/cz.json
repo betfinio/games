@@ -1,160 +1,285 @@
 {
 	"predict": {
-		"feeStaking": "All bets are subject of <b>3,6% fee</b> which is distributed into <b>Conservative staking.</b>",
+		"stats": "Statistiky",
+		"feeStaking": "Všechny sázky podléhají <b>3,6% poplatku</b>, který je distribuován do <b>konzervativního stakingu.</b>",
+		"howToPlay": "Jak hrát",
 		"bonus": {
-			"title": "Your potential Bonus:",
-			"description": "test",
-			"info": "The bonus represents <b>4%</b> of all bets <b>({count} BET)</b> that are split among winners according to <b>order</b> and <b>size</b> of bets. <br/>The sooner and more you bet the bigger bonus you get."
+			"title": "Tvůj potenciální bonus:",
+			"info": "Čím dříve a více sázíš, tím větší bonus získáš."
+		},
+		"pairSwitcher": {
+			"predict": "Predict",
+			"minutes": "min",
+			"howToPlay": "Jak hrát"
+		},
+		"switchModal": {
+			"selectPair": "Vyber pár"
+		},
+		"lastBets": {
+			"noBets": "Žádné sázky zatím nejsou",
+			"latestBets": "Poslední sázky"
 		},
 		"tile": {
-			"24change": "24h change %",
-			"bets": "Total bets",
-			"volume": "Total volume",
-			"staking": "Total staking"
+			"24change": "Změna za 24h %",
+			"bets": "Celkové sázky",
+			"volume": "Celkový objem",
+			"staking": "Celkový staking"
 		},
 		"pairs": {
 			"btcusdt": "BTC/USDT",
 			"ethusdt": "ETH/USDT",
 			"maticusdt": "MATIC/USDT"
 		},
+		"tabs": {
+			"bonusChart": "Bonusový graf",
+			"priceGraph": "Cenový graf"
+		},
 		"table": {
-			"player": "Player",
-			"game": "Game",
-			"noData": "There is no data to display",
-			"profit": "Profit",
-			"price": "Price",
-			"bets": "All bets",
-			"amounts": "Amount of all bets",
-			"total": "Total",
-			"result": "Result",
-			"amount": "Amount",
+			"player": "Hráč",
+			"game": "Hra",
+			"noData": "Nejsou k dispozici žádná data",
+			"profit": "Zisk",
+			"price": "Cena",
+			"bets": "Všechny sázky",
+			"amounts": "Celkový počet sázek",
+			"total": "Celkem",
+			"result": "Výsledek",
+			"amount": "Množství",
 			"bonus": "Bonus",
-			"address": "Address",
-			"side": "Side",
-			"win": "Win",
-			"status": "Status",
-			"round": "Round",
+			"address": "Adresa",
+			"side": "Strana",
+			"long": "LONG",
+			"short": "SHORT",
+			"win": "Výhra",
+			"status": "Stav",
+			"round": "Kolo",
+			"columns": {
+				"round": "Kolo",
+				"price": "Změna ceny",
+				"bets": "Sázky",
+				"status": "Stav"
+			},
 			"filter": {
-				"all": "All bets",
-				"my": "My bets"
+				"all": "Všechny sázky",
+				"my": "Moje sázky"
 			},
 			"statuses": {
-				"0": "Pending",
-				"1": "Registered",
-				"2": "Won",
-				"3": "Lost",
-				"4": "Draw",
-				"5": "Refunded"
+				"0": "Čekající",
+				"1": "Registrováno",
+				"2": "Vyhráno",
+				"3": "Prohráno",
+				"4": "Remíza",
+				"5": "Vráceno"
 			},
 			"roundStatuses": {
-				"ended": "Ended",
-				"waiting": "Waiting",
-				"calculated": "Calculated",
-				"accepting": "Betting"
+				"ended": "Ukončeno",
+				"waiting": "Čekání",
+				"calculated": "Vypočteno",
+				"accepting": "Sázení"
+			},
+			"tabs": {
+				"all": "Všechna kola",
+				"my": "Moje kola"
 			}
 		},
 		"roundConditions": {
-			"title": "Round",
-			"round": "Current round",
-			"price": "Price at <b>{time}</b>",
-			"time": "Remaining time to place bets:",
-			"currentPrice": "Current price"
+			"title": "Podmínky kola",
+			"price": "Cena v <b>{time}</b>",
+			"currentPrice": "Aktuální cena",
+			"description": "Sázíš, jestli se cena <green>zvýší</green> nebo <red>sníží</red> do <yellow>{time}</yellow>",
+			"up": "NAHORU",
+			"down": "DOLŮ"
 		},
 		"placeBet": {
-			"title": "Place a bet",
-			"amount": "Enter the amount of your bet:",
-			"bonus": "First one gets a ",
-			"pool": "Current pool:",
-			"myBets": "Your bets:",
+			"title": "Uzavři sázku",
+			"amount": "Zadej částku sázky:",
+			"pool": "Aktuální pool:",
+			"myBets": "Tvoje sázky:",
 			"long": "LONG",
 			"short": "SHORT",
-			"allowance": "Increase allowance",
-			"unlock": "Unlock",
-			"unlockTitle": "Increase BET token allowance to make a bet",
-			"connectTitle": "Connect your wallet to place a bet",
-			"topUpTitle": "Top up your wallet to place a bet"
+			"allowance": "Zvýšit povolený limit",
+			"unlock": "Odemknout",
+			"bonus": "bonus",
+			"expectedWinnings": "Očekávané výhry",
+			"unlockTitle": "Zvýšit povolený limit BET tokenů pro sázku",
+			"connectTitle": "Připoj svou peněženku pro uzavření sázky",
+			"topUpTitle": "Dobij si peněženku pro uzavření sázky",
+			"toast": {
+				"connect": "Připoj svou peněženku",
+				"notMember": "Připojená peněženka není členem Betfinu. Požádej někoho o pozvánku",
+				"amount": "Zadej částku",
+				"minimalBet": "Minimální částka sázky je 1 BET",
+				"invalidAmount": "Neplatná částka",
+				"allowance": "Nemáš dostatečný povolený limit"
+			}
 		},
 		"modal": {
-			"start": "Start price:",
-			"startFinalPrice": "Start / Final price:",
-			"startCurrentPrice": "Start / Current price:",
-			"betUser": "Bet user:",
-			"current": "Current price:",
-			"end": "End price:",
-			"player": "Player:",
-			"text": "Player bets {amount} that price will go {side} till {time}",
-			"stakingContribution": "Staking contribution:",
-			"pending": "Pending",
-			"win": "Win",
-			"lost": "Lost",
-			"draw": "Draw",
-			"refund": "Refunded",
-			"status": "Status:",
-			"winnings": "Winnings:",
+			"start": "Počáteční cena:",
+			"startFinalPrice": "Počáteční / Konečná cena:",
+			"startCurrentPrice": "Počáteční / Aktuální cena:",
+			"betUser": "Sázka uživatele:",
+			"current": "Aktuální cena:",
+			"end": "Konečná cena:",
+			"player": "Hráč:",
+			"text": "Hráč sází {amount}, že cena půjde {side} do {time}",
+			"stakingContribution": "Příspěvek do stakingu:",
+			"pending": "Čeká se",
+			"win": "Výhra",
+			"lost": "Prohra",
+			"draw": "Remíza",
+			"refund": "Vráceno",
+			"status": "Stav:",
+			"winnings": "Výhry:",
 			"bonus": "Bonus:",
-			"total": "Total:"
+			"total": "Celkem:",
+			"at": "v"
 		},
 		"roundModal": {
-			"title": "Round",
-			"titleFinished": "Result for round",
-			"activity": "Betting Activity",
-			"volume": "Total round volume",
-			"staking": "Staking contribution",
-			"users": "{players} users",
-			"bets": "{bets} bets"
+			"title": "Kolo",
+			"calculateResult": "Vypočítat výsledek",
+			"totalBonus": "Celkový bonus:",
+			"status": {
+				"ended": "Ukončeno",
+				"accepting": "Přijímání",
+				"waiting": "Čekání",
+				"calculated": "Vypočteno"
+			},
+			"longShortRatio": "<green>Long</green> / <red>Short</red> poměr:",
+			"long": "Long",
+			"short": "Short",
+			"titleFinished": "Výsledek pro kolo",
+			"activity": "Sázková aktivita",
+			"volume": "Celkový objem kola",
+			"staking": "Příspěvek do stakingu",
+			"users": "{players} uživatelů",
+			"bets": "{bets} sázek"
+		},
+		"roundPool": {
+			"bonusPool": "Bonusový pool je"
 		}
 	},
 	"luro": {
-		"feeStaking": "All bets are subject of <b>3,6% fee</b> which is distributed into <b>Conservative staking.</b>",
+		"feeStaking": "Všechny sázky podléhají <b>3,6% poplatku</b>, který je distribuován do <b>konzervativního stakingu.</b>",
 		"placeBet": {
-			"title": "Place a bet",
-			"amount": "Enter the amount of your bet:",
-			"bonus": "First one gets a ",
-			"myBets": "Your bets:",
-			"allowance": "Increase allowance",
-			"unlock": "Unlock",
-			"unlockTitle": "Increase BET token allowance to make a bet",
-			"connectTitle": "Connect your wallet to place a bet",
-			"topUpTitle": "Top up your wallet to place a bet",
-			"expected": "Expected winnings from this bet",
-			"bet": "Bet"
+			"title": "Uzavři sázku",
+			"amount": "Zadej částku sázky:",
+			"bonus": "bonus",
+			"myBets": "Tvoje sázky:",
+			"allowance": "Zvýšit povolený limit",
+			"unlock": "Odemknout",
+			"bet": "Sázka",
+			"unlockTitle": "Zvýšit povolený limit BET tokenů pro sázku",
+			"connectTitle": "Připoj svou peněženku pro uzavření sázky",
+			"topUpTitle": "Dobij si peněženku pro uzavření sázky",
+			"expected": "Očekávané výhry z této sázky",
+			"toast": {
+				"connect": "Připoj svou peněženku",
+				"notMember": "Připojená peněženka není členem Betfinu. Požádej někoho o pozvánku",
+				"amount": "Zadej částku",
+				"minimalBet": "Minimální částka sázky je 1000 BET",
+				"invalidAmount": "Neplatná částka"
+			},
+			"placeholder": {
+				"balance": "Prosím, dobij si zůstatek",
+				"Amount": "Částka"
+			},
+			"activeBets": "Tvoje aktivní sázky",
+			"potentialWin": "Potenciální výhra",
+			"waiting": "Čeká se na polygonový blok...",
+			"spinning": "Točí se...",
+			"spinTheWheel": "Roztoč kolo",
+			"winnerIsBeingDecided": "Vítěz se rozhoduje....",
+			"over": "Kolo je u konce",
+			"couldWin": "Mohl bys vyhrát",
+			"backToGame": "Zpět do hry",
+			"youWin": "VYHRÁL JSI!",
+			"total": "Celkem",
+			"yourBonus": "Tvůj bonus:"
+		},
+		"bonusClaimBlock": {
+			"available": "Dostupné k vyzvednutí:",
+			"claim": "Vyzvednout"
+		},
+		"bonusInfo": {
+			"title": "Tvůj bonus za toto kolo:",
+			"info": "Čím dříve a více sázíš, tím větší bonus získáš.",
+			"everyPlayer": "Bonus je vyplacen každému hráči!",
+			"firstBet": "První sázka",
+			"lastBet": "Poslední sázka",
+			"coefficient": "Koeficient"
+		},
+		"roundInfo": {
+			"luro": "Šťastné kolo",
+			"howToPlay": "Jak hrát?",
+			"stats": {
+				"totalBets": "Celkové sázky",
+				"totalVolume": "Celkový objem",
+				"stakingRewards": "Odměny ze stakingu"
+			}
+		},
+		"roundCircle": {
+			"waiting": "Čeká se na transakci. Každou chvíli...",
+			"ended": "Ukončeno",
+			"over": "Kolo je u konce",
+			"win": "VÝHRA",
+			"couldWin": "Mohl bys vyhrát",
+			"youWin": "VYHRÁL JSI!",
+			"bonus": "bonus",
+			"total": "Celkem",
+			"yourBonus": "Tvůj bonus:"
+		},
+		"myInfo": {
+			"totalBonus": "Celkový bonus"
 		},
 		"roundModal": {
-			"title": "Round",
-			"titleFinished": "Result for round",
-			"activity": "Betting Activity",
-			"volume": "Total round volume",
-			"staking": "Staking contribution",
-			"users": "{players} users",
-			"bets": "{bets} bets"
+			"title": "Kolo",
+			"titleFinished": "Výsledek pro kolo",
+			"activity": "Sázková aktivita",
+			"volume": "Celkový objem kola",
+			"staking": "Příspěvek do stakingu",
+			"users": "{players} uživatelů",
+			"bets": "{bets} sázek",
+			"details": {
+				"bets": "sázky",
+				"totalBets": "Celkové sázky",
+				"totalBonus": "Celkový bonus",
+				"paidToStaking": "Vyplaceno do stakingu"
+			},
+			"winnerBet": {
+				"winningBet": "Výherní sázka:",
+				"proofOfRandom": "Důkaz náhodnosti:"
+			},
+			"table": {
+				"you": "TY",
+				"columns": {
+					"player": "Hráč",
+					"bets": "Sázky",
+					"amount": "Částka",
+					"result": "Výsledek",
+					"bonus": "Bonus",
+					"totalResult": "Celkový výsledek"
+				}
+			}
 		},
 		"statsModal": {
-			"bets": "Bets count",
-			"volume": "Total Volume",
-			"staking": "Staking Contribution"
+			"bets": "Počet sázek",
+			"volume": "Celkový objem",
+			"staking": "Příspěvek do stakingu"
 		},
 		"table": {
-			"round": "Round ID",
-			"bets": "Total bets",
-			"bonus": "Total bonus",
-			"playerBet": "Your bet",
-			"playerWin": "Total win (win+bonus)",
-			"player": "Player",
-			"game": "Game",
-			"noData": "There is no data to display",
-			"profit": "Profit",
-			"price": "Price movement($)",
-			"total": "Total",
-			"result": "Result",
-			"amount": "Amount",
-			"address": "Address",
-			"win": "Win",
-			"winner": "Winner Address",
-			"status": "Status",
-			"filter": {
-				"all": "All bets",
-				"my": "My bets"
-			}
+			"tabs": {
+				"all": "Všechna kola",
+				"my": "Moje kola"
+			},
+			"columns": {
+				"round": "Kolo",
+				"bets": "Sázky",
+				"totalBets": "Celkové sázky",
+				"totalBonuses": "Celkové bonusy",
+				"winner": "Vítěz",
+				"stakingEarnings": "Výdělky ze stakingu"
+			},
+			"waiting": "Čekání"
 		}
 	}
 }
