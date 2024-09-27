@@ -349,6 +349,9 @@ const RoundResult: FC<{ round: number }> = ({ round }) => {
 		return bonuses.find((bonus) => bonus?.bet?.address === winner?.address);
 	}, [bets, volume, address]);
 
+	const { interval } = Route.useParams();
+	const luroAddress = interval === '1d' ? LURO : LURO_5MIN;
+
 	if (!roundData) return null;
 
 	if (roundData.player.bets === 0n) {
@@ -372,7 +375,7 @@ const RoundResult: FC<{ round: number }> = ({ round }) => {
 					initial={{ opacity: 0 }}
 					animate={{ opacity: 1 }}
 					onClick={() => {
-						jumpToCurrentRound(queryClient);
+						jumpToCurrentRound(queryClient, luroAddress);
 					}}
 					exit={{ opacity: 0 }}
 					transition={{ duration: 1, delay: 2 }}
@@ -414,7 +417,7 @@ const RoundResult: FC<{ round: number }> = ({ round }) => {
 					initial={{ opacity: 0 }}
 					animate={{ opacity: 1 }}
 					onClick={() => {
-						jumpToCurrentRound(queryClient);
+						jumpToCurrentRound(queryClient, luroAddress);
 					}}
 					exit={{ opacity: 0 }}
 					transition={{ duration: 1, delay: 2 }}
@@ -447,7 +450,7 @@ const RoundResult: FC<{ round: number }> = ({ round }) => {
 				exit={{ opacity: 0 }}
 				transition={{ duration: 1, delay: 2 }}
 				onClick={() => {
-					jumpToCurrentRound(queryClient);
+					jumpToCurrentRound(queryClient, luroAddress);
 				}}
 				className={'w-3/4 bg-yellow-400 py-3 text-black rounded-[10px]'}
 			>

@@ -25,6 +25,7 @@ import { useAccount } from 'wagmi';
 
 import Crown from '@/src/assets/luro/crown.svg';
 import Duck from '@/src/assets/luro/duck.png';
+import { LURO, LURO_5MIN } from '@/src/global.ts';
 import { useTranslation } from 'react-i18next';
 
 const largeProps = {
@@ -381,9 +382,11 @@ const ProgressBar: FC<{ round: number; authors: CustomLuroBet[] }> = ({ round })
 		}
 	};
 
+	const luroAddress = interval === '1d' ? LURO : LURO_5MIN;
+
 	const handleRoundEnd = () => {
 		if (bank === 0n) {
-			jumpToCurrentRound(queryClient);
+			jumpToCurrentRound(queryClient, luroAddress);
 		} else {
 			changeLotteryState();
 		}

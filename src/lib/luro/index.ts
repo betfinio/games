@@ -98,9 +98,9 @@ export const getTimesByRound = (round: number, interval: LuroInterval) => {
 	return { start, end: start + 60 * 60 * 24 * 1000 };
 };
 
-export const jumpToCurrentRound = (queryClient: QueryClient) => {
+export const jumpToCurrentRound = (queryClient: QueryClient, address: Address) => {
+	queryClient.setQueryData(['luro', address, 'state'], { state: 'standby' });
 	queryClient.invalidateQueries({ queryKey: ['luro'] });
-	queryClient.setQueryData(['luro', 'state'], { state: 'standby' });
 };
 
 export function hexToRgbA(hex: string) {

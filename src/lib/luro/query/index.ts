@@ -71,7 +71,6 @@ export const usePlaceBet = () => {
 		mutationKey: ['luro', address, 'bets', 'place'],
 		mutationFn: (params) => placeBet(params, config),
 		onError: (e) => {
-			console.dir(e.cause);
 			toast({
 				// @ts-ignore
 				title: t('default'),
