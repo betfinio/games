@@ -206,7 +206,6 @@ export const fetchRound = async (address: Address, round: number, player: Addres
 	const status = data[4].result as RoundStatusEnum;
 	const bonus = (volume / 100n) * 5n;
 	const winnerOffset = BigInt(data[5].result as bigint);
-	const myBets = 0n;
 
 	return {
 		round,
