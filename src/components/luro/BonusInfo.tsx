@@ -39,22 +39,22 @@ export const BonusInfo = () => {
 					<div className={'flex items-center justify-between'}>
 						<h1 className={'flex gap-1 my-2 text-lg font-semibold'}>
 							{t('bonusInfo.title')}
-							<span className={'text-[#FFC800]'}>
+							<span className={'text-yellow-400'}>
 								<BetValue value={myBonus} precision={2} withIcon={true} />
 							</span>
 						</h1>
 						<TooltipTrigger>
 							<AlertCircle className={'text-yellow-400'} width={24} />
 						</TooltipTrigger>
-						<TooltipContent className={'text-[#959DAD] border border-yellow-400 rounded-lg bg-black bg-opacity-75 py-2 px-3'}>
+						<TooltipContent className={'border border-yellow-400 rounded-lg bg-black bg-opacity-75 py-2 px-3'}>
 							{/*todo: extract description*/}
 							<div className={'text-sm italic'}>
 								<div className={'text-center'}>
-									The bonus represents <span className={'text-[#FFC800]'}>5%</span> of all bets{' '}
-									<span className={'text-[#FFC800]'}>({valueToNumber(volume).toLocaleString()} BET)</span> that are split among players according to{' '}
-									<span className={'text-[#FFC800]'}>order</span> and <span className={'text-[#FFC800]'}>size</span> of bets.
+									The bonus represents <span className={'text-yellow-400'}>5%</span> of all bets{' '}
+									<span className={'text-yellow-400'}>({valueToNumber(volume).toLocaleString()} BET)</span> that are split among players according to{' '}
+									<span className={'text-yellow-400'}>order</span> and <span className={'text-yellow-400'}>size</span> of bets.
 								</div>
-								<div className={'text-center font-semibold text-[#FFC800]'}>{t('bonusInfo.info')}</div>
+								<div className={'text-center font-semibold text-yellow-400'}>{t('bonusInfo.info')}</div>
 								<div className={'text-center font-semibold'}>{t('bonusInfo.everyPlayer')}</div>
 							</div>
 						</TooltipContent>

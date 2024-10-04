@@ -198,6 +198,7 @@ export const fetchRound = async (address: Address, round: number, player: Addres
 			},
 		],
 	});
+
 	const volume = data[0].result as bigint;
 	const count = data[1].result as bigint;
 	const playerVolume = data[2].result as bigint;
