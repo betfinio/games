@@ -14,9 +14,7 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as SoonImport } from './routes/soon'
 import { Route as IndexImport } from './routes/index'
 import { Route as RouletteIndexImport } from './routes/roulette/index'
-import { Route as PredictIndexImport } from './routes/predict/index'
 import { Route as LuroIndexImport } from './routes/luro/index'
-import { Route as PredictPairImport } from './routes/predict/$pair'
 import { Route as LuroSoonImport } from './routes/luro/soon'
 import { Route as LuroIntervalImport } from './routes/luro/$interval'
 
@@ -37,18 +35,8 @@ const RouletteIndexRoute = RouletteIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const PredictIndexRoute = PredictIndexImport.update({
-  path: '/predict/',
-  getParentRoute: () => rootRoute,
-} as any)
-
 const LuroIndexRoute = LuroIndexImport.update({
   path: '/luro/',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const PredictPairRoute = PredictPairImport.update({
-  path: '/predict/$pair',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -94,25 +82,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LuroSoonImport
       parentRoute: typeof rootRoute
     }
-    '/predict/$pair': {
-      id: '/predict/$pair'
-      path: '/predict/$pair'
-      fullPath: '/predict/$pair'
-      preLoaderRoute: typeof PredictPairImport
-      parentRoute: typeof rootRoute
-    }
     '/luro/': {
       id: '/luro/'
       path: '/luro'
       fullPath: '/luro'
       preLoaderRoute: typeof LuroIndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/predict/': {
-      id: '/predict/'
-      path: '/predict'
-      fullPath: '/predict'
-      preLoaderRoute: typeof PredictIndexImport
       parentRoute: typeof rootRoute
     }
     '/roulette/': {
@@ -132,9 +106,7 @@ export interface FileRoutesByFullPath {
   '/soon': typeof SoonRoute
   '/luro/$interval': typeof LuroIntervalRoute
   '/luro/soon': typeof LuroSoonRoute
-  '/predict/$pair': typeof PredictPairRoute
   '/luro': typeof LuroIndexRoute
-  '/predict': typeof PredictIndexRoute
   '/roulette': typeof RouletteIndexRoute
 }
 
@@ -143,9 +115,7 @@ export interface FileRoutesByTo {
   '/soon': typeof SoonRoute
   '/luro/$interval': typeof LuroIntervalRoute
   '/luro/soon': typeof LuroSoonRoute
-  '/predict/$pair': typeof PredictPairRoute
   '/luro': typeof LuroIndexRoute
-  '/predict': typeof PredictIndexRoute
   '/roulette': typeof RouletteIndexRoute
 }
 
@@ -155,9 +125,7 @@ export interface FileRoutesById {
   '/soon': typeof SoonRoute
   '/luro/$interval': typeof LuroIntervalRoute
   '/luro/soon': typeof LuroSoonRoute
-  '/predict/$pair': typeof PredictPairRoute
   '/luro/': typeof LuroIndexRoute
-  '/predict/': typeof PredictIndexRoute
   '/roulette/': typeof RouletteIndexRoute
 }
 
@@ -168,29 +136,17 @@ export interface FileRouteTypes {
     | '/soon'
     | '/luro/$interval'
     | '/luro/soon'
-    | '/predict/$pair'
     | '/luro'
-    | '/predict'
     | '/roulette'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/soon'
-    | '/luro/$interval'
-    | '/luro/soon'
-    | '/predict/$pair'
-    | '/luro'
-    | '/predict'
-    | '/roulette'
+  to: '/' | '/soon' | '/luro/$interval' | '/luro/soon' | '/luro' | '/roulette'
   id:
     | '__root__'
     | '/'
     | '/soon'
     | '/luro/$interval'
     | '/luro/soon'
-    | '/predict/$pair'
     | '/luro/'
-    | '/predict/'
     | '/roulette/'
   fileRoutesById: FileRoutesById
 }
@@ -200,9 +156,7 @@ export interface RootRouteChildren {
   SoonRoute: typeof SoonRoute
   LuroIntervalRoute: typeof LuroIntervalRoute
   LuroSoonRoute: typeof LuroSoonRoute
-  PredictPairRoute: typeof PredictPairRoute
   LuroIndexRoute: typeof LuroIndexRoute
-  PredictIndexRoute: typeof PredictIndexRoute
   RouletteIndexRoute: typeof RouletteIndexRoute
 }
 
@@ -211,9 +165,7 @@ const rootRouteChildren: RootRouteChildren = {
   SoonRoute: SoonRoute,
   LuroIntervalRoute: LuroIntervalRoute,
   LuroSoonRoute: LuroSoonRoute,
-  PredictPairRoute: PredictPairRoute,
   LuroIndexRoute: LuroIndexRoute,
-  PredictIndexRoute: PredictIndexRoute,
   RouletteIndexRoute: RouletteIndexRoute,
 }
 
@@ -233,9 +185,7 @@ export const routeTree = rootRoute
         "/soon",
         "/luro/$interval",
         "/luro/soon",
-        "/predict/$pair",
         "/luro/",
-        "/predict/",
         "/roulette/"
       ]
     },
@@ -251,14 +201,8 @@ export const routeTree = rootRoute
     "/luro/soon": {
       "filePath": "luro/soon.tsx"
     },
-    "/predict/$pair": {
-      "filePath": "predict/$pair.tsx"
-    },
     "/luro/": {
       "filePath": "luro/index.tsx"
-    },
-    "/predict/": {
-      "filePath": "predict/index.tsx"
     },
     "/roulette/": {
       "filePath": "roulette/index.tsx"
