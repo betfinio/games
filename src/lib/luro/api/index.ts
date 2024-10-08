@@ -1,5 +1,5 @@
 import logger from '@/src/config/logger';
-import { BETS_MEMORY, FIRST_BLOCK, LURO, PARTNER } from '@/src/global.ts';
+import { BETS_MEMORY, FIRST_BLOCK, PARTNER } from '@/src/global.ts';
 import type { ICurrentRoundInfo } from '@/src/lib/luro/query';
 import type { BonusClaimParams, LuroBet, PlaceBetParams, Round, RoundStatusEnum, WinnerInfo } from '@/src/lib/luro/types.ts';
 import {
