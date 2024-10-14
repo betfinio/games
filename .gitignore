@@ -32,3 +32,6 @@ src/gql/
 
 
 .graphclient/
+
+
+deno/

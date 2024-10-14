@@ -276,3 +276,13 @@ export const fetchWinners = async (luro: Address, config: Config): Promise<Winne
 		return [];
 	}
 };
+
+export const calculateRound = async (address: Address, round: number, config: Config) => {
+	logger.start('[luro]', 'calculating', address, round);
+	return writeContract(config, {
+		abi: LuckyRoundContract.abi,
+		address: address,
+		functionName: 'requestCalculation',
+		args: [BigInt(round)],
+	});
+};

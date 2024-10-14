@@ -1,6 +1,8 @@
+import logger from '@/src/config/logger';
 import { LURO, LURO_5MIN } from '@/src/global.ts';
 import { type LuroInterval, animateNewBet, getCurrentRound, handleError } from '@/src/lib/luro';
 import {
+	calculateRound,
 	claimBonus,
 	distributeBonus,
 	fetchAvailableBonus,
@@ -397,5 +399,22 @@ export const useBetsCount = () => {
 	return useQuery<number>({
 		queryKey: ['luro', address, 'betsCount'],
 		queryFn: () => fetchBetsCount(address, config),
+	});
+};
+
+export const useCalculate = (round: number) => {
+	const config = useConfig();
+	const { interval } = Route.useParams();
+	const address = interval === '1d' ? LURO : LURO_5MIN;
+
+	return useMutation({
+		mutationKey: ['luro', address, 'calculate'],
+		mutationFn: () => calculateRound(address, round, config),
+		onMutate: () => logger.log('calculate'),
+		onSuccess: async (data) => {
+			logger.log(data);
+		},
+		onSettled: () => logger.log('calculate settled'),
+		onError: (e) => logger.error(e),
 	});
 };
