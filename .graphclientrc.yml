@@ -3,10 +3,6 @@ sources:
     handler:
       graphql:
         endpoint: ${PUBLIC_ROULETTE_GRAPH_URL}
-  - name: predict
-    handler:
-      graphql:
-        endpoint: ${PUBLIC_PREDICT_GRAPH_URL}
   - name: luro
     handler:
       graphql:

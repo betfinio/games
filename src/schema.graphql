@@ -23,11 +23,6 @@ query RouletteAllLandeds {
     }
 }
 
-query PredictRoundCreatedsByGameAddress($address: Bytes, $first: Int, $skip: Int) {
-    roundCreateds(where: { address: $address }, first: $first, skip: $skip, orderBy: round, orderDirection: desc) {
-        round
-    }
-}
 
 query LuroRoundStarts($address: Bytes) {
     roundStarts(where: { address: $address }, orderBy: blockTimestamp, orderDirection: desc) {
