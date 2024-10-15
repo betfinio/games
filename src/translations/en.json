@@ -274,6 +274,7 @@
 			"columns": {
 				"round": "Round",
 				"bets": "Bets",
+				"myBets": "My Bets",
 				"totalBets": "Total Bets",
 				"totalBonuses": "Total bonuses",
 				"winner": "Winner",

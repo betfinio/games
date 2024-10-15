@@ -21,10 +21,18 @@ const RoundsTable: FC<{ className?: string }> = ({ className = '' }) => {
 		columnHelper.accessor('round', {
 			header: t('columns.round'),
 			meta: { className: 'md:w-[120px]' },
-			cell: (props) => <div className={'text-gray-400'}>#{Number(props.getValue())}</div>,
+
+			cell: (props) => {
+				const { player, round } = props.row.original;
+
+				return <div className={cx('text-gray-400 md:w-[90px]', player.bets > 0 && 'text-yellow-400')}>#{round.toString().slice(2)}</div>;
+			},
 		}),
 		columnHelper.accessor('total.bets', {
 			header: t('columns.bets'),
+			meta: {
+				className: 'hidden md:table-cell',
+			},
 			cell: (props) => <div className={''}>{valueToNumber(props.getValue(), 0)}</div>,
 		}),
 		columnHelper.accessor('total.volume', {
@@ -66,14 +74,28 @@ const RoundsTable: FC<{ className?: string }> = ({ className = '' }) => {
 			header: '',
 			id: 'actions',
 			cell: (props) => (
-				<Link to={`./?round=${props.row.original.round}`} className={'w-full'}>
+				<Link to={`./?round=${props.row.original.round}`} className={'w-full'} params={{}} search={{}}>
 					<Expand className={'w-4 h-4 text-white'} />
 				</Link>
 			),
 		}),
 	];
 
-	useWinners();
+	const myBetsColumn = columnHelper.accessor('player.volume', {
+		header: t('columns.myBets'),
+		cell: (props) => (
+			<div className={''}>
+				<BetValue value={valueToNumber(props.getValue())} withIcon />
+			</div>
+		),
+	});
+
+	const getPlayerRoundsTableColumns = (columns: unknown[]) => {
+		const newColumns = [...columns];
+		newColumns.splice(2, 0, myBetsColumn);
+		return newColumns;
+	};
+
 	return (
 		<div className={cx('w-full overflow-x-auto min-h-[100px]', className)}>
 			<Tabs defaultValue={'all'}>
@@ -89,7 +111,7 @@ const RoundsTable: FC<{ className?: string }> = ({ className = '' }) => {
 					<AllRoundsTable columns={columns} />
 				</TabsContent>
 				<TabsContent value={'my'}>
-					<PlayerRoundsTable columns={columns} />
+					<PlayerRoundsTable columns={getPlayerRoundsTableColumns(columns)} />
 				</TabsContent>
 			</Tabs>
 		</div>
@@ -128,8 +150,9 @@ const PlayerRoundsTable: FC<{ columns: unknown }> = ({ columns }) => {
 	const { address = ZeroAddress } = useAccount();
 	const { data: rounds = [], isLoading } = usePlayerRounds(address);
 	const navigate = useNavigate();
+	const { interval } = Route.useParams();
+
 	const handleClick = (row: Round) => {
-		const { interval } = Route.useParams();
 		navigate({ to: '/luro/$interval', params: { interval }, search: { round: row.round } });
 	};
 	return (
@@ -149,6 +172,7 @@ const PlayerRoundsTable: FC<{ columns: unknown }> = ({ columns }) => {
 
 const WinnerInfo: FC<{ round: number }> = ({ round }) => {
 	const { t } = useTranslation('games', { keyPrefix: 'luro.table' });
+	const { address } = useAccount();
 
 	const { data: winner = null, isLoading, isFetching } = useWinner(round);
 	if (isLoading || isFetching) {
@@ -157,5 +181,5 @@ const WinnerInfo: FC<{ round: number }> = ({ round }) => {
 	if (!winner) {
 		return <div>{t('waiting')}</div>;
 	}
-	return <div>{truncateEthAddress(winner.player)}</div>;
+	return <div className={cx(address?.toLowerCase() === winner.player.toLowerCase() && 'text-green-500')}>{truncateEthAddress(winner.player)}</div>;
 };

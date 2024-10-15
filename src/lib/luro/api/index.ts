@@ -198,6 +198,7 @@ export const fetchRound = async (address: Address, round: number, player: Addres
 			},
 		],
 	});
+
 	const volume = data[0].result as bigint;
 	const count = data[1].result as bigint;
 	const playerVolume = data[2].result as bigint;
@@ -274,4 +275,14 @@ export const fetchWinners = async (luro: Address, config: Config): Promise<Winne
 		console.log(e);
 		return [];
 	}
+};
+
+export const calculateRound = async (address: Address, round: number, config: Config) => {
+	logger.start('[luro]', 'calculating', address, round);
+	return writeContract(config, {
+		abi: LuckyRoundContract.abi,
+		address: address,
+		functionName: 'requestCalculation',
+		args: [BigInt(round)],
+	});
 };
