@@ -15,7 +15,6 @@ import { Route as SoonImport } from './routes/soon'
 import { Route as IndexImport } from './routes/index'
 import { Route as RouletteIndexImport } from './routes/roulette/index'
 import { Route as LuroIndexImport } from './routes/luro/index'
-import { Route as LuroSoonImport } from './routes/luro/soon'
 import { Route as LuroIntervalImport } from './routes/luro/$interval'
 
 // Create/Update Routes
@@ -37,11 +36,6 @@ const RouletteIndexRoute = RouletteIndexImport.update({
 
 const LuroIndexRoute = LuroIndexImport.update({
   path: '/luro/',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const LuroSoonRoute = LuroSoonImport.update({
-  path: '/luro/soon',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -75,13 +69,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LuroIntervalImport
       parentRoute: typeof rootRoute
     }
-    '/luro/soon': {
-      id: '/luro/soon'
-      path: '/luro/soon'
-      fullPath: '/luro/soon'
-      preLoaderRoute: typeof LuroSoonImport
-      parentRoute: typeof rootRoute
-    }
     '/luro/': {
       id: '/luro/'
       path: '/luro'
@@ -105,7 +92,6 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/soon': typeof SoonRoute
   '/luro/$interval': typeof LuroIntervalRoute
-  '/luro/soon': typeof LuroSoonRoute
   '/luro': typeof LuroIndexRoute
   '/roulette': typeof RouletteIndexRoute
 }
@@ -114,7 +100,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/soon': typeof SoonRoute
   '/luro/$interval': typeof LuroIntervalRoute
-  '/luro/soon': typeof LuroSoonRoute
   '/luro': typeof LuroIndexRoute
   '/roulette': typeof RouletteIndexRoute
 }
@@ -124,30 +109,16 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/soon': typeof SoonRoute
   '/luro/$interval': typeof LuroIntervalRoute
-  '/luro/soon': typeof LuroSoonRoute
   '/luro/': typeof LuroIndexRoute
   '/roulette/': typeof RouletteIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/soon'
-    | '/luro/$interval'
-    | '/luro/soon'
-    | '/luro'
-    | '/roulette'
+  fullPaths: '/' | '/soon' | '/luro/$interval' | '/luro' | '/roulette'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/soon' | '/luro/$interval' | '/luro/soon' | '/luro' | '/roulette'
-  id:
-    | '__root__'
-    | '/'
-    | '/soon'
-    | '/luro/$interval'
-    | '/luro/soon'
-    | '/luro/'
-    | '/roulette/'
+  to: '/' | '/soon' | '/luro/$interval' | '/luro' | '/roulette'
+  id: '__root__' | '/' | '/soon' | '/luro/$interval' | '/luro/' | '/roulette/'
   fileRoutesById: FileRoutesById
 }
 
@@ -155,7 +126,6 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SoonRoute: typeof SoonRoute
   LuroIntervalRoute: typeof LuroIntervalRoute
-  LuroSoonRoute: typeof LuroSoonRoute
   LuroIndexRoute: typeof LuroIndexRoute
   RouletteIndexRoute: typeof RouletteIndexRoute
 }
@@ -164,7 +134,6 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SoonRoute: SoonRoute,
   LuroIntervalRoute: LuroIntervalRoute,
-  LuroSoonRoute: LuroSoonRoute,
   LuroIndexRoute: LuroIndexRoute,
   RouletteIndexRoute: RouletteIndexRoute,
 }
@@ -184,7 +153,6 @@ export const routeTree = rootRoute
         "/",
         "/soon",
         "/luro/$interval",
-        "/luro/soon",
         "/luro/",
         "/roulette/"
       ]
@@ -197,9 +165,6 @@ export const routeTree = rootRoute
     },
     "/luro/$interval": {
       "filePath": "luro/$interval.tsx"
-    },
-    "/luro/soon": {
-      "filePath": "luro/soon.tsx"
     },
     "/luro/": {
       "filePath": "luro/index.tsx"
