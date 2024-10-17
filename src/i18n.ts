@@ -51,7 +51,6 @@ const changeLanguage = async (locale: string | null) => {
 
 if (!localStorage.getItem('i18nextLng')) {
 	const locale = navigator.language.split('-')[0];
-	console.log(locale, changeLanguage);
 	changeLanguage(locale);
 } else {
 	changeLanguage(localStorage.getItem('i18nextLng'));
