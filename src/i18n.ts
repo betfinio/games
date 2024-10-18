@@ -8,14 +8,14 @@ import czJSON from './translations/cz.json';
 import enJSON from './translations/en.json';
 import ruJSON from './translations/ru.json';
 
-export const defaultNS = 'academy';
+export const defaultNS = 'games';
 
 export const resources = {
 	en: {
 		games: enJSON,
 		shared: sharedLang.en,
 	},
-	cz: {
+	cs: {
 		games: czJSON,
 		shared: sharedLang.cz,
 	},
@@ -26,11 +26,16 @@ export const resources = {
 } as const;
 
 const instance: i18n = i18.createInstance();
+
 instance
 	.use(initReactI18next)
-	.use(ICU)
 	.use(I18nextBrowserLanguageDetector)
+	.use(ICU)
 	.init({
+		detection: {
+			order: ['localStorage', 'navigator'],
+			convertDetectedLanguage: (lng) => lng.split('-')[0],
+		},
 		resources: resources,
 		fallbackLng: 'en',
 		defaultNS,
