@@ -1,6 +1,7 @@
 import { sharedLang } from 'betfinio_app/locales/index';
 import type { i18n } from 'i18next';
 import * as i18 from 'i18next';
+import I18nextBrowserLanguageDetector from 'i18next-browser-languagedetector';
 import ICU from 'i18next-icu';
 import { initReactI18next } from 'react-i18next';
 import czJSON from './translations/cz.json';
@@ -9,16 +10,10 @@ import ruJSON from './translations/ru.json';
 
 export const defaultNS = 'games';
 
-export const defaultLocale = 'en';
-
 export const resources = {
 	en: {
 		games: enJSON,
 		shared: sharedLang.en,
-	},
-	cz: {
-		games: czJSON,
-		shared: sharedLang.cz,
 	},
 	cs: {
 		games: czJSON,
@@ -34,26 +29,18 @@ const instance: i18n = i18.createInstance();
 
 instance
 	.use(initReactI18next)
+	.use(I18nextBrowserLanguageDetector)
 	.use(ICU)
 	.init({
+		detection: {
+			order: ['localStorage', 'navigator'],
+			convertDetectedLanguage: (lng) => lng.split('-')[0],
+		},
 		resources: resources,
 		fallbackLng: 'en',
 		defaultNS,
 		interpolation: { escapeValue: false },
 		react: { useSuspense: true },
 	});
-
-const changeLanguage = async (locale: string | null) => {
-	const lng = locale ?? defaultLocale;
-	await instance.changeLanguage(lng);
-	localStorage.setItem('i18nextLng', lng);
-};
-
-if (!localStorage.getItem('i18nextLng')) {
-	const locale = navigator.language.split('-')[0];
-	changeLanguage(locale);
-} else {
-	changeLanguage(localStorage.getItem('i18nextLng'));
-}
 
 export default instance;
